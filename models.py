@@ -13,7 +13,11 @@ class Score(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     date = db.Column(db.DateTime)
+
+    # this might need adjustment
     course = db.Column(db.String(64))
+    course_id = db.Column(db.Integer, db.ForeignKey('course.id'))
+
     tee = db.Column(db.String(64))
 
     # figure out how to have a row for each hole with strokes, green, putts.
