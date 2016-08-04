@@ -4,6 +4,7 @@ from stats import db
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), index=True)
+    scores = db.relationship('Score', backref='golfer', lazy='dynamic')
 
     def __repr__(self):
         return '<User %r>' % (self.name)
@@ -21,11 +22,10 @@ class Score(db.Model):
     tee = db.Column(db.String(64))
 
     # figure out how to have a row for each hole with strokes, green, putts.
-    # greens should probably be saved as 1 or 0
-
     score = db.Column(db.Integer)
     putts = db.Column(db.Integer)
-    greens = db.Column(db.Integer)
+    greens = db.Column(db.Integer)  # use 1 or 0
+
     course_handicap = db.Column(db.Integer)
     adj_score = db.Column(db.Integer)
     handicap_index = db.Column(db.Float)
@@ -37,6 +37,9 @@ class Score(db.Model):
 class Course(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64))
+
+    # this is possibly wrong
+    rounds = db.relationship('Score', backref='round', lazy='dynamic')
 
     # need each tee, then each hole for each tee with par, yardage, handicap
 
