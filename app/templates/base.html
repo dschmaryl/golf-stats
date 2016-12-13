@@ -17,11 +17,25 @@
     <div class="container">
 
       <div class="row">
-        <h3>golf-stats</h3>
+        <h1>golf-stats</h1>
       </div>
 
       <div class="row">
         {% block content %}{% endblock %}
+      </div>
+
+      <div>
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <ul>
+              {% for message in messages %}
+                <li>
+                  {{ message }}
+                </li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        {% endwith %}
       </div>
 
     </div>
