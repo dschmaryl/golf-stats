@@ -1,6 +1,6 @@
 from flask import render_template
 
-from app import app, db, lm
+from app import app, db, login_manager
 from .models import User
 
 
