@@ -1,0 +1,8 @@
+/* TEAM */
+    Developer: Daryl Smith
+    Contact: dschmaryl gmail
+    From: New York
+    LinkedIn: https://www.linkedin.com/pub/daryl-smith/b8/924/b76
+
+/* SITE */
+    daryl.jumpingcrab.com
