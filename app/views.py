@@ -1,5 +1,5 @@
 import flask
-from flask_login import login_required, logout_user
+from flask_login import current_user, login_required, login_user, logout_user
 
 from app import app, db, login_manager
 from .forms import LoginForm
@@ -22,6 +22,11 @@ def load_user(id):
     return User.get(id)
 
 
+@app.before_request
+def before_request():
+    flask.g.user = current_user
+
+
 @app.route('/')
 @app.route('/index')
 def index():
@@ -30,17 +35,21 @@ def index():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    def check_next():
+        next = flask.request.args.get('next')
+        if not is_safe_url(next):
+            return flask.abort(400)
+        return flask.redirect(next or flask.url_for('index'))
+    if flask.g.user is not None and flask.g.user.is_authenticated:
+        return check_next()
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.get(form.username.data)
         if user:
             if bcrypt.check_password_hash(user.password, form.password.data):
                 login_user(user, remember=True)
-                next = request.args.get('next')
-                if not is_safe_url(next):
-                    return flask.abort(400)
-                return flask.redirect(next or flask.url_for('index'))
-    return flask.render_template('login.html', form=form)
+                return check_next()
+    return flask.render_template('login.html', title='log in', form=form)
 
 
 @app.route('/logout', methods=['GET'])
@@ -52,5 +61,6 @@ def logout():
 @app.route('/new_score')
 @login_required
 def new_score():
-    # temporary
-    return flask.redirect(flask.url_for('index'))
+    # form page for adding a new round
+    return flask.render_template('new_score.html', title='new score',
+                                 form=form)
