@@ -1,11 +1,10 @@
-from flask import Flask, render_template
-from flask_sqlalchemy import SQLAlchemy
+from flask import render_template
 
-app = Flask(__name__)
-app.config.from_object('config')
-db = SQLAlchemy(app)
+from app import app, db
+from .models import User
 
 
 @app.route('/')
+@app.route('/index')
 def index():
     return render_template('index.html')
