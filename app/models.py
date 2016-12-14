@@ -35,9 +35,9 @@ class Round(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     date = db.Column(db.DateTime)
 
-    course = db.Column(db.String(64))
+    course_nickname = db.Column(db.String(32))
     course_id = db.Column(db.Integer, db.ForeignKey('course.id'))
-    tees = db.Column(db.String(64))
+    tee_color = db.Column(db.String(32))
 
     scores = db.relationship('Score', backref='round', lazy='dynamic')
 
