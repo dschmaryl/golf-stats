@@ -42,9 +42,10 @@ def login():
         user = users.first()
         if user:
             password = flask.request.form['password']
-            #if bcrypt.check_password_hash(password, user.password):
-            if password == user.password:
+            if bcrypt.check_password_hash(user.password, password):
                 flask_login.login_user(user, remember=True)
+            else:
+                flask.flash('incorrect password')
         else:
             flask.flash('username not found')
         return flask.redirect(flask.url_for('index'))
