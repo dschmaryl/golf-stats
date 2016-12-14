@@ -6,10 +6,7 @@ class User(db.Model):
     username = db.Column('username', db.String(32), unique=True, index=True)
     password = db.Column('password', db.String(32))
 
-    # not sure if i want a name besides username
-    #name = db.Column('name', db.String(64), index=True)
-
-    scores = db.relationship('Score', backref='golfer', lazy='dynamic')
+    rounds = db.relationship('Round', backref='user', lazy='dynamic')
 
     @property
     def is_authenticated(self):
@@ -33,38 +30,69 @@ class User(db.Model):
         return '<User %r>' % (self.username)
 
 
-class Score(db.Model):
+class Round(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     date = db.Column(db.DateTime)
 
-    # this might need adjustment
     course = db.Column(db.String(64))
     course_id = db.Column(db.Integer, db.ForeignKey('course.id'))
+    tees = db.Column(db.String(64))
 
-    tee = db.Column(db.String(64))
-
-    # figure out how to have a row for each hole with strokes, green, putts.
-    score = db.Column(db.Integer)
-    putts = db.Column(db.Integer)
-    greens = db.Column(db.Integer)  # use 1 or 0
+    scores = db.relationship('Score', backref='round', lazy='dynamic')
 
     course_handicap = db.Column(db.Integer)
     adj_score = db.Column(db.Integer)
     handicap_index = db.Column(db.Float)
 
     def __repr__(self):
-        return '<Score %r>' % (self.date)
+        return '<Round %r>' % (self.date)
+
+
+class Score(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    round_id = db.Column(db.Integer, db.ForeignKey('round.id'))
+    hole = db.Column(db.Integer)
+    score = db.Column(db.Integer)
+    putts = db.Column(db.Integer)
+    gir = db.Column(db.Integer)
+
+    def __repr__(self):
+        return '<Score %r>' % (self.id)
 
 
 class Course(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    nickname = db.Column(db.String(32), unique=True, index=True)
     name = db.Column(db.String(64))
 
-    # this is possibly wrong
-    rounds = db.relationship('Score', backref='round', lazy='dynamic')
-
-    # need each tee, then each hole for each tee with par, yardage, handicap
+    tees = db.relationship('Tee', backref='course', lazy='dynamic')
 
     def __repr__(self):
         return '<Course %r>' % (self.name)
+
+
+class Tee(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    course_id = db.Column(db.Integer, db.ForeignKey('course.id'))
+    tee_color = db.Column(db.String(32))
+    rating = db.Column(db.Float)
+    slope = db.Column(db.Integer)
+
+    holes = db.relationship('Hole', backref='tee', lazy='dynamic')
+
+    def __repr__(self):
+        return '<Tee %r>' % (self.tee_color)
+
+
+class Hole(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    tee_id = db.Column(db.Integer, db.ForeignKey('tee.id'))
+    hole = db.Column(db.Integer)
+    yardage = db.Column(db.Integer)
+    par = db.Column(db.Integer)
+    rating = db.Column(db.Float)
+    slope = db.Column(db.Integer)
+
+    def __repr__(self):
+        return '<Hole %r>' % (self.hole)
