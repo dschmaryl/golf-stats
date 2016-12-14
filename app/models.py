@@ -30,7 +30,7 @@ class User(db.Model):
             return str(self.id)
 
     def __repr__(self):
-        return '<User %r>' % (self.name)
+        return '<User %r>' % (self.username)
 
 
 class Score(db.Model):

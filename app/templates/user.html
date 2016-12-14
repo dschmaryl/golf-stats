@@ -3,23 +3,22 @@
 
 <div class="row">
   <div class="col-md-12">
-    <h3>new score</h3>
+    <h3>stats for {{ username }}</h3>
   </div>
 </div>
 
 <div class="row">
   <div class="col-md-12">
     <p>
-      this page will be a form for adding a new score
+      this will be the main stats page for each user
     </p>
   </div>
 </div>
 
-
 <div class="row">
   <div class="col-md-12">
     <p>
-      <a href="{{ url_for('user', username=g.user.username) }}">go back to stats</a>
+      <a href="{{ url_for('new_score', username=g.user.username) }}">add new score</a>
     </p>
   </div>
 </div>

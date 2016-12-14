@@ -1,7 +1,7 @@
 import flask
 import flask_login
 
-from app import app, db, login_manager
+from app import app, bcrypt, db, login_manager
 from .models import User
 
 
@@ -18,7 +18,7 @@ def internal_error(error):
 
 @login_manager.user_loader
 def load_user(id):
-    return User.get(id)
+    return User.query.get(int(id))
 
 
 @app.before_request
@@ -34,25 +34,20 @@ def index():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    def check_next():
-        next = flask.request.args.get('next')
-        if not is_safe_url(next):
-            return flask.abort(400)
-        return flask.redirect(next or flask.url_for('index'))
-
     if flask.g.user is not None and flask.g.user.is_authenticated:
-        return check_next()
+        return flask.redirect(flask.url_for('index'))
 
     if flask.request.method == 'POST':
-        user = User.query.get(flask.request.form['username'])
+        users = User.query.filter_by(username=flask.request.form['username'])
+        user = users.first()
         if user:
             password = flask.request.form['password']
-            if bcrypt.check_password_hash(password, user.password):
+            #if bcrypt.check_password_hash(password, user.password):
+            if password == user.password:
                 flask_login.login_user(user, remember=True)
-                return check_next()
         else:
             flask.flash('username not found')
-            return flask.redirect(flask.url_for('index'))
+        return flask.redirect(flask.url_for('index'))
 
     return flask.render_template('login.html', title='log in',
                                  form=flask.request.form)
@@ -64,9 +59,17 @@ def logout():
     return flask.redirect(flask.url_for('index'))
 
 
-@app.route('/new_score')
+@app.route('/user/<username>')
 @flask_login.login_required
-def new_score():
+def user(username):
+    # page for player stats
+    title = 'stats for ' + username
+    return flask.render_template('user.html', username=username, title=title)
+
+
+@app.route('/user/<username>/new_score')
+@flask_login.login_required
+def new_score(username):
     # form page for adding a new round
-    return flask.render_template('new_score.html', title='new score',
-                                 form=form)
+    return flask.render_template('new_score.html', username=username,
+                                 title='new score')

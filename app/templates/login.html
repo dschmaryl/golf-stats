@@ -1,23 +1,37 @@
 {% extends "base.html" %}
 {% block content %}
 
-<h3>log in</h3>
+<div class="row">
+  <div class="col-md-12">
+    <h3>log in</h3>
+  </div>
+</div>
+
 <form action="" method="post" name="login">
-  <div>
-    <p>
-      name: <input type="text" placeholder="username" name="username" value="{{ request.form.username }}" />
-    </p>
+
+  <div class="row">
+    <div class="col-md-12">
+      <P>
+        name: <input type="text" placeholder="username" name="username" value="{{ request.form.username }}" />
+      </P>
+    </div>
   </div>
-  <div>
-    <p>
-      password: <input type="password" placeholder="password" name="password" value="{{ request.form.password }}" />
-    </p>
+  <div class="row">
+    <div class="col-md-12">
+      <p>
+        password: <input type="password" placeholder="password" name="password" value="{{ request.form.password }}" />
+      </p>
+    </div>
   </div>
-  <div>
-    <p>
-      <input type="submit" value="sign in" />
-    </p>
+
+  <div class="row">
+    <div class="col-md-12">
+      <p>
+        <input type="submit" value="sign in" />
+      </p>
+    </div>
   </div>
+
 </form>
 
 {% endblock %}
