@@ -3,14 +3,14 @@
 
 <div class="row">
   <div class="col-md-12">
-    <h3>stats for {{ username }}</h3>
+    <h3>new course</h3>
   </div>
 </div>
 
 <div class="row">
   <div class="col-md-12">
     <p>
-      this will be the main stats page for each user
+      this will be a form for adding a new course
     </p>
   </div>
 </div>
@@ -18,8 +18,7 @@
 <div class="row">
   <div class="col-md-12">
     <p>
-      <a href="{{ url_for('round_new', username=g.user.username) }}">add new round</a> |
-      <a href="{{ url_for('round_edit', username=g.user.username) }}">edit previous round</a>
+      <a href="{{ url_for('courses') }}">back to courses</a>
     </p>
   </div>
 </div>

@@ -68,9 +68,47 @@ def user(username):
     return flask.render_template('user.html', username=username, title=title)
 
 
-@app.route('/user/<username>/new_score')
+
+@app.route('/user/<username>/rounds')
 @flask_login.login_required
-def new_score(username):
+def rounds(username):
+    # form page for editing a round
+    return flask.render_template('rounds.html', username=username,
+                                 title='rounds')
+
+
+@app.route('/user/<username>/round_new')
+@flask_login.login_required
+def round_new(username):
     # form page for adding a new round
-    return flask.render_template('new_score.html', username=username,
-                                 title='new score')
+    return flask.render_template('round_new.html', username=username,
+                                 title='new round')
+
+
+@app.route('/user/<username>/round_edit')
+@flask_login.login_required
+def round_edit(username):
+    # form page for editing a round
+    return flask.render_template('round_edit.html', username=username,
+                                 title='edit round')
+
+
+@app.route('/courses')
+@flask_login.login_required
+def courses():
+    # form page for editing a round
+    return flask.render_template('courses.html', title='courses')
+
+
+@app.route('/course_new')
+@flask_login.login_required
+def course_new():
+    # form page for editing a round
+    return flask.render_template('course_new.html', title='new course')
+
+
+@app.route('/course_edit')
+@flask_login.login_required
+def course_edit():
+    # form page for editing a round
+    return flask.render_template('course_edit.html', title='edit course')
