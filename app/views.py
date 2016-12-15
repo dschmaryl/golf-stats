@@ -98,7 +98,6 @@ def round_new(username):
                           course_id=course.id,
                           tee_color=flask.request.form['tee_color'])
         db_save(new_round)
-
         flask.flash('added round %i' % new_round.id)
         return flask.redirect(flask.url_for('round_list', username=username))
 
@@ -110,15 +109,25 @@ def round_new(username):
 @flask_login.login_required
 def round_edit(username, round_id):
     round_ = Round.query.get(round_id)
+    course = Course.query.get(round_.course_id)
+
     if flask.request.method == 'POST':
-        round_.date = flask.request.form['date']
-        round_.course = flask.request.form['name']
+        round_.date = parse(flask.request.form['date'])
+        courses = Course.query.filter_by(nickname=flask.request.form['course'])
+        course = courses.first()
+        if not course:
+            flask.flash('course %s not found' % flask.request.form['course'])
+            return flask.redirect(flask.url_for('round_new'))
+        round_.course_id = course.id
+        if 'tee_color' in flask.request.form:
+                round_.tee_color = flask.request.form['tee_color']
         db_save(round_)
         flask.flash('saved round %i' % round_.id)
-        return flask.redirect(flask.url_for('course_list'))
+        return flask.redirect(flask.url_for('round_list', username=username))
 
     return flask.render_template('round_edit.html', title='edit round',
-                                 form=flask.request.form, round=round_)
+                                 username=username, form=flask.request.form,
+                                 round=round_, course=course)
 
 
 @app.route('/course_list')

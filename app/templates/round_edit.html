@@ -7,18 +7,48 @@
   </div>
 </div>
 
-<div class="row">
-  <div class="col-md-12">
-    <p>
-      this page will be a form for editing a round
-    </p>
+<form action="" method="post" name="edit_round">
+
+  <div class="row">
+    <div class="col-md-12">
+      <p>
+        date: <input type="text" name="date" placeholder="{{ round.date }}" />
+      </p>
+    </div>
   </div>
-</div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <p>
+        course: <input type="text" name="course" placeholder="{{ course.name }}" />
+      </p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <p>
+        tees: <input type="radio" name="tee_color" value="white" /> white
+              <input type="radio" name="tee_color" value="red" /> red
+      </p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <p>
+        <input type="submit" value="save" />
+      </p>
+    </div>
+  </div>
+
+</form>
 
 <div class="row">
   <div class="col-md-12">
     <p>
-      <a href="{{ url_for('user', username=g.user.username) }}">back to stats</a>
+      <a href="{{ url_for('round_list', username=g.user.username) }}">rounds</a> |
+      <a href="{{ url_for('user', username=g.user.username) }}">stats</a>
     </p>
   </div>
 </div>
