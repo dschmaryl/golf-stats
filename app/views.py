@@ -1,6 +1,8 @@
 import flask
 import flask_login
 
+from dateutil.parser import parse
+
 from app import app, bcrypt, db, login_manager
 from .models import Course, Round, User
 
@@ -85,11 +87,20 @@ def round_list(username):
 @flask_login.login_required
 def round_new(username):
     if flask.request.method == 'POST':
-        new_round = Round(nickname=flask.request.form['date'],
-                            tee_color=flask.request.form['tee_color'])
+        user = User.query.filter_by(username=username).first()
+        courses = Course.query.filter_by(nickname=flask.request.form['course'])
+        course = courses.first()
+        if not course:
+            flask.flash('course %s not found' % flask.request.form['course'])
+            return flask.redirect(flask.url_for('round_new'))
+        new_round = Round(date=parse(flask.request.form['date']),
+                          user_id=user.id,
+                          course_id=course.id,
+                          tee_color=flask.request.form['tee_color'])
         db_save(new_round)
-        flask.flash('added round %i' % round_.id)
-        return flask.redirect(flask.url_for('round_list'))
+
+        flask.flash('added round %i' % new_round.id)
+        return flask.redirect(flask.url_for('round_list', username=username))
 
     return flask.render_template('round_new.html', title='new round',
                                  username=username, form=flask.request.form)
