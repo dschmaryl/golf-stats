@@ -12,7 +12,7 @@
   <div class="row">
     <div class="col-md-12">
       <p>
-        date: <input type="text" name="date" value="{{ request.form.date }}" />
+        date: <input type="text" name="date" placeholder="YYYY MM DD" />
       </p>
     </div>
   </div>
@@ -20,7 +20,7 @@
   <div class="row">
     <div class="col-md-12">
       <p>
-        course: <input type="text" name="course" value="{{ request.form.course }}" />
+        course: <input type="text" name="course" />
       </p>
     </div>
   </div>
@@ -28,7 +28,8 @@
   <div class="row">
     <div class="col-md-12">
       <p>
-        tee color: <input type="text" name="tee_color" value="{{ request.form.tee_color }}" />
+        tees: <input type="radio" name="tee_color" value="white" /> white
+              <input type="radio" name="tee_color" value="red" /> red
       </p>
     </div>
   </div>
