@@ -2,7 +2,7 @@ import flask
 import flask_login
 
 from app import app, bcrypt, db, login_manager
-from .models import User
+from .models import Course, Round, User
 
 
 @app.errorhandler(404)
@@ -60,55 +60,88 @@ def logout():
     return flask.redirect(flask.url_for('index'))
 
 
+def db_save(data):
+    db.session.add(data)
+    db.session.commit()
+
+
 @app.route('/user/<username>')
 @flask_login.login_required
 def user(username):
-    # page for player stats
     title = 'stats for ' + username
     return flask.render_template('user.html', username=username, title=title)
 
 
-
-@app.route('/user/<username>/rounds')
+@app.route('/user/<username>/round_list')
 @flask_login.login_required
-def rounds(username):
-    # form page for editing a round
-    return flask.render_template('rounds.html', username=username,
+def round_list(username):
+    user = User.query.filter_by(username=username).first()
+    rounds = Round.query.filter_by(user_id=user.id)
+    return flask.render_template('round_list.html', rounds=rounds,
                                  title='rounds')
 
 
-@app.route('/user/<username>/round_new')
+@app.route('/user/<username>/round_new', methods=['GET', 'POST'])
 @flask_login.login_required
 def round_new(username):
-    # form page for adding a new round
-    return flask.render_template('round_new.html', username=username,
-                                 title='new round')
+    if flask.request.method == 'POST':
+        new_round = Round(nickname=flask.request.form['date'],
+                            tee_color=flask.request.form['tee_color'])
+        db_save(new_round)
+        flask.flash('added round %i' % round_.id)
+        return flask.redirect(flask.url_for('round_list'))
+
+    return flask.render_template('round_new.html', title='new round',
+                                 username=username, form=flask.request.form)
 
 
-@app.route('/user/<username>/round_edit')
+@app.route('/user/<username>/round_edit/<round_id>', methods=['GET', 'POST'])
 @flask_login.login_required
-def round_edit(username):
-    # form page for editing a round
-    return flask.render_template('round_edit.html', username=username,
-                                 title='edit round')
+def round_edit(username, round_id):
+    round_ = Round.query.get(round_id)
+    if flask.request.method == 'POST':
+        round_.date = flask.request.form['date']
+        round_.course = flask.request.form['name']
+        db_save(round_)
+        flask.flash('saved round %i' % round_.id)
+        return flask.redirect(flask.url_for('course_list'))
+
+    return flask.render_template('round_edit.html', title='edit round',
+                                 form=flask.request.form, round=round_)
 
 
-@app.route('/courses')
+@app.route('/course_list')
 @flask_login.login_required
-def courses():
-    # form page for editing a round
-    return flask.render_template('courses.html', title='courses')
+def course_list():
+    courses = Course.query.all()
+    return flask.render_template('course_list.html', title='courses',
+                                 courses=courses)
 
 
-@app.route('/course_new')
+@app.route('/course_new', methods=['GET', 'POST'])
 @flask_login.login_required
 def course_new():
-    # form page for editing a round
-    return flask.render_template('course_new.html', title='new course')
+    if flask.request.method == 'POST':
+        new_course = Course(nickname=flask.request.form['nickname'],
+                            name=flask.request.form['name'])
+        db_save(new_course)
+        return flask.redirect(flask.url_for('course_list'))
+
+    return flask.render_template('course_new.html', title='new course',
+                                 form=flask.request.form)
 
 
-@app.route('/course_edit')
+@app.route('/course_edit/<course>', methods=['GET', 'POST'])
 @flask_login.login_required
-def course_edit():
-    # form page for editing a round
-    return flask.render_template('course_edit.html', title='edit course')
+def course_edit(course):
+    course = Course.query.filter_by(nickname=course).first()
+
+    if flask.request.method == 'POST':
+        course.nickname = flask.request.form['nickname']
+        course.name = flask.request.form['name']
+        db_save(course)
+        flask.flash('saved %s' % course.nickname)
+        return flask.redirect(flask.url_for('course_list'))
+
+    return flask.render_template('course_edit.html', title='edit course',
+                                 form=flask.request.form, course=course)

@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="row">
+  <div class="col-md-12">
+    <h3>rounds</h3>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    {% if rounds %}
+      {% for round in rounds %}
+        <p>
+          <a href="{{ url_for('round_edit', username=g.user.username, round_id=round.id) }}">
+            {{ round.date }}
+          </a>
+        </p>
+      {% endfor %}
+    {% else %}
+      <p>
+        no rounds to list
+      </p>
+    {% endif %}
+  </div>
+</div>
+
+
+<div class="row">
+  <div class="col-md-12">
+    <p>
+      <a href="{{ url_for('round_new', username=g.user.username) }}">add new round</a> |
+      <a href="{{ url_for('user', username=g.user.username) }}">back to stats</a>
+    </p>
+  </div>
+</div>
+
+{% endblock %}

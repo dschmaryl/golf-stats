@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="row">
+  <div class="col-md-12">
+    <h3>courses</h3>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    {% if courses %}
+      {% for course in courses %}
+        <p>
+          <a href="{{ url_for('course_edit', course=course.nickname) }}">
+            {{ course.name }}
+          </a>
+        </p>
+      {% endfor %}
+    {% else %}
+      <p>
+        no courses to list
+      </p>
+    {% endif %}
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <p>
+      <a href="{{ url_for('course_new') }}">add new course</a> |
+      <a href="{{ url_for('index') }}">back to main</a>
+    </p>
+  </div>
+</div>
+
+{% endblock %}
