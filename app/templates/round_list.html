@@ -13,7 +13,7 @@
       {% for round in rounds %}
         <p>
           <a href="{{ url_for('round_edit', username=g.user.username, round_id=round.id) }}">
-            {{ round.date }}
+            {{ round.date }} - {{ courses[round.id] }}
           </a>
         </p>
       {% endfor %}

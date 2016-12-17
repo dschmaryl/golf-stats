@@ -4,7 +4,7 @@ import flask_login
 from dateutil.parser import parse
 
 from app import app, bcrypt, db, login_manager
-from .models import Course, Round, User
+from .models import Course, Round, Score, User
 
 
 @app.errorhandler(404)
@@ -62,11 +62,6 @@ def logout():
     return flask.redirect(flask.url_for('index'))
 
 
-def db_save(data):
-    db.session.add(data)
-    db.session.commit()
-
-
 @app.route('/user/<username>')
 @flask_login.login_required
 def user(username):
@@ -79,30 +74,102 @@ def user(username):
 def round_list(username):
     user = User.query.filter_by(username=username).first()
     rounds = Round.query.filter_by(user_id=user.id)
+    courses = {}
+    for r in rounds:
+        course = Course.query.get(r.course_id)
+        courses[r.id] = course.nickname
     return flask.render_template('round_list.html', rounds=rounds,
-                                 title='rounds')
+                                 courses=courses, title='rounds')
+
+
+
+def save_scores(round_id, form):
+    for i in range(1, 19):
+        hole = 'hole%i' % i
+        score = form['%s_score' % hole]
+        putts = form['%s_putts' % hole]
+        gir_str = '%s_gir' % hole
+        if gir_str in form:
+            gir = form[gir_str]
+        else:
+            # need par for the hole to calculate gir from putts
+            gir = 2  # temporary
+
+        score = Score(round_id=round_id, hole=hole, score=score,
+                      putts=putts, gir=gir)
+        db.session.add(score)
+        db.session.commit()
+
+
+def save_round(username, form):
+    courses = Course.query.filter_by(nickname=form['course'])
+    course = courses.first()
+    user = User.query.filter_by(username=username).first()
+    if 'tee_color' in form:
+        tee_color = form['tee_color']
+    else:
+        # this is not ideal. fix it. maybe add 'default tee' to user model
+        tee_color = 'red' if username == 'kim' else 'white'
+
+    new_round = Round(date=parse(form['date']),
+                      user_id=user.id,
+                      course_id=course.id,
+                      tee_color=tee_color)
+    db.session.add(new_round)
+    db.session.commit()
+    save_scores(new_round.id, form)
+    return new_round.id
 
 
 @app.route('/user/<username>/round_new', methods=['GET', 'POST'])
 @flask_login.login_required
 def round_new(username):
+    holes = ['hole%i' % i for i in range(1, 19)]
+
     if flask.request.method == 'POST':
-        user = User.query.filter_by(username=username).first()
-        courses = Course.query.filter_by(nickname=flask.request.form['course'])
-        course = courses.first()
-        if not course:
-            flask.flash('course %s not found' % flask.request.form['course'])
-            return flask.redirect(flask.url_for('round_new'))
-        new_round = Round(date=parse(flask.request.form['date']),
-                          user_id=user.id,
-                          course_id=course.id,
-                          tee_color=flask.request.form['tee_color'])
-        db_save(new_round)
-        flask.flash('added round %i' % new_round.id)
+        round_id = save_round(username, flask.request.form)
+        # if round_id == -1:
+        #     flask.flash('course %s not found' % form['course'])
+        #     return flask.redirect(flask.url_for('round_new'), use)
+        flask.flash('added round %i' % round_id)
         return flask.redirect(flask.url_for('round_list', username=username))
 
     return flask.render_template('round_new.html', title='new round',
-                                 username=username, form=flask.request.form)
+                                 username=username, holes=holes,
+                                 form=flask.request.form)
+
+
+def update_scores(round_id, form):
+    scores = Score.query.filter_by(round_id=round_id)
+    for score in scores:
+        hole = score.hole
+        score.score = form['%s_score' % hole]
+        score.putts = form['%s_putts' % hole]
+        gir_str = '%s_gir' % hole
+        if gir_str in form:
+            score.gir = form[gir_str]
+        else:
+            # need par for the hole to calculate gir from putts
+            score.gir = 2  # temporary
+        db.session.commit()
+
+
+def update_round(round_id, form):
+    round_ = Round.query.get(round_id)
+    round_.date = parse(form['date'])
+    if 'course' in form:
+        course = Course.query.filter_by(nickname=form['course']).first()
+        round_.course_id = course.id
+    if 'tee_color' in form:
+        round_.tee_color = form['tee_color']
+    db.session.commit()
+    update_scores(round_id, form)
+
+
+def delete_round(round_id):
+    round_ = Round.query.get(round_id)
+    db.session.delete(round_)
+    db.session.commit()
 
 
 @app.route('/user/<username>/round_edit/<round_id>', methods=['GET', 'POST'])
@@ -110,24 +177,21 @@ def round_new(username):
 def round_edit(username, round_id):
     round_ = Round.query.get(round_id)
     course = Course.query.get(round_.course_id)
+    scores = Score.query.filter_by(round_id=round_.id)
 
     if flask.request.method == 'POST':
-        round_.date = parse(flask.request.form['date'])
-        courses = Course.query.filter_by(nickname=flask.request.form['course'])
-        course = courses.first()
-        if not course:
-            flask.flash('course %s not found' % flask.request.form['course'])
-            return flask.redirect(flask.url_for('round_new'))
-        round_.course_id = course.id
-        if 'tee_color' in flask.request.form:
-                round_.tee_color = flask.request.form['tee_color']
-        db_save(round_)
-        flask.flash('saved round %i' % round_.id)
+        if 'delete' in flask.request.form:
+            delete_round(round_id)
+            flask.flash('deleted round %s' % round_id)
+        else:
+            update_round(round_id, flask.request.form)
+            flask.flash('saved round %s' % round_id)
         return flask.redirect(flask.url_for('round_list', username=username))
 
     return flask.render_template('round_edit.html', title='edit round',
-                                 username=username, form=flask.request.form,
-                                 round=round_, course=course)
+                                 username=username, round=round_,
+                                 course=course, scores=scores,
+                                 form=flask.request.form)
 
 
 @app.route('/course_list')
@@ -144,7 +208,8 @@ def course_new():
     if flask.request.method == 'POST':
         new_course = Course(nickname=flask.request.form['nickname'],
                             name=flask.request.form['name'])
-        db_save(new_course)
+        db.session.add(new_course)
+        db.session.commit()
         return flask.redirect(flask.url_for('course_list'))
 
     return flask.render_template('course_new.html', title='new course',
@@ -159,7 +224,8 @@ def course_edit(course):
     if flask.request.method == 'POST':
         course.nickname = flask.request.form['nickname']
         course.name = flask.request.form['name']
-        db_save(course)
+        db.session.update(course)
+        db.session.commit()
         flask.flash('saved %s' % course.nickname)
         return flask.redirect(flask.url_for('course_list'))
 

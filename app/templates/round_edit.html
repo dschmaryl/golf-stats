@@ -12,7 +12,7 @@
   <div class="row">
     <div class="col-md-12">
       <p>
-        date: <input type="text" name="date" placeholder="{{ round.date }}" />
+        date: <input type="text" name="date" value="{{ round.date }}" />
       </p>
     </div>
   </div>
@@ -20,7 +20,7 @@
   <div class="row">
     <div class="col-md-12">
       <p>
-        course: <input type="text" name="course" placeholder="{{ course.name }}" />
+        course: <input type="text" name="course" value="{{ course.nickname }}" />
       </p>
     </div>
   </div>
@@ -34,11 +34,28 @@
     </div>
   </div>
 
+
   <div class="row">
     <div class="col-md-12">
+      {% for score in scores %}
+        <p>
+          {{ score.hole }} :
+          score: <input type="number" name="{{ '%s_score' % score.hole }}" value="{{ score.score }}" />
+          putts: <input type="number" name="{{ '%s_putts' % score.hole }}" value="{{ score.putts }}"  />
+        </p>
+      {% endfor %}
+    </div>
+  </div>
+
+
+  <div class="row">
+    <div class="col-md-1">
       <p>
         <input type="submit" value="save" />
       </p>
+    </div>
+    <div class="col-md-11">
+      <input type="submit" name='delete' value="delete"  />
     </div>
   </div>
 
