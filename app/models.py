@@ -7,7 +7,7 @@ class User(db.Model):
     username = db.Column('username', db.String(32), unique=True, index=True)
     password = db.Column('password', db.String(32))
 
-    rounds = db.relationship('Round', backref='user_o', lazy='dynamic')
+    rounds = db.relationship('Round', backref='user_o')
 
     @property
     def is_authenticated(self):
@@ -42,7 +42,7 @@ class Round(db.Model):
     adj_score = db.Column(db.Integer)
     handicap_index = db.Column(db.Float)
 
-    scores = db.relationship('Score', backref='round_o', lazy='dynamic')
+    scores = db.relationship('Score', backref='round_o')
 
     def __repr__(self):
         return '<Round %r>' % (self.date)
@@ -67,8 +67,8 @@ class Course(db.Model):
     nickname = db.Column(db.String(32), unique=True, index=True)
     name = db.Column(db.String(64))
 
-    rounds = db.relationship('Round', backref='course_o', lazy='dynamic')
-    tees = db.relationship('Tee', backref='course_o', lazy='dynamic')
+    rounds = db.relationship('Round', backref='course_o')
+    tees = db.relationship('Tee', backref='course_o')
 
     def __repr__(self):
         return '<Course %r>' % (self.name)
@@ -82,7 +82,7 @@ class Tee(db.Model):
     rating = db.Column(db.Float)
     slope = db.Column(db.Integer)
 
-    holes = db.relationship('Hole', backref='tee_o', lazy='dynamic')
+    holes = db.relationship('Hole', backref='tee_o')
 
     def __repr__(self):
         return '<Tee %r>' % (self.tee_color)
