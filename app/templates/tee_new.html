@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="row">
+  <div class="col-md-12">
+    <h3>new tees</h3>
+  </div>
+</div>
+
+<form action="" method="post" name="new_round">
+
+  <div class="row">
+    <div class="col-md-12">
+      <p>
+        date: <input type="text" name="date" placeholder="YYYY MM DD" />
+      </p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <p>
+        tees: <input type="radio" name="tee_color" value="white" /> white
+              <input type="radio" name="tee_color" value="red" /> red
+              <input type="radio" name="tee_color" value="blue" /> blue
+              <input type="radio" name="tee_color" value="gold" /> gold
+      </p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <p>
+        rating: <input type="number" name="rating" />
+      </p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <p>
+        slope: <input type="number" name="slope" />
+      </p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      {% for hole in holes %}
+        <p>
+          {{ hole }}:
+          par: <input type="number" name="{{ '%s_par' % hole }}" />
+          yardage: <input type="number" name="{{ '%s_yardage' % hole }}" />
+        </p>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-1">
+      <p>
+        <input type="submit" value="save" />
+      </p>
+    </div>
+    <div class="col-md-11">
+      <p>
+      <input type="submit" name='delete' value="delete"  />
+      </p>
+    </div>
+  </div>
+
+</form>
+
+<div class="row">
+  <div class="col-md-12">
+    <p>
+      <a href="{{ url_for('course_list') }}">back to courses</a>
+    </p>
+  </div>
+</div>
+
+{% endblock %}

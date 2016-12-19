@@ -12,7 +12,7 @@
     {% if courses %}
       {% for course in courses %}
         <p>
-          <a href="{{ url_for('course_edit', course=course.nickname) }}">
+          <a href="{{ url_for('course_edit', course_nickname=course.nickname) }}">
             {{ course.name }}
           </a>
         </p>

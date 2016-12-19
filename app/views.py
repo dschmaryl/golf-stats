@@ -82,7 +82,6 @@ def round_list(username):
                                  courses=courses, title='rounds')
 
 
-
 def save_scores(round_id, form):
     for i in range(1, 19):
         hole = 'hole%i' % i
@@ -180,7 +179,6 @@ def round_edit(username, round_id):
 
     course = Course.query.get(round_.course_id)
     scores = Score.query.filter_by(round_id=round_.id)
-
     courses = Course.query.all()
 
     if flask.request.method == 'POST':
@@ -206,6 +204,22 @@ def course_list():
                                  courses=courses)
 
 
+@app.route('/course_edit/<course_nickname>/tee_new', methods=['GET', 'POST'])
+@flask_login.login_required
+def tee_new(course_nickname):
+    course = Course.query.filter_by(nickname=course_nickname).first()
+    if not course:
+        flask.flash('course not found')
+
+    if flask.request.method == 'POST':
+        print('post in tee_new')
+
+        flask.redirect(flask.url_for('course_list'))
+
+    return flask.render_template('tee_new.html', title='new tee',
+                                 course=course.nickname)
+
+
 @app.route('/course_new', methods=['GET', 'POST'])
 @flask_login.login_required
 def course_new():
@@ -220,12 +234,17 @@ def course_new():
                                  form=flask.request.form)
 
 
-@app.route('/course_edit/<course>', methods=['GET', 'POST'])
+@app.route('/course_edit/<course_nickname>', methods=['GET', 'POST'])
 @flask_login.login_required
-def course_edit(course):
-    course = Course.query.filter_by(nickname=course).first()
+def course_edit(course_nickname):
+    course = Course.query.filter_by(nickname=course_nickname).first()
 
     if flask.request.method == 'POST':
+        if 'delete' in flask.request.form:
+            db.session.delete(course)
+            db.session.commit()
+            flask.flash('course %s deleted' % course.nickname)
+            return flask.redirect(flask.url_for('course_list'))
         course.nickname = flask.request.form['nickname']
         course.name = flask.request.form['name']
         db.session.update(course)

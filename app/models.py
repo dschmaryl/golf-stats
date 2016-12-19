@@ -78,7 +78,8 @@ class Tee(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     course_id = db.Column(db.Integer, db.ForeignKey('course.id'))
 
-    tee_color = db.Column(db.String(32))
+    date = db.Column(db.DateTime)
+    color = db.Column(db.String(32))
     rating = db.Column(db.Float)
     slope = db.Column(db.Integer)
 
@@ -93,10 +94,10 @@ class Hole(db.Model):
     tee_id = db.Column(db.Integer, db.ForeignKey('tee.id'))
 
     hole = db.Column(db.Integer)
-    yardage = db.Column(db.Integer)
     par = db.Column(db.Integer)
     rating = db.Column(db.Float)
     slope = db.Column(db.Integer)
+    yardage = db.Column(db.Integer)
 
     def __repr__(self):
         return '<Hole %r>' % (self.hole)
