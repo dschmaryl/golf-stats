@@ -174,6 +174,10 @@ def delete_round(round_id):
 @flask_login.login_required
 def round_edit(username, round_id):
     round_ = Round.query.get(round_id)
+    if not round_:
+        flask.flash('round %s not found' % round_id)
+        return flask.redirect(flask.url_for('round_list', username=username))
+
     course = Course.query.get(round_.course_id)
     scores = Score.query.filter_by(round_id=round_.id)
 
