@@ -20,7 +20,10 @@
   <div class="row">
     <div class="col-md-12">
       <p>
-        course: <input type="text" name="course" value="{{ course.nickname }}" />
+        course:
+        {% for course in courses %}
+          <input type="radio" name="course" value="{{ course.nickname }}"  /> {{ course.nickname }}
+        {% endfor %}
       </p>
     </div>
   </div>

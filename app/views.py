@@ -98,7 +98,7 @@ def save_scores(round_id, form):
         score = Score(round_id=round_id, hole=hole, score=score,
                       putts=putts, gir=gir)
         db.session.add(score)
-        db.session.commit()
+    db.session.commit()
 
 
 def save_round(username, form):
@@ -125,18 +125,16 @@ def save_round(username, form):
 @flask_login.login_required
 def round_new(username):
     holes = ['hole%i' % i for i in range(1, 19)]
+    courses = Course.query.all()
 
     if flask.request.method == 'POST':
         round_id = save_round(username, flask.request.form)
-        # if round_id == -1:
-        #     flask.flash('course %s not found' % form['course'])
-        #     return flask.redirect(flask.url_for('round_new'), use)
         flask.flash('added round %i' % round_id)
         return flask.redirect(flask.url_for('round_list', username=username))
 
     return flask.render_template('round_new.html', title='new round',
                                  username=username, holes=holes,
-                                 form=flask.request.form)
+                                 courses=courses, form=flask.request.form)
 
 
 def update_scores(round_id, form):
@@ -151,7 +149,7 @@ def update_scores(round_id, form):
         else:
             # need par for the hole to calculate gir from putts
             score.gir = 2  # temporary
-        db.session.commit()
+    db.session.commit()
 
 
 def update_round(round_id, form):
@@ -179,6 +177,8 @@ def round_edit(username, round_id):
     course = Course.query.get(round_.course_id)
     scores = Score.query.filter_by(round_id=round_.id)
 
+    courses = Course.query.all()
+
     if flask.request.method == 'POST':
         if 'delete' in flask.request.form:
             delete_round(round_id)
@@ -190,7 +190,7 @@ def round_edit(username, round_id):
 
     return flask.render_template('round_edit.html', title='edit round',
                                  username=username, round=round_,
-                                 course=course, scores=scores,
+                                 course=course, courses=courses, scores=scores,
                                  form=flask.request.form)
 
 
