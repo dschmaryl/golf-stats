@@ -14,7 +14,7 @@
         <div class="row">
           <div class="col-xs-12">
             <a href="{{ url_for('round_edit', username=g.user.username, round_id=round.id) }}">
-              {{ round.date.strftime("%Y-%m-%d") }} - {{ courses[round.id] }}
+              {{ round.date.strftime("%Y-%m-%d") }} - {{ round.course.name }}
             </a>
           </div>
         </div>

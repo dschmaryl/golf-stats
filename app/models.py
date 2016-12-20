@@ -7,6 +7,8 @@ class User(db.Model):
     username = db.Column('username', db.String(32), unique=True, index=True)
     password = db.Column('password', db.String(32))
 
+    default_tees = db.Column(db.String(32))
+
     rounds = db.relationship('Round', backref='user', lazy='dynamic',
                              cascade="save-update, delete")
 
