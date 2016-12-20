@@ -235,36 +235,37 @@ def tee_new(course_nickname):
             return redirect(url_for('course_edit',
                                     course_nickname=course.nickname))
 
-        tee = Tee(course_id=course.id, date=parse(flask.request.form['date']),
+        tee = Tee(date=parse(flask.request.form['date']),
                   color=flask.request.form['tee_color'],
                   rating=flask.request.form['rating'],
                   slope=flask.request.form['slope'])
-        db.session.add(tee)
-        db.session.commit()
+        course.tees.append(tee)
 
         for i in range(1, 19):
-            hole = Hole(tee_id=tee.id, hole=i,
-                        par=flask.request.form['hole%i_par' % i],
-                        yardage=flask.request.form['hole%i_yardage' % i])
-            db.session.add(hole)
+            tee.holes.append(Hole(
+                hole=i,
+                par=flask.request.form['hole%i_par' % i],
+                yardage=flask.request.form['hole%i_yardage' % i]
+                ))
         db.session.commit()
 
         flash('saved %s tees' % tee.color)
-        return redirect(url_for('course_list'))
+        return redirect(url_for('course_edit',
+                                course_nickname=course.nickname))
 
     return render_template('tee_new.html', title='new tee',
                            form=flask.request.form)
 
 
-@app.route('/course_edit/<course_nickname>/tee_edit/<tee_color>',
+@app.route('/course_edit/<course_nickname>/tee_edit/<tee_id>',
            methods=['GET', 'POST'])
 @flask_login.login_required
-def tee_edit(course_nickname, tee_color):
+def tee_edit(course_nickname, tee_id):
     course = Course.query.filter_by(nickname=course_nickname).first()
     if not course:
         flash('course not found')
 
-    tee = Tee.query.filter_by(course_id=course.id, color=tee_color)[-1]
+    tee = course.tees.filter_by(id=tee_id).first()
 
     if flask.request.method == 'POST':
         if 'cancel' in flask.request.form:
@@ -278,6 +279,18 @@ def tee_edit(course_nickname, tee_color):
             return redirect(url_for('course_edit',
                                     course_nickname=course.nickname))
 
+        tee.date = parse(flask.request.form['date'])
+        tee.rating = flask.request.form['rating']
+        tee.slope = flask.request.form['slope']
+        if 'tee_color' in flask.request.form:
+            tee.color = flask.request.form['tee_color']
+
+        for hole in tee.holes:
+            hole.par = flask.request.form['hole%i_par' % hole.hole]
+            hole.yardage = flask.request.form['hole%i_yardage' % hole.hole]
+        db.session.commit()
+
+        flash('saved %s tees' % tee.color)
         return redirect(url_for('course_edit',
                                 course_nickname=course.nickname))
 
@@ -304,7 +317,6 @@ def course_edit(course_nickname):
             return redirect(url_for('course_list'))
         course.nickname = flask.request.form['nickname']
         course.name = flask.request.form['name']
-        db.session.update(course)
         db.session.commit()
         flash('saved %s' % course.nickname)
         return redirect(url_for('course_list'))
