@@ -3,19 +3,21 @@ import flask_login
 
 from dateutil.parser import parse
 
+from flask import flash, redirect, render_template, url_for
+
 from app import app, bcrypt, db, login_manager
-from .models import Course, Round, Score, User
+from .models import Course, Hole, Round, Score, Tee, User
 
 
 @app.errorhandler(404)
 def not_found_error(error):
-    return flask.render_template('404.html'), 404
+    return render_template('404.html'), 404
 
 
 @app.errorhandler(500)
 def internal_error(error):
     db.session.rollback()
-    return flask.render_template('500.html'), 500
+    return render_template('500.html'), 500
 
 
 @login_manager.user_loader
@@ -31,13 +33,13 @@ def before_request():
 @app.route('/')
 @app.route('/index')
 def index():
-    return flask.render_template('index.html')
+    return render_template('index.html')
 
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if flask.g.user is not None and flask.g.user.is_authenticated:
-        return flask.redirect(flask.url_for('index'))
+        return redirect(url_for('index'))
 
     if flask.request.method == 'POST':
         users = User.query.filter_by(username=flask.request.form['username'])
@@ -47,26 +49,26 @@ def login():
             if bcrypt.check_password_hash(user.password, password):
                 flask_login.login_user(user, remember=True)
             else:
-                flask.flash('incorrect password')
+                flash('incorrect password')
         else:
-            flask.flash('username not found')
-        return flask.redirect(flask.url_for('index'))
+            flash('username not found')
+        return redirect(url_for('index'))
 
-    return flask.render_template('login.html', title='log in',
-                                 form=flask.request.form)
+    return render_template('login.html', title='log in',
+                           form=flask.request.form)
 
 
 @app.route('/logout', methods=['GET'])
 def logout():
     flask_login.logout_user()
-    return flask.redirect(flask.url_for('index'))
+    return redirect(url_for('index'))
 
 
 @app.route('/user/<username>')
 @flask_login.login_required
 def user(username):
     title = 'stats for ' + username
-    return flask.render_template('user.html', username=username, title=title)
+    return render_template('user.html', username=username, title=title)
 
 
 @app.route('/user/<username>/round_list')
@@ -78,8 +80,8 @@ def round_list(username):
     for r in rounds:
         course = Course.query.get(r.course_id)
         courses[r.id] = course.nickname
-    return flask.render_template('round_list.html', rounds=rounds,
-                                 courses=courses, title='rounds')
+    return render_template('round_list.html', courses=courses, rounds=rounds,
+                           title='rounds')
 
 
 def save_scores(round_id, form):
@@ -94,8 +96,8 @@ def save_scores(round_id, form):
             # need par for the hole to calculate gir from putts
             gir = 2  # temporary
 
-        score = Score(round_id=round_id, hole=hole, score=score,
-                      putts=putts, gir=gir)
+        score = Score(round_id=round_id, hole=hole, score=score, putts=putts,
+                      gir=gir)
         db.session.add(score)
     db.session.commit()
 
@@ -110,10 +112,8 @@ def save_round(username, form):
         # this is not ideal. fix it. maybe add 'default tee' to user model
         tee_color = 'red' if username == 'kim' else 'white'
 
-    new_round = Round(date=parse(form['date']),
-                      user_id=user.id,
-                      course_id=course.id,
-                      tee_color=tee_color)
+    new_round = Round(date=parse(form['date']), user_id=user.id,
+                      course_id=course.id, tee_color=tee_color)
     db.session.add(new_round)
     db.session.commit()
     save_scores(new_round.id, form)
@@ -128,16 +128,15 @@ def round_new(username):
 
     if flask.request.method == 'POST':
         if 'cancel' in flask.request.form:
-            flask.flash('canceled new round')
-            return flask.redirect(flask.url_for('round_list',
-                                  username=username))
+            flash('canceled new round')
+            return redirect(url_for('round_list', username=username))
         round_id = save_round(username, flask.request.form)
-        flask.flash('added round %i' % round_id)
-        return flask.redirect(flask.url_for('round_list', username=username))
+        flash('added round %i' % round_id)
+        return redirect(url_for('round_list', username=username))
 
-    return flask.render_template('round_new.html', title='new round',
-                                 username=username, holes=holes,
-                                 courses=courses, form=flask.request.form)
+    return render_template('round_new.html', title='new round', holes=holes,
+                           courses=courses, username=username,
+                           form=flask.request.form)
 
 
 def update_scores(round_id, form):
@@ -178,8 +177,8 @@ def delete_round(round_id):
 def round_edit(username, round_id):
     round_ = Round.query.get(round_id)
     if not round_:
-        flask.flash('round %s not found' % round_id)
-        return flask.redirect(flask.url_for('round_list', username=username))
+        flash('round %s not found' % round_id)
+        return redirect(url_for('round_list', username=username))
 
     course = Course.query.get(round_.course_id)
     scores = Score.query.filter_by(round_id=round_.id)
@@ -188,24 +187,38 @@ def round_edit(username, round_id):
     if flask.request.method == 'POST':
         if 'delete' in flask.request.form:
             delete_round(round_id)
-            flask.flash('deleted round %s' % round_id)
+            flash('deleted round %s' % round_id)
         else:
             update_round(round_id, flask.request.form)
-            flask.flash('saved round %s' % round_id)
-        return flask.redirect(flask.url_for('round_list', username=username))
+            flash('saved round %s' % round_id)
+        return redirect(url_for('round_list', username=username))
 
-    return flask.render_template('round_edit.html', title='edit round',
-                                 username=username, round=round_,
-                                 course=course, courses=courses, scores=scores,
-                                 form=flask.request.form)
+    return render_template('round_edit.html', title='edit round',
+                           course=course, courses=courses, round=round_,
+                           scores=scores, username=username,
+                           form=flask.request.form)
 
 
 @app.route('/course_list')
 @flask_login.login_required
 def course_list():
     courses = Course.query.all()
-    return flask.render_template('course_list.html', title='courses',
-                                 courses=courses)
+    return render_template('course_list.html', title='courses',
+                           courses=courses)
+
+
+@app.route('/course_new', methods=['GET', 'POST'])
+@flask_login.login_required
+def course_new():
+    if flask.request.method == 'POST':
+        new_course = Course(name=flask.request.form['name'],
+                            nickname=flask.request.form['nickname'])
+        db.session.add(new_course)
+        db.session.commit()
+        return redirect(url_for('tee_new', course_id=new_course.id))
+
+    return render_template('course_new.html', title='new course',
+                           form=flask.request.form)
 
 
 @app.route('/course_edit/<course_nickname>/tee_new', methods=['GET', 'POST'])
@@ -213,48 +226,88 @@ def course_list():
 def tee_new(course_nickname):
     course = Course.query.filter_by(nickname=course_nickname).first()
     if not course:
-        flask.flash('course not found')
+        flash('course not found')
+        return redirect(url_for('course_list'))
 
     if flask.request.method == 'POST':
-        print('post in tee_new')
+        if 'cancel' in flask.request.form:
+            flash('canceled new tee')
+            return redirect(url_for('course_edit',
+                                    course_nickname=course.nickname))
 
-        flask.redirect(flask.url_for('course_list'))
-
-    return flask.render_template('tee_new.html', title='new tee',
-                                 course=course.nickname)
-
-
-@app.route('/course_new', methods=['GET', 'POST'])
-@flask_login.login_required
-def course_new():
-    if flask.request.method == 'POST':
-        new_course = Course(nickname=flask.request.form['nickname'],
-                            name=flask.request.form['name'])
-        db.session.add(new_course)
+        tee = Tee(course_id=course.id, date=parse(flask.request.form['date']),
+                  color=flask.request.form['tee_color'],
+                  rating=flask.request.form['rating'],
+                  slope=flask.request.form['slope'])
+        db.session.add(tee)
         db.session.commit()
-        return flask.redirect(flask.url_for('course_list'))
 
-    return flask.render_template('course_new.html', title='new course',
-                                 form=flask.request.form)
+        for i in range(1, 19):
+            hole = Hole(tee_id=tee.id, hole=i,
+                        par=flask.request.form['hole%i_par' % i],
+                        yardage=flask.request.form['hole%i_yardage' % i])
+            db.session.add(hole)
+        db.session.commit()
+
+        flash('saved %s tees' % tee.color)
+        return redirect(url_for('course_list'))
+
+    return render_template('tee_new.html', title='new tee',
+                           form=flask.request.form)
+
+
+@app.route('/course_edit/<course_nickname>/tee_edit/<tee_color>',
+           methods=['GET', 'POST'])
+@flask_login.login_required
+def tee_edit(course_nickname, tee_color):
+    course = Course.query.filter_by(nickname=course_nickname).first()
+    if not course:
+        flash('course not found')
+
+    tee = Tee.query.filter_by(course_id=course.id, color=tee_color)[-1]
+
+    if flask.request.method == 'POST':
+        if 'cancel' in flask.request.form:
+            flash('canceled new tee')
+            return redirect(url_for('course_edit',
+                                    course_nickname=course.nickname))
+        if 'delete' in flask.request.form:
+            db.session.delete(tee)
+            db.session.commit()
+            flash('%s tee deleted' % tee.color)
+            return redirect(url_for('course_edit',
+                                    course_nickname=course.nickname))
+
+        return redirect(url_for('course_edit',
+                                course_nickname=course.nickname))
+
+    return render_template('tee_edit.html', title='new tee', tee=tee,
+                           form=flask.request.form)
 
 
 @app.route('/course_edit/<course_nickname>', methods=['GET', 'POST'])
 @flask_login.login_required
 def course_edit(course_nickname):
     course = Course.query.filter_by(nickname=course_nickname).first()
+    if not course:
+        flash('course %s not found' % course_nickname)
+        return redirect(url_for('course_list'))
 
     if flask.request.method == 'POST':
+        if 'cancel' in flask.request.form:
+            flash('canceled %s edit' % course.nickname)
+            return redirect(url_for('course_list'))
         if 'delete' in flask.request.form:
             db.session.delete(course)
             db.session.commit()
-            flask.flash('course %s deleted' % course.nickname)
-            return flask.redirect(flask.url_for('course_list'))
+            flash('course %s deleted' % course.nickname)
+            return redirect(url_for('course_list'))
         course.nickname = flask.request.form['nickname']
         course.name = flask.request.form['name']
         db.session.update(course)
         db.session.commit()
-        flask.flash('saved %s' % course.nickname)
-        return flask.redirect(flask.url_for('course_list'))
+        flash('saved %s' % course.nickname)
+        return redirect(url_for('course_list'))
 
-    return flask.render_template('course_edit.html', title='edit course',
-                                 form=flask.request.form, course=course)
+    return render_template('course_edit.html', title='edit course',
+                           course=course, form=flask.request.form)

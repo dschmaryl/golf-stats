@@ -21,7 +21,7 @@
       <h4>course:</h4>
       {% for course in courses %}
         <label class="radio-inline">
-          <input type="radio" name="course" value="{{ course.nickname }}"  /> {{ course.nickname }}
+          <input type="radio" name="course" value="{{ course.nickname }}" /> {{ course.nickname }}
         </label>
       {% endfor %}
     </div>
@@ -61,7 +61,7 @@
             <input class="form-control number-input" type="number" name="{{ '%s_score' % score.hole }}" value="{{ score.score }}" />
           </div>
           <div class="col-xs-3 col-sm-3 col-md-2">
-            <input class="form-control number-input" type="number" name="{{ '%s_putts' % score.hole }}" value="{{ score.putts }}"  />
+            <input class="form-control number-input" type="number" name="{{ '%s_putts' % score.hole }}" value="{{ score.putts }}" />
           </div>
         </div>
       {% endfor %}
@@ -71,7 +71,7 @@
   <div class="row">
     <div class="col-xs-12">
       <input class="btn" type="submit" value="save" />
-      <input class="btn" type="submit" name="delete" value="delete"  />
+      <input class="btn" type="submit" name="delete" value="delete" />
       <input class="btn" type="submit" name="cancel" value="cancel" />
     </div>
   </div>

@@ -86,7 +86,7 @@ class Tee(db.Model):
     holes = db.relationship('Hole', backref='tee', cascade="delete")
 
     def __repr__(self):
-        return '<Tee %r>' % (self.tee_color)
+        return '<Tee %r>' % (self.color)
 
 
 class Hole(db.Model):
