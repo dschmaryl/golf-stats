@@ -127,6 +127,10 @@ def round_new(username):
     courses = Course.query.all()
 
     if flask.request.method == 'POST':
+        if 'cancel' in flask.request.form:
+            flask.flash('canceled new round')
+            return flask.redirect(flask.url_for('round_list',
+                                  username=username))
         round_id = save_round(username, flask.request.form)
         flask.flash('added round %i' % round_id)
         return flask.redirect(flask.url_for('round_list', username=username))

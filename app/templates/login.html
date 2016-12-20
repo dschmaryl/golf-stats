@@ -2,7 +2,7 @@
 {% block content %}
 
 <div class="row">
-  <div class="col-md-12">
+  <div class="col-xs-12">
     <h3>log in</h3>
   </div>
 </div>
@@ -10,26 +10,20 @@
 <form action="" method="post" name="login">
 
   <div class="row">
-    <div class="col-md-12">
-      <p>
-        name: <input type="text" placeholder="username" name="username" value="{{ request.form.username }}" />
-      </p>
+    <div class="col-xs-12">
+      name: <input class="form-control" type="text" name="username" placeholder="username" />
     </div>
   </div>
 
   <div class="row">
-    <div class="col-md-12">
-      <p>
-        password: <input type="password" placeholder="password" name="password" value="{{ request.form.password }}" />
-      </p>
+    <div class="col-xs-12">
+      password: <input class="form-control" type="password" name="password" placeholder="password" />
     </div>
   </div>
 
   <div class="row">
-    <div class="col-md-12">
-      <p>
-        <input class="btn" type="submit" value="sign in" />
-      </p>
+    <div class="col-xs-12">
+      <input class="btn" type="submit" value="sign in" />
     </div>
   </div>
 

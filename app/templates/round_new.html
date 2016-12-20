@@ -2,70 +2,79 @@
 {% block content %}
 
 <div class="row">
-  <div class="col-md-12">
-    <h3>new round</h3>
+  <div class="col-xs-12">
+    <h3>new course</h3>
   </div>
 </div>
 
 <form action="" method="post" name="new_round">
 
   <div class="row">
-    <div class="col-md-12">
-      <p>
-        date: <input type="text" name="date" placeholder="YYYY MM DD" />
-      </p>
+    <div class="col-xs-12">
+      <h4>date:</h4>
+      <input class="form-control date-input" type="date" name="date" />
     </div>
   </div>
 
   <div class="row">
-    <div class="col-md-12">
-      <p>
-        course:
-        {% for course in courses %}
+    <div class="col-xs-12">
+      <h4>course:</h4>
+      {% for course in courses %}
+        <label class="radio-inline">
           <input type="radio" name="course" value="{{ course.nickname }}"  /> {{ course.nickname }}
-        {% endfor %}
-      </p>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col-md-12">
-      <p>
-        tees: <input type="radio" name="tee_color" value="white" /> white
-              <input type="radio" name="tee_color" value="red" /> red
-      </p>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col-md-12">
-      {% for hole in holes %}
-        <p>
-          {{ hole }}:
-          score: <input type="number" name="{{ '%s_score' % hole }}" />
-          putts: <input type="number" name="{{ '%s_putts' % hole }}" />
-        </p>
+        </label>
       {% endfor %}
     </div>
   </div>
 
   <div class="row">
-    <div class="col-md-12">
-      <p>
-        <input class="btn" type="submit" value="save" />
-      </p>
+    <div class="col-xs-12">
+      <h4>tee:</h4>
+      <label class="radio-inline">
+        <input type="radio" name="tee_color" value="white" /> white
+      </label>
+      <label class="radio-inline">
+        <input type="radio" name="tee_color" value="red" /> red
+      </label>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="row">
+        <div class="col-xs-2 col-sm-1">
+          <h4>hole</h4>
+        </div>
+        <div class="col-xs-3 col-sm-3 col-md-2">
+          <h4>score</h4>
+        </div>
+        <div class="col-xs-3 col-sm-3 col-md-2">
+          <h4>putts</h4>
+        </div>
+      </div>
+      {% for i in range(1,19) %}
+      <div class="row">
+        <div class="col-xs-2 col-sm-1">
+            {{ i }} :
+          </div>
+          <div class="col-xs-3 col-sm-3 col-md-2">
+            <input class="form-control number-input" type="number" name="{{ 'hole%i_score' % i }}" />
+          </div>
+          <div class="col-xs-3 col-sm-3 col-md-2">
+            <input class="form-control number-input" type="number" name="{{ 'hole%i_putts' % i }}" />
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-xs-12">
+      <input class="btn" type="submit" value="save" />
+      <input class="btn" type="submit" name="cancel" value="cancel" />
     </div>
   </div>
 
 </form>
-
-<div class="row">
-  <div class="col-md-12">
-    <p>
-      <a href="{{ url_for('round_list', username=g.user.username) }}">rounds</a> |
-      <a href="{{ url_for('user', username=g.user.username) }}">stats</a>
-    </p>
-  </div>
-</div>
 
 {% endblock %}

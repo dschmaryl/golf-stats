@@ -2,7 +2,7 @@
 {% block content %}
 
 <div class="row">
-  <div class="col-md-12">
+  <div class="col-xs-12">
     <h3>new tees</h3>
   </div>
 </div>
@@ -10,73 +10,73 @@
 <form action="" method="post" name="new_round">
 
   <div class="row">
-    <div class="col-md-12">
-      <p>
-        date: <input type="text" name="date" placeholder="YYYY MM DD" />
-      </p>
+    <div class="col-xs-12">
+      <h4>date:</h4>
+      <input class="form-control date-input" type="date" name="date" />
     </div>
   </div>
 
   <div class="row">
-    <div class="col-md-12">
-      <p>
-        tees: <input type="radio" name="tee_color" value="white" /> white
-              <input type="radio" name="tee_color" value="red" /> red
-              <input type="radio" name="tee_color" value="blue" /> blue
-              <input type="radio" name="tee_color" value="gold" /> gold
-      </p>
+    <div class="col-xs-12">
+      <h4>tee:</h4>
+      <label class="radio-inline">
+        <input type="radio" name="tee_color" value="white" /> white
+      </label>
+      <label class="radio-inline">
+        <input type="radio" name="tee_color" value="red" /> red
+      </label>
+    </div>
+  </div>
+
+
+  <div class="row">
+    <div class="col-xs-12">
+      rating: <input class="form-control number-input" type="number" name="rating" />
     </div>
   </div>
 
   <div class="row">
-    <div class="col-md-12">
-      <p>
-        rating: <input type="number" name="rating" />
-      </p>
+    <div class="col-xs-12">
+      slope: <input class="form-control number-input" type="number" name="slope" />
     </div>
   </div>
 
   <div class="row">
-    <div class="col-md-12">
-      <p>
-        slope: <input type="number" name="slope" />
-      </p>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col-md-12">
-      {% for hole in holes %}
-        <p>
-          {{ hole }}:
-          par: <input type="number" name="{{ '%s_par' % hole }}" />
-          yardage: <input type="number" name="{{ '%s_yardage' % hole }}" />
-        </p>
+    <div class="col-xs-12">
+      <div class="row">
+        <div class="col-xs-2 col-sm-1">
+          <h4>hole</h4>
+        </div>
+        <div class="col-xs-3 col-sm-3 col-md-2">
+          <h4>par</h4>
+        </div>
+        <div class="col-xs-3 col-sm-3 col-md-2">
+          <h4>yardage</h4>
+        </div>
+      </div>
+      {% for i in range(1, 19) %}
+        <div class="row">
+          <div class="col-xs-2 col-sm-1">
+            {{ i }} :
+          </div>
+          <div class="col-xs-3 col-sm-3 col-md-2">
+            <input class="form-control number-input" type="number" name="{{ 'hole%i_par' % i }}" />
+          </div>
+          <div class="col-xs-3 col-sm-3 col-md-2">
+            <input class="form-control number-input" type="number" name="{{ 'hole%i_yardage' % i }}" />
+          </div>
+        </div>
       {% endfor %}
     </div>
   </div>
 
   <div class="row">
-    <div class="col-md-1">
-      <p>
-        <input class="btn" type="submit" value="save" />
-      </p>
-    </div>
-    <div class="col-md-11">
-      <p>
-      <input class="btn" type="submit" name='delete' value="delete"  />
-      </p>
+    <div class="col-xs-12">
+      <input class="btn" type="submit" value="save" />
+      <input class="btn" type="submit" name="cancel" value="cancel" />
     </div>
   </div>
 
 </form>
-
-<div class="row">
-  <div class="col-md-12">
-    <p>
-      <a href="{{ url_for('course_list') }}">back to courses</a>
-    </p>
-  </div>
-</div>
 
 {% endblock %}

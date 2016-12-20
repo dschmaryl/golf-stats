@@ -15,49 +15,40 @@
     <div class="container">
 
       <div class="row">
-        <div class="col-md-12">
+        <div class="col-xs-12">
           <h1>golf-stats</h1>
         </div>
       </div>
 
       <div class="row">
-        <div class="col-md-12">
+        <div class="col-xs-12">
           <hr />
         </div>
       </div>
 
-      <div class="row">
-        <div class="col-md-12">
-          {% with messages = get_flashed_messages() %}
-            {% if messages %}
-              <ul>
-                {% for message in messages %}
-                  <li>
-                    {{ message }}
-                  </li>
-                {% endfor %}
-              </ul>
-            {% endif %}
-          {% endwith %}
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <div class="row">
+          <div class="col-xs-12">
+            <ul>
+              {% for message in messages %}
+                <li>
+                  {{ message }}
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
         </div>
-      </div>
+        {% endif %}
+      {% endwith %}
+
+      {% block content %}{% endblock %}
+
+      <br />
 
       <div class="row">
-        <div class="col-md-12">
-          {% block content %}{% endblock %}
-          <br />
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-md-12">
+        <div class="col-xs-12">
           <hr />
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-md-12">
-
         </div>
       </div>
 

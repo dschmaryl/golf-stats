@@ -7,7 +7,7 @@ class User(db.Model):
     username = db.Column('username', db.String(32), unique=True, index=True)
     password = db.Column('password', db.String(32))
 
-    rounds = db.relationship('Round', backref='user')
+    rounds = db.relationship('Round', backref='user', cascade="delete")
 
     @property
     def is_authenticated(self):
@@ -42,7 +42,7 @@ class Round(db.Model):
     adj_score = db.Column(db.Integer)
     handicap_index = db.Column(db.Float)
 
-    scores = db.relationship('Score', backref='round')
+    scores = db.relationship('Score', backref='round', cascade="delete")
 
     def __repr__(self):
         return '<Round %r>' % (self.date)
@@ -68,7 +68,7 @@ class Course(db.Model):
     name = db.Column(db.String(64))
 
     rounds = db.relationship('Round', backref='course')
-    tees = db.relationship('Tee', backref='course')
+    tees = db.relationship('Tee', backref='course', cascade="delete")
 
     def __repr__(self):
         return '<Course %r>' % (self.name)
@@ -83,7 +83,7 @@ class Tee(db.Model):
     rating = db.Column(db.Float)
     slope = db.Column(db.Integer)
 
-    holes = db.relationship('Hole', backref='tee')
+    holes = db.relationship('Hole', backref='tee', cascade="delete")
 
     def __repr__(self):
         return '<Tee %r>' % (self.tee_color)

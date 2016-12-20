@@ -3,6 +3,7 @@
 
 import csv
 import sys
+
 from dateutil.parser import parse
 
 from app import db
@@ -17,10 +18,10 @@ def get_data(golfer):
 
 
 def add_scores(row, round_id):
-    for i in range(18):
-        hole = 'hole%i' % i
-        score = row[i+4]
-        putts = row[i+22]
+    for i in range(1, 19):
+        hole = i
+        score = row[i+3]
+        putts = row[i+21]
         gir = 2
         score = Score(round_id=round_id, hole=hole, score=score, putts=putts,
                       gir=gir)
@@ -38,7 +39,7 @@ def add_round(row, user_id, tee_color):
     add_scores(row, round_.id)
 
 
-def seed(golfer):
+def seed_rounds(golfer):
     user = User.query.filter_by(username=golfer).first()
     tee_color = 'red' if golfer == 'kim' else 'white'
     data = get_data(golfer)
@@ -49,6 +50,6 @@ def seed(golfer):
 if __name__ == '__main__':
     golfer = sys.argv[-1]
     if golfer in ['daryl', 'kim', 'ryan']:
-        seed(golfer)
+        seed_rounds(golfer)
     else:
         print('golfer not valid')
