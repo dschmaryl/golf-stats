@@ -94,9 +94,8 @@ def round_new(username):
         courses = Course.query.filter_by(nickname=request.form['course'])
         course = courses.first()
         user = User.query.filter_by(username=username).first()
-
         new_round = Round(date=parse(request.form['date']),
-                          course_id=course.id,
+                          course_id=course.id, notes=request.form['notes'],
                           tee_color=request.form['tee_color'])
         user.rounds.append(new_round)
 
@@ -151,6 +150,7 @@ def round_edit(username, round_id):
                 if score:
                     score.score = request.form['hole%i_score' % i]
                     score.putts = request.form['hole%i_putts' % i]
+                    score.handicap = request.form['hole%i_handicap' % i]
                 else:
                     hole_score_str = 'hole%i_score' % i
                     if hole_score_str in request.form:
@@ -222,7 +222,8 @@ def tee_new(course_nickname):
             tee.holes.append(Hole(
                 hole=i,
                 par=request.form['hole%i_par' % i],
-                yardage=request.form['hole%i_yardage' % i]
+                yardage=request.form['hole%i_yardage' % i],
+                handicap=request.form['hole%i_handicap' % i]
                 ))
         db.session.commit()
 
@@ -255,12 +256,21 @@ def tee_edit(course_nickname, tee_id):
             tee.date = parse(request.form['date'])
             tee.rating = request.form['rating']
             tee.slope = request.form['slope']
-            if 'tee_color' in request.form:
-                tee.color = request.form['tee_color']
+            tee.color = request.form['tee_color']
 
-            for hole in tee.holes:
-                hole.par = request.form['hole%i_par' % hole.hole]
-                hole.yardage = request.form['hole%i_yardage' % hole.hole]
+            for i in range(1, 19):
+                par = request.form['hole%i_par' % i]
+                yardage = request.form['hole%i_yardage' % i]
+                handicap = request.form['hole%i_handicap' % i]
+
+                hole = tee.holes.filter_by(hole=i).first()
+                if hole:
+                    hole.par = par
+                    hole.yardage = yardage
+                    hole.handicap = handicap
+                else:
+                    tee.holes.append(Hole(hole=i, par=par, yardage=yardage,
+                                          handicap=handicap))
             db.session.commit()
             flash('saved %s tees' % tee.color)
 

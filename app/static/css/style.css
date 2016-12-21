@@ -1,5 +1,5 @@
 div.container {
-  max-width: 800px;
+  max-width: 900px;
   min-width: 340px;
 }
 
@@ -19,6 +19,7 @@ nav a button {
 
 .number-input {
   max-width: 120px;
+  min-width: 68px;
 }
 
 .text-input {

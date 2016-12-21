@@ -102,8 +102,7 @@ class Hole(db.Model):
 
     hole = db.Column(db.Integer)
     par = db.Column(db.Integer)
-    rating = db.Column(db.Float)
-    slope = db.Column(db.Integer)
+    handicap = db.Column(db.Integer)
     yardage = db.Column(db.Integer)
 
     def __repr__(self):
