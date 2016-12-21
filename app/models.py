@@ -37,14 +37,17 @@ class User(db.Model):
 class Round(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    course_id = db.Column(db.Integer, db.ForeignKey('course.id'))
+    tee_id = db.Column(db.Integer, db.ForeignKey('tee.id'))
 
     date = db.Column(db.DateTime)
-    tee_color = db.Column(db.String(32))
-    course_handicap = db.Column(db.Integer)
-    adj_score = db.Column(db.Integer)
-    handicap_index = db.Column(db.Float)
     notes = db.Column(db.String(128))
+
+    total_score = db.Column(db.Integer)
+    total_putts = db.Column(db.Integer)
+    total_gir = db.Column(db.Integer)
+
+    diff = db.Column(db.Integer)
+    handicap_index = db.Column(db.Integer)
 
     scores = db.relationship('Score', backref='round', lazy='dynamic',
                              cascade="save-update, delete")
@@ -62,6 +65,8 @@ class Score(db.Model):
     putts = db.Column(db.Integer)
     gir = db.Column(db.Integer)  # 0: false, 1: true, 2: unknown
 
+    adjusted_score = db.Column(db.Integer)
+
     def __repr__(self):
         return '<Score %r>' % (self.id)
 
@@ -72,7 +77,6 @@ class Course(db.Model):
     nickname = db.Column(db.String(32), unique=True, index=True)
     name = db.Column(db.String(64))
 
-    rounds = db.relationship('Round', backref='course')
     tees = db.relationship('Tee', backref='course', lazy='dynamic',
                            cascade="save-update, delete")
 
@@ -91,6 +95,8 @@ class Tee(db.Model):
 
     holes = db.relationship('Hole', backref='tee', lazy='dynamic',
                             cascade="save-update, delete")
+
+    rounds = db.relationship('Round', backref='tee', lazy='dynamic')
 
     def __repr__(self):
         return '<Tee %r>' % (self.color)

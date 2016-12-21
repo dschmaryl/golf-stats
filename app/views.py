@@ -91,12 +91,15 @@ def round_new(username):
             flash('canceled new round')
             return redirect(url_for('round_list', username=username))
 
+        new_round = Round(date=parse(request.form['date']),
+                          notes=request.form['notes'])
+
         courses = Course.query.filter_by(nickname=request.form['course'])
         course = courses.first()
+        tee = course.tees.filter_by(color=request.form['tee_color'])[-1]
+        new_round.tee = tee
+
         user = User.query.filter_by(username=username).first()
-        new_round = Round(date=parse(request.form['date']),
-                          course_id=course.id, notes=request.form['notes'],
-                          tee_color=request.form['tee_color'])
         user.rounds.append(new_round)
 
         for i in range(1, 19):
@@ -140,10 +143,9 @@ def round_edit(username, round_id):
             flash('deleted round %s' % round_id)
         else:
             round_.date = parse(request.form['date'])
-            if 'course' in request.form:
-                round_.course = Course.query.get(request.form['course'])
-            if 'tee_color' in request.form:
-                round_.tee_color = request.form['tee_color']
+            course = Course.query.get(request.form['course'])
+            tee = course.tees.filter_by(color=request.form['tee_color'])[-1]
+            round_.tee = tee
 
             for i in range(1, 19):
                 score = round_.scores.filter_by(hole=i).first()

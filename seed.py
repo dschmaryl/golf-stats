@@ -2,54 +2,67 @@
 # -*- coding: utf-8 -*-
 
 import csv
-import sys
+import pickle
 
+from datetime import date
 from dateutil.parser import parse
 
 from app import db
 from app.models import *
 
 
-def get_data(golfer):
+def get_golfer(golfer):
     file_name = 'data/' + golfer + '.csv'
     with open(file_name, 'r') as f:
-        data = [row for row in csv.reader(f, delimiter=',')][1:]
+        data = [row for row in csv.reader(f, delimiter=',')]
     return data
 
 
-def add_scores(row, round_id):
-    for i in range(1, 19):
-        hole = i
-        score = row[i+3]
-        putts = row[i+21]
-        gir = 2
-        score = Score(round_id=round_id, hole=hole, score=score, putts=putts,
-                      gir=gir)
-        db.session.add(score)
+def seed_golfers():
+    for username in ['daryl', 'kim', 'ryan']:
+        user = User(username=username)
+        user.default_tees = 'red' if username == 'kim' else 'white'
+        db.session.add(user)
+
+        data = get_golfer(username)
+        if len(data) > 0:
+            for row in data:
+                course = Course.query.filter_by(nickname=row[1]).first()
+                tee = course.tees.filter_by(color=user.default_tees)[-1]
+                round_ = Round(date=parse(row[0]), tee=tee)
+                for i in range(1, 19):
+                    round_.scores.append(Score(hole=i, score=row[i+3],
+                                               putts=row[i+21]))
+                user.rounds.append(round_)
     db.session.commit()
 
 
-def add_round(row, user_id, tee_color):
-    date = parse(row[0])
-    course = Course.query.filter_by(nickname=row[1]).first()
-    round_ = Round(date=parse(row[0]), user_id=user_id, course_id=course.id,
-                   tee_color=tee_color)
-    db.session.add(round_)
+def get_courses():
+    with open('data/courses.pk', 'rb') as f:
+        courses_dict = pickle.load(f)
+    return courses_dict
+
+
+def seed_courses():
+    names = {'stony': 'Stony Ford', 'hickory': 'Hickory Hill'}
+    courses = get_courses()
+    for course_name in courses.keys():
+        course = Course(nickname=course_name, name=names[course_name])
+        db.session.add(course)
+        for color in ['white', 'red']:
+            rating = courses[course_name][color]['rating']
+            slope = courses[course_name][color]['slope']
+            tee = Tee(date=date.today(), color=color, rating=rating,
+                      slope=slope)
+            for i in range(1, 19):
+                tee.holes.append(Hole(
+                    hole=i, par=courses[course_name]['par'][i-1],
+                    yardage=courses[course_name][color]['yards'][i-1]
+                    ))
+            course.tees.append(tee)
     db.session.commit()
-    add_scores(row, round_.id)
-
-
-def seed_rounds(golfer):
-    user = User.query.filter_by(username=golfer).first()
-    tee_color = 'red' if golfer == 'kim' else 'white'
-    data = get_data(golfer)
-    for row in data:
-        add_round(row, user.id, tee_color)
 
 
 if __name__ == '__main__':
-    golfer = sys.argv[-1]
-    if golfer in ['daryl', 'kim', 'ryan']:
-        seed_rounds(golfer)
-    else:
-        print('golfer not valid')
+    seed_courses()
+    seed_golfers()
