@@ -21,7 +21,7 @@
       <h4>tee</h4>
       {% for color in ['white', 'red', 'blue'] %}
       <label class="radio-inline">
-        <input type="radio" name="tee_color" value="{{ color }}" {{ 'checked' if color == tee.color }}/> {{ color }}
+        <input type="radio" name="tee_color" value="{{ color }}" {{ 'checked' if color == tee.color }} /> {{ color }}
       </label>
       {% endfor %}
     </div>
