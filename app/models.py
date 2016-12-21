@@ -44,6 +44,7 @@ class Round(db.Model):
     course_handicap = db.Column(db.Integer)
     adj_score = db.Column(db.Integer)
     handicap_index = db.Column(db.Float)
+    notes = db.Column(db.String(128))
 
     scores = db.relationship('Score', backref='round', lazy='dynamic',
                              cascade="save-update, delete")
