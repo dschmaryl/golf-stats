@@ -32,7 +32,7 @@
       <h4>tee:</h4>
       {% for color in ["white", "red", "blue"] %}
       <label class="radio-inline">
-        <input type="radio" name="tee_color" value=color {{ 'checked' if round.tee.color == color }} /> {{ color }}
+        <input type="radio" name="tee_color" value="{{ color }}" {{ 'checked' if round.tee.color == color }} /> {{ color }}
       </label>
       {% endfor %}
     </div>
@@ -46,6 +46,11 @@
     </div>
   </div>
 
+  <div class="row">
+    <div class="col-xs-12">
+      total: {{ round.total_score }}, putts: {{ round.total_putts }}
+    </div>
+  </div>
 
   <div class="row">
     <div class="col-xs-12">

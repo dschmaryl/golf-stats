@@ -31,8 +31,8 @@ def seed_golfers():
                 tee = course.tees.filter_by(color=user.default_tees)[-1]
                 round_ = Round(date=parse(row[0]), tee=tee)
                 for i in range(1, 19):
-                    round_.scores.append(Score(hole=i, score=row[i+3],
-                                               putts=row[i+21]))
+                    round_.scores.append(Score(hole=i, score=int(row[i+3]),
+                                               putts=int(row[i+21])))
                 user.rounds.append(round_)
     db.session.commit()
 

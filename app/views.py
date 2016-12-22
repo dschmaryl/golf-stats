@@ -105,15 +105,19 @@ def round_new(username):
         for i in range(1, 19):
             gir_str = 'hole%i_gir' % i
             if gir_str in request.form:
-                gir = request.form[gir_str]
+                gir = int(request.form[gir_str])
             else:
                 # need par for the hole to calculate gir from putts
                 gir = 2  # temporary
 
             new_round.scores.append(Score(
-                hole=i, gir=gir, score=request.form['hole%i_score' % i],
-                putts=request.form['hole%i_putts' % i]
+                hole=i, gir=gir, score=int(request.form['hole%i_score' % i]),
+                putts=int(request.form['hole%i_putts' % i])
                 ))
+
+        new_round.total_score = sum([s.score for s in new_round.scores])
+        new_round.total_putts = sum([s.putts for s in new_round.scores])
+
         db.session.commit()
 
         flash('added round %i' % new_round.id)
@@ -150,32 +154,35 @@ def round_edit(username, round_id):
             for i in range(1, 19):
                 score = round_.scores.filter_by(hole=i).first()
                 if score:
-                    score.score = request.form['hole%i_score' % i]
-                    score.putts = request.form['hole%i_putts' % i]
-                    score.handicap = request.form['hole%i_handicap' % i]
+                    score.score = int(request.form['hole%i_score' % i])
+                    score.putts = int(request.form['hole%i_putts' % i])
                 else:
                     hole_score_str = 'hole%i_score' % i
                     if hole_score_str in request.form:
                         score = Score(hole=i,
-                                      score=request.form[hole_score_str])
+                                      score=int(request.form[hole_score_str]))
                     hole_putts_str = 'hole%i_putts' % i
                     if hole_putts_str in request.form:
-                        score.putts = request.form[hole_putts_str]
+                        score.putts = int(request.form[hole_putts_str])
                     round_.scores.append(score)
 
                 gir_str = 'hole%i_gir' % score.hole
                 if gir_str in request.form:
-                    score.gir = request.form[gir_str]
+                    score.gir = int(request.form[gir_str])
                 else:
                     # need par for the hole to calculate gir from putts
                     score.gir = 2  # temporary
+
+            round_.total_score = sum([s.score for s in round_.scores])
+            round_.total_putts = sum([s.putts for s in round_.scores])
+
             db.session.commit()
             flash('saved round %s' % round_id)
 
         return redirect(url_for('round_list', username=username))
 
     return render_template('round_edit.html', title='edit round',
-                             round=round_, courses=courses, form=request.form)
+                           round=round_, courses=courses, form=request.form)
 
 
 @app.route('/course_list')
@@ -216,16 +223,16 @@ def tee_new(course_nickname):
 
         tee = Tee(date=parse(request.form['date']),
                   color=request.form['tee_color'],
-                  rating=request.form['rating'],
-                  slope=request.form['slope'])
+                  rating=int(request.form['rating']),
+                  slope=int(request.form['slope']))
         course.tees.append(tee)
 
         for i in range(1, 19):
             tee.holes.append(Hole(
                 hole=i,
-                par=request.form['hole%i_par' % i],
-                yardage=request.form['hole%i_yardage' % i],
-                handicap=request.form['hole%i_handicap' % i]
+                par=int(request.form['hole%i_par' % i]),
+                yardage=int(request.form['hole%i_yardage' % i]),
+                handicap=int(request.form['hole%i_handicap' % i])
                 ))
         db.session.commit()
 
@@ -256,14 +263,14 @@ def tee_edit(course_nickname, tee_id):
             flash('%s tee deleted' % tee.color)
         else:
             tee.date = parse(request.form['date'])
-            tee.rating = request.form['rating']
-            tee.slope = request.form['slope']
-            tee.color = request.form['tee_color']
+            tee.rating = int(request.form['rating'])
+            tee.slope = int(request.form['slope'])
+            tee.color = int(request.form['tee_color'])
 
             for i in range(1, 19):
-                par = request.form['hole%i_par' % i]
-                yardage = request.form['hole%i_yardage' % i]
-                handicap = request.form['hole%i_handicap' % i]
+                par = int(request.form['hole%i_par' % i])
+                yardage = int(request.form['hole%i_yardage' % i])
+                handicap = int(request.form['hole%i_handicap' % i])
 
                 hole = tee.holes.filter_by(hole=i).first()
                 if hole:
