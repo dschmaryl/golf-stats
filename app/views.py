@@ -68,8 +68,9 @@ def logout():
 @app.route('/user/<username>')
 @flask_login.login_required
 def user(username):
+    user = User.query.filter_by(username=username).first()
     title = 'stats for ' + username
-    return render_template('user.html', username=username, title=title)
+    return render_template('user.html', user=user, title=title)
 
 
 @app.route('/user/<username>/round_list')

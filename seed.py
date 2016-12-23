@@ -32,6 +32,7 @@ def seed_golfers():
                 course = Course.query.filter_by(nickname=row[1]).first()
                 tee = course.tees.filter_by(color=user.default_tees)[-1]
                 round_ = Round(date=parse(row[0]), tee=tee)
+                user.rounds.append(round_)
                 for i in range(1, 19):
                     score = int(row[i + 3])
                     putts = int(row[i + 21])
@@ -39,7 +40,6 @@ def seed_golfers():
                     round_.scores.append(Score(hole=i, score=score,
                                                putts=putts, gir=gir))
                 round_.calc_totals()
-                user.rounds.append(round_)
                 round_.handicap_index = calc_handicap(round_)
     db.session.commit()
 
