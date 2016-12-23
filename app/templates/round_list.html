@@ -10,13 +10,32 @@
 <div class="row">
   <div class="col-xs-12">
     {% if rounds %}
+      <div class="row">
+        {% for heading in ['date', 'course'] %}
+          <div class="col-xs-2">
+            {{ heading }}
+          </div>
+        {% endfor %}
+        {% for heading in ['score', 'putts'] %}
+          <div class="col-xs-1">
+            {{ heading }}
+          </div>
+        {% endfor %}
+      </div>
       {% for round in rounds %}
         <div class="row">
-          <div class="col-xs-12">
-            <a href="{{ url_for('round_edit', username=g.user.username, round_id=round.id) }}">
-              {{ round.date.strftime("%Y-%m-%d") }} - {{ round.tee.course.name }}
-            </a>
-          </div>
+          <a href="{{ url_for('round_edit', username=g.user.username, round_id=round.id) }}">
+            {% for stat in [round.date.strftime('%Y-%m-%d'), round.tee.course.name] %}
+              <div class="col-xs-2">
+                {{ stat }}
+              </div>
+            {% endfor %}
+            {% for stat in [round.total_score, round.total_putts] %}
+              <div class="col-xs-1">
+                {{ stat }}
+              </div>
+            {% endfor %}
+          </a>
         </div>
       {% endfor %}
     {% else %}

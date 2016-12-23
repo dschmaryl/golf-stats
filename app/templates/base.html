@@ -28,17 +28,17 @@
 
       {% with messages = get_flashed_messages() %}
         {% if messages %}
-        <div class="row">
-          <div class="col-xs-12">
-            <ul>
-              {% for message in messages %}
-                <li>
-                  {{ message }}
-                </li>
-              {% endfor %}
-            </ul>
+          <div class="row">
+            <div class="col-xs-12">
+              <ul>
+                {% for message in messages %}
+                  <li>
+                    {{ message }}
+                  </li>
+                {% endfor %}
+              </ul>
+            </div>
           </div>
-        </div>
         {% endif %}
       {% endwith %}
 
