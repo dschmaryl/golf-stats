@@ -8,6 +8,7 @@ from flask import flash, g, redirect, render_template, request, url_for
 
 from app import app, bcrypt, db, login_manager
 from .models import Course, Hole, Round, Score, Tee, User
+from .stats import calc_gir
 
 
 @app.errorhandler(404)
@@ -43,8 +44,7 @@ def login():
         return redirect(url_for('index'))
 
     if request.method == 'POST':
-        users = User.query.filter_by(username=request.form['username'])
-        user = users.first()
+        user = User.query.filter_by(username=request.form['username']).first()
         if user:
             password = request.form['password']
             if bcrypt.check_password_hash(user.password, password):
@@ -96,27 +96,27 @@ def round_new(username):
 
         courses = Course.query.filter_by(nickname=request.form['course'])
         course = courses.first()
-        tee = course.tees.filter_by(color=request.form['tee_color'])[-1]
+        tee = course.get_tee_by_color(request.form['tee_color'])
         new_round.tee = tee
 
         user = User.query.filter_by(username=username).first()
         user.rounds.append(new_round)
 
         for i in range(1, 19):
-            gir_str = 'hole%i_gir' % i
-            if gir_str in request.form:
+            score = int(request.form['hole%i_score' % i])
+            putts = int(request.form['hole%i_putts' % i])
+            if 'hole%i_gir' % i in request.form:
                 gir = int(request.form[gir_str])
             else:
-                # need par for the hole to calculate gir from putts
-                gir = 2  # temporary
+                gir = calc_gir(score, putts, tee.get_hole(i).par)
 
-            new_round.scores.append(Score(
-                hole=i, gir=gir, score=int(request.form['hole%i_score' % i]),
-                putts=int(request.form['hole%i_putts' % i])
-                ))
+            new_round.scores.append(Score(hole=i, gir=gir, score=score,
+                                          putts=putts))
 
         new_round.total_score = sum([s.score for s in new_round.scores])
         new_round.total_putts = sum([s.putts for s in new_round.scores])
+        new_round.total_gir = sum([s.gir for s in new_round.scores])
+        new_round.handicap_index = calc_handicap(new_round)
 
         db.session.commit()
 
@@ -148,11 +148,11 @@ def round_edit(username, round_id):
         else:
             round_.date = parse(request.form['date'])
             course = Course.query.get(request.form['course'])
-            tee = course.tees.filter_by(color=request.form['tee_color'])[-1]
+            tee = course.get_tee_by_color(request.form['tee_color'])
             round_.tee = tee
 
             for i in range(1, 19):
-                score = round_.scores.filter_by(hole=i).first()
+                score = round_.get_score_for_hole(i)
                 if score:
                     score.score = int(request.form['hole%i_score' % i])
                     score.putts = int(request.form['hole%i_putts' % i])
@@ -166,15 +166,16 @@ def round_edit(username, round_id):
                         score.putts = int(request.form[hole_putts_str])
                     round_.scores.append(score)
 
-                gir_str = 'hole%i_gir' % score.hole
-                if gir_str in request.form:
+                if 'hole%i_gir' % score.hole in request.form:
                     score.gir = int(request.form[gir_str])
                 else:
-                    # need par for the hole to calculate gir from putts
-                    score.gir = 2  # temporary
+                    score.gir = calc_gir(score.score, score.putts,
+                                         tee.get_hole(i).par)
 
             round_.total_score = sum([s.score for s in round_.scores])
             round_.total_putts = sum([s.putts for s in round_.scores])
+            round_.total_gir = sum([s.gir for s in round_.scores])
+            round_.handicap_index = calc_handicap(round_)
 
             db.session.commit()
             flash('saved round %s' % round_id)
@@ -233,7 +234,7 @@ def tee_new(course_nickname):
                 par=int(request.form['hole%i_par' % i]),
                 yardage=int(request.form['hole%i_yardage' % i]),
                 handicap=int(request.form['hole%i_handicap' % i])
-                ))
+            ))
         db.session.commit()
 
         flash('saved %s tees' % tee.color)

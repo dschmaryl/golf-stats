@@ -7,8 +7,9 @@ import pickle
 from datetime import date
 from dateutil.parser import parse
 
-from app import db
+from app import db, bcrypt
 from app.models import *
+from app.stats import *
 
 
 def get_golfer(golfer):
@@ -20,7 +21,8 @@ def get_golfer(golfer):
 
 def seed_golfers():
     for username in ['daryl', 'kim', 'ryan']:
-        user = User(username=username)
+        user = User(username=username,
+                    password=bcrypt.generate_password_hash('asdf'))
         user.default_tees = 'red' if username == 'kim' else 'white'
         db.session.add(user)
 
@@ -31,9 +33,14 @@ def seed_golfers():
                 tee = course.tees.filter_by(color=user.default_tees)[-1]
                 round_ = Round(date=parse(row[0]), tee=tee)
                 for i in range(1, 19):
-                    round_.scores.append(Score(hole=i, score=int(row[i+3]),
-                                               putts=int(row[i+21])))
+                    score = int(row[i + 3])
+                    putts = int(row[i + 21])
+                    gir = calc_gir(score, putts, tee.get_hole(i).par)
+                    round_.scores.append(Score(hole=i, score=score,
+                                               putts=putts, gir=gir))
+                round_.calc_totals()
                 user.rounds.append(round_)
+                round_.handicap_index = calc_handicap(round_)
     db.session.commit()
 
 

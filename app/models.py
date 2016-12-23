@@ -12,6 +12,9 @@ class User(db.Model):
     rounds = db.relationship('Round', backref='user', lazy='dynamic',
                              cascade="save-update, delete")
 
+    def get_handicap(self, round_id):
+        return self.rounds.filter_by(id=round_id).first().handicap_index
+
     @property
     def is_authenticated(self):
         return True
@@ -46,11 +49,20 @@ class Round(db.Model):
     total_putts = db.Column(db.Integer)
     total_gir = db.Column(db.Integer)
 
-    diff = db.Column(db.Integer)
-    handicap_index = db.Column(db.Integer)
+    handicap_index = db.Column(db.Float)
 
     scores = db.relationship('Score', backref='round', lazy='dynamic',
                              cascade="save-update, delete")
+
+    def get_score_for_hole(self, hole):
+        return self.scores.filter_by(hole=hole).first()
+
+    def calc_totals(self):
+        self.total_score, self.total_putts, self.total_gir = 0, 0, 0
+        for s in self.scores:
+            self.total_score += s.score
+            self.total_putts += s.putts
+            self.total_gir += s.gir
 
     def __repr__(self):
         return '<Round %r>' % (self.date)
@@ -80,6 +92,9 @@ class Course(db.Model):
     tees = db.relationship('Tee', backref='course', lazy='dynamic',
                            cascade="save-update, delete")
 
+    def get_tee_by_color(self, color):
+        return self.tees.filter_by(color=color)[-1]
+
     def __repr__(self):
         return '<Course %r>' % (self.name)
 
@@ -97,6 +112,9 @@ class Tee(db.Model):
                             cascade="save-update, delete")
 
     rounds = db.relationship('Round', backref='tee', lazy='dynamic')
+
+    def get_hole(self, hole):
+        return Hole.query.filter_by(hole=hole).first()
 
     def __repr__(self):
         return '<Tee %r>' % (self.color)

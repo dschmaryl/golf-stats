@@ -71,10 +71,10 @@
             {{ i }} :
           </div>
           <div class="col-xs-3 col-sm-3 col-md-2">
-            <input class="form-control number-input" type="number" name="{{ 'hole%i_score' % i }}" value="{{ round.scores.filter_by(hole=i).first().score }}" />
+            <input class="form-control number-input" type="number" name="{{ 'hole%i_score' % i }}" value="{{ round.get_score_for_hole(i).score }}" />
           </div>
           <div class="col-xs-3 col-sm-3 col-md-2">
-            <input class="form-control number-input" type="number" name="{{ 'hole%i_putts' % i }}" value="{{ round.scores.filter_by(hole=i).first().putts }}" />
+            <input class="form-control number-input" type="number" name="{{ 'hole%i_putts' % i }}" value="{{ round.get_score_for_hole(i).putts }}" />
           </div>
         </div>
       {% endfor %}
