@@ -15,14 +15,19 @@ nav a button {
 
 .date-input {
   max-width: 180px;
+  min-width: 134px;
 }
 
 .number-input {
   max-width: 120px;
-  min-width: 68px;
+  min-width: 48px;
 }
 
 .text-input {
+  max-width: 300px;
+}
+
+.notes-input {
   max-width: 300px;
 }
 
