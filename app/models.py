@@ -117,7 +117,7 @@ class Tee(db.Model):
     rounds = db.relationship('Round', backref='tee', lazy='dynamic')
 
     def get_hole(self, hole):
-        return Hole.query.filter_by(hole=hole).first()
+        return self.holes.filter_by(hole=hole).first()
 
     def __repr__(self):
         return '<Tee %r>' % (self.color)
