@@ -1,13 +1,6 @@
 from app import db
 
 
-def calc_gir(score):
-    if (score - putts) <= (par - 2):
-        return 1
-    else:
-        return 0
-
-
 def adjust_score(round_):
     if round_ == round_.user.rounds.first():
         return round_.total_score
@@ -39,11 +32,9 @@ def calc_handicap(round_):
     rounds = round_.user.rounds.all()
     round_idx = rounds.index(round_)
     rounds = rounds[max(0, round_idx - 19):round_idx+1]
-
     if len(rounds) < 5:
         # not enough rounds yet
         return 50.0
-
     diffs_used_table = {
         5: 1, 6: 1, 7: 2, 8: 2, 9: 3, 10: 3, 11: 4, 12: 4,
         13: 5, 14: 5, 15: 6, 16: 6, 17: 7, 18: 8, 19: 9, 20: 10

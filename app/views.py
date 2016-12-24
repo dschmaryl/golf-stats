@@ -7,8 +7,8 @@ from dateutil.parser import parse
 from flask import flash, g, redirect, render_template, request, url_for
 
 from app import app, bcrypt, db, login_manager
-from .models import *
-from .stats import *
+from .models import Course, Hole, Round, Score, Tee, User
+# from .stats import calc_handicap
 
 
 @app.errorhandler(404)
@@ -104,24 +104,18 @@ def round_new(username):
         user.rounds.append(new_round)
 
         for i in range(1, 19):
-            score = int(request.form['hole%i_score' % i])
-            putts = int(request.form['hole%i_putts' % i])
-            gir_str = 'hole%i_gir' % i
-            if gir_str in request.form:
-                gir = int(request.form[gir_str])
-            else:
-                gir = calc_gir(score)
+            score = Score(hole=i, score=int(request.form['hole%i_score' % i]),
+                          putts=int(request.form['hole%i_putts' % i]))
+            new_round.scores.append(score)
+            try:
+                score.gir = int(request.form['hole%i_gir' % i])
+            except:
+                score.calc_gir()
 
-            new_round.scores.append(Score(hole=i, gir=gir, score=score,
-                                          putts=putts))
-
-        new_round.total_score = sum([s.score for s in new_round.scores])
-        new_round.total_putts = sum([s.putts for s in new_round.scores])
-        new_round.total_gir = sum([s.gir for s in new_round.scores])
-        new_round.handicap_index = calc_handicap(new_round)
+        new_round.calc_totals()
+        new_round.calc_handicap()
 
         db.session.commit()
-
         flash('added round %i' % new_round.id)
         return redirect(url_for('round_list', username=username))
 
@@ -167,16 +161,14 @@ def round_edit(username, round_id):
                     if hole_putts_str in request.form:
                         score.putts = int(request.form[hole_putts_str])
                     round_.scores.append(score)
-                gir_str = 'hole%i_gir' % score.hole
-                if gir_str in request.form:
+                try:
+                    gir_str = 'hole%i_gir' % score.hole
                     score.gir = int(request.form[gir_str])
-                else:
-                    score.gir = calc_gir(score)
+                except:
+                    score.calc_gir()
 
-            round_.total_score = sum([s.score for s in round_.scores])
-            round_.total_putts = sum([s.putts for s in round_.scores])
-            round_.total_gir = sum([s.gir for s in round_.scores])
-            round_.handicap_index = calc_handicap(round_)
+            round_.calc_totals()
+            round_.calc_handicap()
 
             db.session.commit()
             flash('saved round %s' % round_id)
