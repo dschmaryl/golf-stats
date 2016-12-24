@@ -7,8 +7,8 @@ from dateutil.parser import parse
 from flask import flash, g, redirect, render_template, request, url_for
 
 from app import app, bcrypt, db, login_manager
-from .models import Course, Hole, Round, Score, Tee, User
-from .stats import calc_gir
+from .models import *
+from .stats import *
 
 
 @app.errorhandler(404)
@@ -106,10 +106,11 @@ def round_new(username):
         for i in range(1, 19):
             score = int(request.form['hole%i_score' % i])
             putts = int(request.form['hole%i_putts' % i])
-            if 'hole%i_gir' % i in request.form:
+            gir_str = 'hole%i_gir' % i
+            if gir_str in request.form:
                 gir = int(request.form[gir_str])
             else:
-                gir = calc_gir(score, putts, tee.get_hole(i).par)
+                gir = calc_gir(score)
 
             new_round.scores.append(Score(hole=i, gir=gir, score=score,
                                           putts=putts))
@@ -166,12 +167,11 @@ def round_edit(username, round_id):
                     if hole_putts_str in request.form:
                         score.putts = int(request.form[hole_putts_str])
                     round_.scores.append(score)
-
-                if 'hole%i_gir' % score.hole in request.form:
+                gir_str = 'hole%i_gir' % score.hole
+                if gir_str in request.form:
                     score.gir = int(request.form[gir_str])
                 else:
-                    score.gir = calc_gir(score.score, score.putts,
-                                         tee.get_hole(i).par)
+                    score.gir = calc_gir(score)
 
             round_.total_score = sum([s.score for s in round_.scores])
             round_.total_putts = sum([s.putts for s in round_.scores])

@@ -1,7 +1,7 @@
 from app import db
 
 
-def calc_gir(score, putts, par):
+def calc_gir(score):
     if (score - putts) <= (par - 2):
         return 1
     else:

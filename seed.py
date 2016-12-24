@@ -34,11 +34,10 @@ def seed_golfers():
                 round_ = Round(date=parse(row[0]), tee=tee)
                 user.rounds.append(round_)
                 for i in range(1, 19):
-                    score = int(row[i + 3])
-                    putts = int(row[i + 21])
-                    gir = calc_gir(score, putts, tee.get_hole(i).par)
-                    round_.scores.append(Score(hole=i, score=score,
-                                               putts=putts, gir=gir))
+                    score = Score(hole=i, score=int(row[i + 3]),
+                                  putts=int(row[i + 21]))
+                    round_.scores.append(score)
+                    score.gir = calc_gir(score)
                 round_.calc_totals()
                 round_.handicap_index = calc_handicap(round_)
     db.session.commit()

@@ -15,9 +15,6 @@ class User(db.Model):
     def get_handicap(self, round_id):
         return self.rounds.filter_by(id=round_id).first().handicap_index
 
-    def get_last_round(self):
-        return self.rounds.all()[-1]
-
     @property
     def is_authenticated(self):
         return True
