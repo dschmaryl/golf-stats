@@ -6,7 +6,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
 
     username = db.Column('username', db.String(32), unique=True, index=True)
-    password = db.Column('password', db.String(32))
+    password = db.Column('password', db.Binary(128))
 
     default_tees = db.Column(db.String(32))
 
