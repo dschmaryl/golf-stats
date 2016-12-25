@@ -9,7 +9,6 @@ from dateutil.parser import parse
 
 from app import db, bcrypt
 from app.models import *
-from app.stats import *
 
 
 def get_golfer(golfer):
@@ -29,17 +28,17 @@ def seed_golfers():
         data = get_golfer(username)
         if len(data) > 0:
             for row in data:
-                course = Course.query.filter_by(nickname=row[1]).first()
+                course = GolfCourse.query.filter_by(nickname=row[1]).first()
                 tee = course.tees.filter_by(color=user.default_tees)[-1]
-                round_ = Round(date=parse(row[0]), tee=tee)
-                user.rounds.append(round_)
+                golf_round = GolfRound(date=parse(row[0]), tee=tee)
+                user.rounds.append(golf_round)
                 for i in range(1, 19):
-                    score = Score(hole=i, score=int(row[i + 3]),
+                    score = HoleScore(hole=i, score=int(row[i + 3]),
                                   putts=int(row[i + 21]))
-                    round_.scores.append(score)
+                    golf_round.scores.append(score)
                     score.calc_gir()
-                round_.calc_totals()
-                round_.handicap_index = calc_handicap(round_)
+                golf_round.calc_totals()
+                golf_round.calc_handicap()
     db.session.commit()
 
 
@@ -53,7 +52,7 @@ def seed_courses():
     names = {'stony': 'Stony Ford', 'hickory': 'Hickory Hill'}
     courses = get_courses()
     for course_name in courses.keys():
-        course = Course(nickname=course_name, name=names[course_name])
+        course = GolfCourse(nickname=course_name, name=names[course_name])
         db.session.add(course)
         for color in ['white', 'red']:
             rating = courses[course_name][color]['rating']
