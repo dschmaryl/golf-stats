@@ -1,4 +1,5 @@
 from app import db
+from pandas import Series
 
 
 class User(db.Model):
@@ -18,6 +19,25 @@ class User(db.Model):
     def get_previous_round(self, golf_round):
         rounds = self.rounds.all()
         return rounds[rounds.index(golf_round) - 1]
+
+    def get_rounds_thru(self, golf_round):
+        rounds = self.rounds.all()
+        return rounds[:rounds.index(golf_round) + 1]
+
+    def _mavg(self, stats, period=20):
+        return Series(stats).ewm(period).mean().iloc[-1]
+
+    def get_mavg_score(self, golf_round):
+        stats = [r.total_score for r in self.get_rounds_thru(golf_round)]
+        return self._mavg(stats)
+
+    def get_mavg_putts(self, golf_round):
+        stats = [r.total_putts for r in self.get_rounds_thru(golf_round)]
+        return self._mavg(stats)
+
+    def get_mavg_gir(self, golf_round):
+        stats = [r.total_gir for r in self.get_rounds_thru(golf_round)]
+        return self._mavg(stats)
 
     @property
     def is_authenticated(self):
