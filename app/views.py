@@ -50,9 +50,11 @@ def login():
                 flask_login.login_user(user, remember=True)
             else:
                 flash('incorrect password')
+                return redirect(url_for('login'))
         else:
             flash('username not found')
-        return redirect(url_for('index'))
+            return redirect(url_for('login'))
+        return redirect(url_for('user', username=g.user.username))
 
     return render_template('login.html', title='log in',
                            form=request.form)

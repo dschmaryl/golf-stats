@@ -21,6 +21,7 @@ nav a button {
 .number-input {
   max-width: 120px;
   min-width: 50px;
+  text-align: right;
 }
 
 .text-input {
