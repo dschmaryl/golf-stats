@@ -21,10 +21,12 @@ def internal_error(error):
     db.session.rollback()
     return render_template('500.html'), 500
 
+
 @app.route('/robots.txt')
 @app.route('/humans.txt')
 def static_file():
     return send_from_directory(app.static_folder, request.path[1:])
+
 
 @login_manager.user_loader
 def load_user(id):
@@ -77,6 +79,38 @@ def user(username):
     user = User.query.filter_by(username=username).first()
     title = 'stats for ' + username
     return render_template('user.html', user=user, title=title)
+
+
+@app.route('/user/<username>/change_password', methods=['GET', 'POST'])
+@flask_login.login_required
+def change_password(username):
+    user = User.query.filter_by(username=username).first()
+
+    if request.method == 'POST':
+        if 'cancel' in request.form:
+            flash('canceled password change')
+            return redirect(url_for('index'))
+
+        for v in ['old_password', 'new_password', 're_password']:
+            if v not in request.form:
+                flash('please fill in every box')
+                return redirect(url_for('change_password', username=username))
+        old_password = request.form['old_password']
+        if bcrypt.check_password_hash(user.password, old_password):
+            if request.form['new_password'] == request.form['re_password']:
+                user.password = bcrypt.generate_password_hash(
+                    request.form['new_password']
+                    )
+                flash('password changed')
+                return redirect(url_for('index'))
+            else:
+                flash('new passwords do not match')
+        else:
+            flash('old password is incorrect')
+        return redirect(url_for('change_password', username=username))
+
+    return render_template('change_password.html', username=username,
+                           title='change password')
 
 
 @app.route('/user/<username>/round_list')
