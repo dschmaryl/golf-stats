@@ -117,7 +117,7 @@ def change_password(username):
 def round_list(username):
     user = User.query.filter_by(username=username).first()
     return render_template('round_list.html', title='rounds',
-                           rounds=user.rounds)
+                           rounds=reversed(user.rounds.all()))
 
 
 @app.route('/user/<username>/round_new', methods=['GET', 'POST'])
