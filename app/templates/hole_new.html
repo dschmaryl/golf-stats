@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="row">
+  <div class="col-xs-12">
+    <h3>hole {{ hole_number }}</h3>
+  </div>
+</div>
+
+<form action="" method="post" name="new_round">
+
+  <div class="row">
+    <div class="col-xs-2 col-sm-1 text-right">
+      <h4>score:</h4>
+    </div>
+    <div class="col-xs-6">
+      <input class="form-control number-input" type="number" name="score" />
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-xs-2 col-sm-1 text-right">
+      <h4>putts:</h4>
+    </div>
+    <div class="col-xs-6">
+      <input class="form-control number-input" type="number" name="putts" />
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-xs-2 col-sm-1 text-right">
+      <h4>g.i.r.:</h4>
+    </div>
+    <div class="col-xs-6">
+      <input class="form-control number-input" type="number" name="gir" />
+    </div>
+  </div>
+
+  <br />
+
+  <div class="row">
+    <div class="col-xs-12">
+      <input class="btn btn-default" type="submit" value="next hole" />
+      <input class="btn btn-default" type="submit" name="cancel" value="cancel" />
+    </div>
+  </div>
+
+</form>
+
+{% endblock %}

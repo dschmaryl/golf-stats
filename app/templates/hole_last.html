@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="row">
+  <div class="col-xs-12">
+    <h3>final score</h3>
+  </div>
+</div>
+
+<form action="" method="post" name="new_round">
+
+  <div class="row">
+    <div class="col-xs-3 col-sm-2">
+      <h4>score:</h4>
+    </div>
+    <div class="col-xs-2">
+      <h4>{{ round.total_score }}</h4>
+    </div>
+  </div>
+
+  <br />
+
+  <div class="row">
+    <div class="col-xs-3 col-sm-2">
+      <h4>putts:</h4>
+    </div>
+    <div class="col-xs-2">
+      <h4>{{ round.total_putts }}</h4>
+    </div>
+  </div>
+
+  <br />
+
+  <div class="row">
+    <div class="col-xs-3 col-sm-2">
+      <h4>g.i.r.:</h4>
+    </div>
+    <div class="col-xs-2">
+      <h4>{{ round.total_gir }}</h4>
+    </div>
+  </div>
+
+  <br />
+
+  <div class="row">
+    <div class="col-xs-12">
+      <input class="btn btn-default" type="submit" value="save" />
+      <input class="btn btn-default" type="submit" name="delete" value="delete" />
+    </div>
+  </div>
+
+</form>
+
+{% endblock %}

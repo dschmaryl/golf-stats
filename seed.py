@@ -34,7 +34,7 @@ def seed_golfers():
                 user.rounds.append(golf_round)
                 for i in range(1, 19):
                     score = HoleScore(hole=i, score=int(row[i + 3]),
-                                  putts=int(row[i + 21]))
+                                      putts=int(row[i + 21]))
                     golf_round.scores.append(score)
                     score.calc_gir()
                 golf_round.calc_totals()
