@@ -1,5 +1,5 @@
 # golf-stats
 
-This app is for calculating a golf handicap and other statistics.
+This app was created to keep track of rounds of golf played, and calculate statistics such as handicap index and scoring average.
 
-Heroku: [golf-stats](https://golf-stats.herokuapp.com)
+Deployed to Heroku at: [golf-stats](https://golf-stats.herokuapp.com)
