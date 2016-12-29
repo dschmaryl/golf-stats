@@ -20,8 +20,8 @@ def get_golfer(golfer):
 
 def seed_golfers():
     for username in ['daryl', 'kim', 'ryan']:
-        user = User(username=username,
-                    password=bcrypt.generate_password_hash('asdf'))
+        user = User(username=username)
+        user.set_password('asdf')
         user.default_tees = 'red' if username == 'kim' else 'white'
         db.session.add(user)
 
@@ -29,7 +29,7 @@ def seed_golfers():
         if len(data) > 0:
             for row in data:
                 course = GolfCourse.query.filter_by(nickname=row[1]).first()
-                tee = course.tees.filter_by(color=user.default_tees)[-1]
+                tee = course.get_tee_by_color(user.default_tees)
                 golf_round = GolfRound(date=parse(row[0]), tee=tee)
                 user.rounds.append(golf_round)
                 for i in range(1, 19):
