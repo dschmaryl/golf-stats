@@ -51,8 +51,7 @@ def login():
     if request.method == 'POST':
         user = User.query.filter_by(username=request.form['username']).first()
         if user:
-            password = request.form['password']
-            if bcrypt.check_password_hash(user.password, password):
+            if user.check_password(request.form['password']):
                 flask_login.login_user(user, remember=True)
             else:
                 flash('incorrect password')
@@ -95,11 +94,10 @@ def change_password(username):
                 flash('please fill in every box')
                 return redirect(url_for('change_password', username=username))
         old_password = request.form['old_password']
-        if bcrypt.check_password_hash(user.password, old_password):
+        if user.check_password(old_password):
             if request.form['new_password'] == request.form['re_password']:
-                user.password = bcrypt.generate_password_hash(
-                    request.form['new_password']
-                    )
+                user.set_password(request.form['new_password'])
+                db.session.commit()
                 flash('password changed')
                 return redirect(url_for('index'))
             else:
@@ -117,7 +115,7 @@ def change_password(username):
 def round_list(username):
     user = User.query.filter_by(username=username).first()
     return render_template('round_list.html', title='rounds',
-                           rounds=reversed(user.rounds.all()))
+                           rounds=reversed(user.get_rounds()))
 
 
 @app.route('/user/<username>/round_new', methods=['GET', 'POST'])
@@ -133,8 +131,6 @@ def round_new(username):
 
         new_round = GolfRound(date=parse(request.form['date']),
                               notes=request.form['notes'])
-
-        print(request.form['course'])
 
         course = GolfCourse.query.get(request.form['course'])
         tee = course.get_tee_by_color(request.form['tee_color'])
@@ -251,15 +247,13 @@ def round_edit(username, round_id):
                     score.score = int(request.form['hole%i_score' % i])
                     score.putts = int(request.form['hole%i_putts' % i])
                 else:
-                    hole_score_str = 'hole%i_score' % i
-                    if hole_score_str in request.form:
-                        score = HoleScore(
-                            hole=i,
-                            score=int(request.form[hole_score_str])
-                            )
-                    hole_putts_str = 'hole%i_putts' % i
-                    if hole_putts_str in request.form:
-                        score.putts = int(request.form[hole_putts_str])
+                    score_str = 'hole%i_score' % i
+                    if score_str in request.form:
+                        score = HoleScore(hole=i,
+                                          score=int(request.form[score_str]))
+                    putts_str = 'hole%i_putts' % i
+                    if putts_str in request.form:
+                        score.putts = int(request.form[putts_str])
                     golf_round.scores.append(score)
                 try:
                     gir_str = 'hole%i_gir' % score.hole
@@ -328,7 +322,7 @@ def tee_new(course_nickname):
                 par=int(request.form['hole%i_par' % i]),
                 yardage=int(request.form['hole%i_yardage' % i]),
                 handicap=int(request.form['hole%i_handicap' % i])
-            ))
+                ))
         db.session.commit()
 
         flash('saved %s tees' % tee.color)

@@ -48,7 +48,7 @@ class GolfRound(db.Model):
             adj_score = sum([min(max_score, s.score) for s in self.scores])
             return (adj_score - self.tee.rating) * 113 / self.tee.slope
 
-        rounds = self.user.rounds.all()
+        rounds = self.user.get_rounds()
         round_idx = rounds.index(self)
         rounds = rounds[max(0, round_idx - 19):round_idx+1]
         if len(rounds) < 5:
@@ -61,9 +61,8 @@ class GolfRound(db.Model):
             }
         num_of_diffs_used = diffs_used_table[len(rounds)]
         diffs = sorted([calc_diff(r) for r in rounds])[:num_of_diffs_used]
-        handicap = sum(diffs) / len(diffs) * .96
-        h_list = list(str(handicap))
-        self.handicap_index = float(''.join(h_list[:h_list.index('.') + 2]))
+        handicap_str = str(sum(diffs) / len(diffs) * .96)
+        self.handicap_index = float(handicap_str[:handicap_str.find('.') + 2])
 
     def __repr__(self):
         return '<Round %r>' % (self.date)

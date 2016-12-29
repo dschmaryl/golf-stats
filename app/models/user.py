@@ -1,5 +1,7 @@
-from app import db
+from app import bcrypt, db
 from pandas import Series
+
+from .golf_round import GolfRound
 
 
 class User(db.Model):
@@ -16,12 +18,15 @@ class User(db.Model):
     def get_handicap(self, round_id):
         return self.rounds.filter_by(id=round_id).first().handicap_index
 
+    def get_rounds(self):
+        return self.rounds.order_by(GolfRound.date).all()
+
     def get_previous_round(self, golf_round):
-        rounds = self.rounds.all()
+        rounds = self.get_rounds()
         return rounds[rounds.index(golf_round) - 1]
 
     def get_rounds_thru(self, golf_round):
-        rounds = self.rounds.all()
+        rounds = self.get_rounds()
         return rounds[:rounds.index(golf_round) + 1]
 
     def _mavg(self, stats, period=20):
@@ -38,6 +43,12 @@ class User(db.Model):
     def get_mavg_gir(self, golf_round):
         stats = [r.total_gir for r in self.get_rounds_thru(golf_round)]
         return self._mavg(stats)
+
+    def set_password(self, password):
+        self.password = bcrypt.generate_password_hash(password)
+
+    def check_password(self, password):
+        return bcrypt.check_password_hash(self.password, password)
 
     @property
     def is_authenticated(self):
