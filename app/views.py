@@ -20,7 +20,7 @@ def internal_error(error):
     db.session.rollback()
     return render_template('500.html'), 500
 
-    
+
 @app.route('/robots.txt')
 @app.route('/humans.txt')
 def static_file():
@@ -144,6 +144,9 @@ def round_new(username):
                                     round_id=new_round.id, hole_number=1))
 
         for i in range(1, 19):
+            if not request.form['hole%i_score' % i]:
+                continue
+
             score = HoleScore(
                 hole=i, score=int(request.form['hole%i_score' % i]),
                 putts=int(request.form['hole%i_putts' % i])

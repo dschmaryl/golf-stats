@@ -46,7 +46,9 @@ class GolfRound(db.Model):
             else:
                 max_score = 10
             adj_score = sum([min(max_score, s.score) for s in self.scores])
-            return (adj_score - self.tee.rating) * 113 / self.tee.slope
+            rating = self.tee.rating * len(self.scores.all()) / 18
+            slope = self.tee.slope * len(self.scores.all()) / 18
+            return (adj_score - rating) * 113 / slope
 
         rounds = self.user.get_rounds()
         round_idx = rounds.index(self)
