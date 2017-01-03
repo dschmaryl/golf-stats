@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import csv
+import os
 import pickle
 
 from datetime import date
@@ -9,6 +10,9 @@ from dateutil.parser import parse
 
 from app import db, bcrypt
 from app.models import *
+
+
+DEFAULT_PASSWORD = os.environ['DEFAULT_PASSWORD']
 
 
 def get_golfer(golfer):
@@ -21,7 +25,7 @@ def get_golfer(golfer):
 def seed_golfers():
     for username in ['daryl', 'kim', 'ryan']:
         user = User(username=username)
-        user.set_password('asdf')
+        user.set_password(DEFAULT_PASSWORD)
         user.default_tees = 'red' if username == 'kim' else 'white'
         db.session.add(user)
 
