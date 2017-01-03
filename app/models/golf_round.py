@@ -30,7 +30,7 @@ class GolfRound(db.Model):
 
     def calc_handicap(self):
         def calc_diff(self):
-            if self == self.user.rounds.first():
+            if self == self.user.get_rounds()[0]:
                 return self.total_score
             old_handicap = self.user.get_previous_round(self).handicap_index
             course_handicap = round(old_handicap * self.tee.slope / 113, 0)
