@@ -266,7 +266,7 @@ def round_edit(username, round_id):
 
             golf_round.calc_totals()
             golf_round.calc_handicap()
-
+            golf_round.user.recalc_handicaps(golf_round)
             db.session.commit()
             flash('saved round %s' % round_id)
 

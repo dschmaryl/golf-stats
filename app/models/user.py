@@ -44,6 +44,11 @@ class User(db.Model):
         stats = [r.total_gir for r in self.get_rounds_thru(golf_round)]
         return self._mavg(stats)
 
+    def recalc_handicaps(self, golf_round):
+        rounds = self.get_rounds()
+        for r in rounds[rounds.index(golf_round) + 1:]:
+            r.calc_handicap()
+
     def set_password(self, password):
         self.password = bcrypt.generate_password_hash(password)
 
