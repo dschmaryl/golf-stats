@@ -35,16 +35,12 @@ class GolfRound(db.Model):
             old_handicap = self.user.get_previous_round(self).handicap_index
             course_handicap = round(old_handicap * self.tee.slope / 113, 0)
             if course_handicap < 10:
-                # max is double bogey. this needs to be fixed
+                # TODO: max is double bogey. this needs to be fixed
                 max_score = 7
-            elif course_handicap < 20:
-                max_score = 7
-            elif course_handicap < 30:
-                max_score = 8
-            elif course_handicap < 40:
-                max_score = 9
             else:
-                max_score = 10
+                rounded_handicap = course_handicap + 10 - course_handicap % 10
+                max_score = int(rounded_handicap / 10 + 5)
+
             adj_score = sum([min(max_score, s.score) for s in self.scores])
             rating = self.tee.rating * len(self.scores.all()) / 18
             slope = self.tee.slope * len(self.scores.all()) / 18
@@ -52,7 +48,7 @@ class GolfRound(db.Model):
 
         rounds = self.user.get_rounds()
         round_idx = rounds.index(self)
-        rounds = rounds[max(0, round_idx - 19):round_idx+1]
+        rounds = rounds[max(0, round_idx - 19):round_idx + 1]
         if len(rounds) < 5:
             # not enough rounds yet
             self.handicap_index = 50.0
