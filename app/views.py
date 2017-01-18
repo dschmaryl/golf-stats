@@ -152,10 +152,7 @@ def round_new(username):
                 putts=int(request.form['hole%i_putts' % i])
                 )
             new_round.scores.append(score)
-            try:
-                score.gir = int(request.form['hole%i_gir' % i])
-            except:
-                score.calc_gir()
+            score.set_gir(request.form.get('hole%i_gir' % i))
 
         new_round.calc_totals()
         new_round.calc_handicap()
@@ -184,10 +181,7 @@ def new_hole(username, round_id, hole_number):
 
         score.score = int(request.form['score'])
         score.putts = int(request.form['putts'])
-        try:
-            score.gir = int(request.form['gir'])
-        except:
-            score.calc_gir()
+        score.set_gir(request.form.get('gir'))
         db.session.commit()
 
         if int(hole_number) == 18:
@@ -258,11 +252,7 @@ def round_edit(username, round_id):
                     if putts_str in request.form:
                         score.putts = int(request.form[putts_str])
                     golf_round.scores.append(score)
-                try:
-                    gir_str = 'hole%i_gir' % score.hole
-                    score.gir = int(request.form[gir_str])
-                except:
-                    score.calc_gir()
+                score.set_gir(request.form.get('hole%i_gir' % i))
 
             golf_round.calc_totals()
             golf_round.calc_handicap()

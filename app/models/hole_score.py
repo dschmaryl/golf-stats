@@ -12,9 +12,12 @@ class HoleScore(db.Model):
 
     adjusted_score = db.Column(db.Integer)
 
-    def calc_gir(self):
+    def set_gir(self, gir):
+        self.gir = int(gir) if gir else self._calc_gir()
+
+    def _calc_gir(self):
         par = self.round.tee.get_hole(self.hole).par
-        self.gir = 1 if self.score - self.putts <= par - 2 else 0
+        return 1 if self.score - self.putts <= par - 2 else 0
 
     def __repr__(self):
         return '<Score %r>' % (self.id)
