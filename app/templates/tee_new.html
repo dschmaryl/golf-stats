@@ -16,11 +16,13 @@
     </div>
     <div class="col-sm-3">
       <h4>tee:</h4>
-      {% for color in ['white', 'red', 'blue'] %}
-        <label class="radio-inline">
-          <input type="radio" name="tee_color" value="{{ color }}" {{ 'checked' if color == 'white'}} /> {{ color }}
-        </label>
-      {% endfor %}
+      <select name="tee_color" class="form-control">
+        {% for color in ['white', 'red', 'blue'] %}
+          <option value="{{ color }}" {{ 'selected="selected"' if color == 'white'}} >
+            {{ color }}
+          </option>
+        {% endfor %}
+      </select>
     </div>
   </div>
 
