@@ -29,23 +29,6 @@ class GolfRound(db.Model):
             self.total_gir += s.gir
 
     def calc_handicap(self):
-        def calc_diff(self):
-            if self == self.user.get_rounds()[0]:
-                return self.total_score
-            old_handicap = self.user.get_previous_round(self).handicap_index
-            course_handicap = round(old_handicap * self.tee.slope / 113, 0)
-            if course_handicap < 10:
-                # TODO: max is double bogey. this needs to be fixed
-                max_score = 7
-            else:
-                rounded_handicap = course_handicap + 10 - course_handicap % 10
-                max_score = int(rounded_handicap / 10 + 5)
-
-            adj_score = sum([min(max_score, s.score) for s in self.scores])
-            rating = self.tee.rating * len(self.scores.all()) / 18
-            slope = self.tee.slope * len(self.scores.all()) / 18
-            return (adj_score - rating) * 113 / slope
-
         rounds = self.user.get_rounds()
         round_idx = rounds.index(self)
         rounds = rounds[max(0, round_idx - 19):round_idx + 1]
@@ -61,6 +44,22 @@ class GolfRound(db.Model):
         diffs = sorted([calc_diff(r) for r in rounds])[:num_of_diffs_used]
         handicap_str = str(sum(diffs) / len(diffs) * .96)
         self.handicap_index = float(handicap_str[:handicap_str.find('.') + 2])
+
+    def calc_diff(self):
+        if self == self.user.get_rounds()[0]:
+            return self.total_score
+        old_handicap = self.user.get_previous_round(self).handicap_index
+        course_handicap = round(old_handicap * self.tee.slope / 113, 0)
+        if course_handicap < 10:
+            # TODO: max is double bogey. this needs to be fixed
+            max_score = 7
+        else:
+            max_score = int(course_handicap / 10 + 6)
+
+        adj_score = sum([min(max_score, s.score) for s in self.scores])
+        rating = self.tee.rating * len(self.scores.all()) / 18
+        slope = self.tee.slope * len(self.scores.all()) / 18
+        return (adj_score - rating) * 113 / slope
 
     def __repr__(self):
         return '<Round %r>' % (self.date)
