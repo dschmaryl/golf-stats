@@ -15,11 +15,37 @@ from app.models import *
 DEFAULT_PASSWORD = os.environ['DEFAULT_PASSWORD']
 
 
+def get_courses():
+    with open('data/courses.pk', 'rb') as f:
+        courses_dict = pickle.load(f)
+    return courses_dict
+
+
 def get_golfer(golfer):
     file_name = 'data/' + golfer + '.csv'
     with open(file_name, 'r') as f:
         data = [row for row in csv.reader(f, delimiter=',')]
     return data
+
+
+def seed_courses():
+    names = {'stony': 'Stony Ford', 'hickory': 'Hickory Hill'}
+    courses = get_courses()
+    for course_name in courses.keys():
+        course = GolfCourse(nickname=course_name, name=names[course_name])
+        db.session.add(course)
+        for color in ['white', 'red']:
+            rating = courses[course_name][color]['rating']
+            slope = courses[course_name][color]['slope']
+            tee = Tee(date=date.today(), color=color, rating=rating,
+                      slope=slope)
+            for i in range(1, 19):
+                tee.holes.append(Hole(
+                    hole=i, par=courses[course_name]['par'][i-1],
+                    yardage=courses[course_name][color]['yards'][i-1]
+                    ))
+            course.tees.append(tee)
+    db.session.commit()
 
 
 def seed_golfers():
@@ -43,32 +69,6 @@ def seed_golfers():
                     score.calc_gir()
                 golf_round.calc_totals()
                 golf_round.calc_handicap()
-    db.session.commit()
-
-
-def get_courses():
-    with open('data/courses.pk', 'rb') as f:
-        courses_dict = pickle.load(f)
-    return courses_dict
-
-
-def seed_courses():
-    names = {'stony': 'Stony Ford', 'hickory': 'Hickory Hill'}
-    courses = get_courses()
-    for course_name in courses.keys():
-        course = GolfCourse(nickname=course_name, name=names[course_name])
-        db.session.add(course)
-        for color in ['white', 'red']:
-            rating = courses[course_name][color]['rating']
-            slope = courses[course_name][color]['slope']
-            tee = Tee(date=date.today(), color=color, rating=rating,
-                      slope=slope)
-            for i in range(1, 19):
-                tee.holes.append(Hole(
-                    hole=i, par=courses[course_name]['par'][i-1],
-                    yardage=courses[course_name][color]['yards'][i-1]
-                    ))
-            course.tees.append(tee)
     db.session.commit()
 
 
