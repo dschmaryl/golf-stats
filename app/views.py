@@ -244,13 +244,13 @@ def round_edit(username, round_id):
                     score.score = int(request.form['hole%i_score' % i])
                     score.putts = int(request.form['hole%i_putts' % i])
                 else:
-                    score_str = 'hole%i_score' % i
-                    if score_str in request.form:
+                    score_str = request.form.get('hole%i_score' % i)
+                    if score_str:
                         score = HoleScore(hole=i,
-                                          score=int(request.form[score_str]))
-                    putts_str = 'hole%i_putts' % i
-                    if putts_str in request.form:
-                        score.putts = int(request.form[putts_str])
+                                          score=int(score_str))
+                    putts_str = request.form.get('hole%i_putts' % i)
+                    if putts_str:
+                        score.putts = int(putts_str)
                     golf_round.scores.append(score)
                 score.set_gir(request.form.get('hole%i_gir' % i))
 
