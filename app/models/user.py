@@ -29,20 +29,20 @@ class User(db.Model):
         rounds = self.get_rounds()
         return rounds[:rounds.index(golf_round) + 1]
 
-    def _mavg(self, stats, period=20):
+    def _mavg(self, stats, period):
         return Series(stats).ewm(period).mean().iloc[-1]
 
-    def get_mavg_score(self, golf_round):
+    def get_mavg_score(self, golf_round, period=20):
         stats = [r.total_score for r in self.get_rounds_thru(golf_round)]
-        return self._mavg(stats)
+        return self._mavg(stats, period)
 
-    def get_mavg_putts(self, golf_round):
+    def get_mavg_putts(self, golf_round, period=20):
         stats = [r.total_putts for r in self.get_rounds_thru(golf_round)]
-        return self._mavg(stats)
+        return self._mavg(stats, period)
 
-    def get_mavg_gir(self, golf_round):
+    def get_mavg_gir(self, golf_round, period=20):
         stats = [r.total_gir for r in self.get_rounds_thru(golf_round)]
-        return self._mavg(stats)
+        return self._mavg(stats, period)
 
     def recalc_handicaps(self, golf_round):
         rounds = self.get_rounds()
