@@ -52,6 +52,13 @@
         </div>
       </div>
 
+      {% if not title %}
+        <footer class="row">
+          <div class="col-xs-12">
+            <a href="https://github.com/dschmaryl/golf-flask" style="text-decoration: none; color: #AAA;">see this code on github</a>
+          </div>
+        </footer>
+      {% endif %}
     </div>
   </body>
 </html>

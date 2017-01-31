@@ -8,7 +8,7 @@ div.row {
   padding-bottom: 4px;
 }
 
-nav a button {
+nav, a {
   min-width: 48px;
   min-height: 48px;
 }
@@ -30,6 +30,10 @@ nav a button {
 
 .notes-input {
   max-width: 300px;
+}
+
+footer {
+  margin-top: 10px;
 }
 
 input::-webkit-outer-spin-button,

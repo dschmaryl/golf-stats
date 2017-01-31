@@ -29,10 +29,19 @@
 
   <div class="row">
     <div class="col-xs-5 col-sm-4">
-      <h4>putting avg:</h4>
+      <h4>putts per round:</h4>
     </div>
     <div class="col-xs-1 text-right">
       <h4>{{ "%.1f" % user.get_mavg_putts(user.rounds.all()[-1]) }}</h4>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-xs-5 col-sm-4">
+      <h4>putts per hole:</h4>
+    </div>
+    <div class="col-xs-1 text-right">
+      <h4>{{ "%.2f" % (user.get_mavg_putts(user.rounds.all()[-1]) / 18) }}</h4>
     </div>
   </div>
 
