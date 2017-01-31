@@ -36,6 +36,11 @@ class User(db.Model):
         stats = [r.total_score for r in self.get_rounds_thru(golf_round)]
         return self._mavg(stats, period)
 
+    def get_mavg_score_to_par(self, golf_round, period=20):
+        stats = [r.total_score - r.tee.get_par()
+                 for r in self.get_rounds_thru(golf_round)]
+        return self._mavg(stats, period)
+
     def get_mavg_putts(self, golf_round, period=20):
         stats = [r.total_putts for r in self.get_rounds_thru(golf_round)]
         return self._mavg(stats, period)
