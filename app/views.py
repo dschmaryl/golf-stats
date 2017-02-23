@@ -246,8 +246,7 @@ def round_edit(username, round_id):
                 else:
                     score_str = request.form.get('hole%i_score' % i)
                     if score_str:
-                        score = HoleScore(hole=i,
-                                          score=int(score_str))
+                        score = HoleScore(hole=i, score=int(score_str))
                     putts_str = request.form.get('hole%i_putts' % i)
                     if putts_str:
                         score.putts = int(putts_str)
