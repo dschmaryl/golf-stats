@@ -46,6 +46,9 @@ class GolfRound(db.Model):
     def calc_diff(self):
         if self == self.user.get_rounds()[0]:
             return self.total_score
+        if len(self.scores.all()) == 0:
+            # large value so as not to be included. this is stupid
+            return 1000
         old_handicap = self.user.get_previous_round(self).handicap_index
         course_handicap = round(old_handicap * self.tee.slope / 113, 0)
         if course_handicap < 10:
