@@ -12,13 +12,17 @@ from app.models import GolfRound, HoleScore, GolfCourse, Tee, Hole, User
 
 @app.errorhandler(404)
 def not_found_error(error):
-    return render_template('404.html'), 404
+    error_msg = "404 - item not found"
+    return (render_template('error.html', error=error_msg, title='404 error'),
+            404)
 
 
 @app.errorhandler(500)
 def internal_error(error):
     db.session.rollback()
-    return render_template('500.html'), 500
+    error_msg = "500 - internal server error"
+    return (render_template('error.html', error=error_msg, title='500 error'),
+            500)
 
 
 @app.route('/robots.txt')
