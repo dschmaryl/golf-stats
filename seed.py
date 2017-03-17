@@ -66,7 +66,7 @@ def seed_golfers():
                     score = HoleScore(hole=i, score=int(row[i + 3]),
                                       putts=int(row[i + 21]))
                     golf_round.scores.append(score)
-                    score.calc_gir()
+                    score.set_gir(gir=None)
                 golf_round.calc_totals()
                 golf_round.calc_handicap()
     db.session.commit()
