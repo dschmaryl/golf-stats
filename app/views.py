@@ -4,7 +4,7 @@ from datetime import date
 from dateutil.parser import parse
 from flask import (flash, g, redirect, render_template, request,
                    send_from_directory, url_for)
-from app import app, db, login_manager, admin
+from app import app, db, login_manager
 from app.models import GolfRound, HoleScore, GolfCourse, Tee, Hole, User
 
 
