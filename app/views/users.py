@@ -1,32 +1,10 @@
-import flask_login
-
 from datetime import date
 from dateutil.parser import parse
-from flask import (flash, g, redirect, render_template, request,
-                   send_from_directory, url_for)
+from flask import flash, g, redirect, render_template, request, url_for
+from flask_login import login_required, current_user
+
 from app import app, db, login_manager
-from app.models import GolfRound, HoleScore, GolfCourse, Tee, Hole, User
-
-
-@app.errorhandler(404)
-def not_found_error(error):
-    error_msg = "404 - item not found"
-    return (render_template('error.html', error=error_msg, title='404 error'),
-            404)
-
-
-@app.errorhandler(500)
-def internal_error(error):
-    db.session.rollback()
-    error_msg = "500 - internal server error"
-    return (render_template('error.html', error=error_msg, title='500 error'),
-            500)
-
-
-@app.route('/robots.txt')
-@app.route('/humans.txt')
-def static_file():
-    return send_from_directory(app.static_folder, request.path[1:])
+from app.models import GolfRound, HoleScore, GolfCourse, User
 
 
 @login_manager.user_loader
@@ -36,45 +14,11 @@ def load_user(id):
 
 @app.before_request
 def before_request():
-    g.user = flask_login.current_user
-
-
-@app.route('/')
-@app.route('/index')
-def index():
-    return render_template('index.html')
-
-
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    if g.user is not None and g.user.is_authenticated:
-        return redirect(url_for('index'))
-
-    if request.method == 'POST':
-        user = User.query.filter_by(username=request.form['username']).first()
-        if user:
-            if user.check_password(request.form['password']):
-                flask_login.login_user(user, remember=True)
-            else:
-                flash('incorrect password')
-                return redirect(url_for('login'))
-        else:
-            flash('username not found')
-            return redirect(url_for('login'))
-        return redirect(url_for('user', username=g.user.username))
-
-    return render_template('login.html', title='log in',
-                           form=request.form)
-
-
-@app.route('/logout', methods=['GET'])
-def logout():
-    flask_login.logout_user()
-    return redirect(url_for('index'))
+    g.user = current_user
 
 
 @app.route('/user/<username>')
-@flask_login.login_required
+@login_required
 def user(username):
     user = User.query.filter_by(username=username).first()
     title = 'stats for ' + username
@@ -82,7 +26,7 @@ def user(username):
 
 
 @app.route('/user/<username>/change_password', methods=['GET', 'POST'])
-@flask_login.login_required
+@login_required
 def change_password(username):
     user = User.query.filter_by(username=username).first()
 
@@ -113,7 +57,7 @@ def change_password(username):
 
 
 @app.route('/user/<username>/round_list')
-@flask_login.login_required
+@login_required
 def round_list(username):
     user = User.query.filter_by(username=username).first()
     return render_template('round_list.html', title='rounds',
@@ -121,7 +65,7 @@ def round_list(username):
 
 
 @app.route('/user/<username>/round_new', methods=['GET', 'POST'])
-@flask_login.login_required
+@login_required
 def round_new(username):
     user = User.query.filter_by(username=username).first()
     courses = GolfCourse.query.all()
@@ -170,7 +114,7 @@ def round_new(username):
 
 @app.route('/user/<username>/round_new/<round_id>/hole/<hole_number>',
            methods=['GET', 'POST'])
-@flask_login.login_required
+@login_required
 def new_hole(username, round_id, hole_number):
     golf_round = GolfRound.query.get(round_id)
     score = HoleScore(hole=int(hole_number))
@@ -199,7 +143,7 @@ def new_hole(username, round_id, hole_number):
 
 @app.route('/user/<username>/round_new/<round_id>/results',
            methods=['GET', 'POST'])
-@flask_login.login_required
+@login_required
 def new_last(username, round_id):
     golf_round = GolfRound.query.get(round_id)
     golf_round.calc_totals()
@@ -218,7 +162,7 @@ def new_last(username, round_id):
 
 
 @app.route('/user/<username>/round_edit/<round_id>', methods=['GET', 'POST'])
-@flask_login.login_required
+@login_required
 def round_edit(username, round_id):
     golf_round = GolfRound.query.get(round_id)
     if not golf_round:
@@ -266,135 +210,3 @@ def round_edit(username, round_id):
     return render_template('round_edit.html', title='edit round',
                            round=golf_round, courses=courses,
                            form=request.form)
-
-
-@app.route('/course_list')
-@flask_login.login_required
-def course_list():
-    courses = GolfCourse.query.all()
-    return render_template('course_list.html', title='courses',
-                           courses=courses)
-
-
-@app.route('/course_new', methods=['GET', 'POST'])
-@flask_login.login_required
-def course_new():
-    if request.method == 'POST':
-        new_course = GolfCourse(name=request.form['name'],
-                                nickname=request.form['nickname'])
-        db.session.add(new_course)
-        db.session.commit()
-        return redirect(url_for('tee_new', course_id=new_course.id))
-
-    return render_template('course_new.html', title='new course',
-                           form=request.form)
-
-
-@app.route('/course_edit/<course_nickname>/tee_new', methods=['GET', 'POST'])
-@flask_login.login_required
-def tee_new(course_nickname):
-    course = GolfCourse.query.filter_by(nickname=course_nickname).first()
-    if not course:
-        flash('course not found')
-        return redirect(url_for('course_list'))
-
-    if request.method == 'POST':
-        if 'cancel' in request.form:
-            flash('canceled new tee')
-            return redirect(url_for('course_edit', title='edit course',
-                                    course_nickname=course.nickname))
-
-        tee = Tee(date=parse(request.form['date']),
-                  color=request.form['tee_color'],
-                  rating=int(request.form['rating']),
-                  slope=int(request.form['slope']))
-        course.tees.append(tee)
-
-        for i in range(1, 19):
-            tee.holes.append(Hole(
-                hole=i,
-                par=int(request.form['hole%i_par' % i]),
-                yardage=int(request.form['hole%i_yardage' % i]),
-                handicap=int(request.form['hole%i_handicap' % i])
-                ))
-        db.session.commit()
-
-        flash('saved %s tees' % tee.color)
-        return redirect(url_for('course_edit', title='edit course',
-                                course_nickname=course.nickname))
-
-    return render_template('tee_new.html', title='new tee',
-                           form=request.form)
-
-
-@app.route('/course_edit/<course_nickname>/tee_edit/<tee_id>',
-           methods=['GET', 'POST'])
-@flask_login.login_required
-def tee_edit(course_nickname, tee_id):
-    course = GolfCourse.query.filter_by(nickname=course_nickname).first()
-    if not course:
-        flash('course not found')
-
-    tee = course.tees.filter_by(id=tee_id).first()
-
-    if request.method == 'POST':
-        if 'cancel' in request.form:
-            flash('canceled %s tees edit' % tee.color)
-        elif 'delete' in request.form:
-            db.session.delete(tee)
-            db.session.commit()
-            flash('%s tee deleted' % tee.color)
-        else:
-            tee.date = parse(request.form['date'])
-            tee.rating = int(request.form['rating'])
-            tee.slope = int(request.form['slope'])
-            tee.color = int(request.form['tee_color'])
-
-            for i in range(1, 19):
-                par = int(request.form['hole%i_par' % i])
-                yardage = int(request.form['hole%i_yardage' % i])
-                handicap = int(request.form['hole%i_handicap' % i])
-
-                hole = tee.holes.filter_by(hole=i).first()
-                if hole:
-                    hole.par = par
-                    hole.yardage = yardage
-                    hole.handicap = handicap
-                else:
-                    tee.holes.append(Hole(hole=i, par=par, yardage=yardage,
-                                          handicap=handicap))
-            db.session.commit()
-            flash('saved %s tees' % tee.color)
-
-        return redirect(url_for('course_edit', title='edit course',
-                                course_nickname=course.nickname))
-
-    return render_template('tee_edit.html', title='new tee', tee=tee,
-                           form=request.form)
-
-
-@app.route('/course_edit/<course_nickname>', methods=['GET', 'POST'])
-@flask_login.login_required
-def course_edit(course_nickname):
-    course = GolfCourse.query.filter_by(nickname=course_nickname).first()
-    if not course:
-        flash('course %s not found' % course_nickname)
-        return redirect(url_for('course_list'))
-
-    if request.method == 'POST':
-        if 'cancel' in request.form:
-            flash('canceled %s edit' % course.nickname)
-        elif 'delete' in request.form:
-            db.session.delete(course)
-            db.session.commit()
-            flash('course %s deleted' % course.nickname)
-        else:
-            course.nickname = request.form['nickname']
-            course.name = request.form['name']
-            db.session.commit()
-            flash('saved %s' % course.nickname)
-
-        return redirect(url_for('course_list'))
-
-    return render_template('course_edit.html', title='edit course',
-                           course=course, form=request.form)
