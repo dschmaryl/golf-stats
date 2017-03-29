@@ -8,7 +8,7 @@ import pickle
 from datetime import date
 from dateutil.parser import parse
 
-from app import db, bcrypt
+from app import db
 from app.models import *
 
 
