@@ -4,16 +4,19 @@ from flask_login import login_user, logout_user
 from app import app
 from app.models import User
 
+from app.forms import LoginForm
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if g.user is not None and g.user.is_authenticated:
         return redirect(url_for('index'))
 
-    if request.method == 'POST':
-        user = User.query.filter_by(username=request.form['username']).first()
+    form = LoginForm(request.form)
+    if request.method == 'POST' and form.validate():
+        user = User.query.filter_by(username=form.username.data).first()
         if user:
-            if user.check_password(request.form['password']):
+            if user.check_password(form.password.data):
                 login_user(user, remember=True)
             else:
                 flash('incorrect password')
@@ -24,7 +27,7 @@ def login():
         return redirect(url_for('user', username=g.user.username))
 
     return render_template('login.html', title='log in',
-                           form=request.form)
+                           form=form)
 
 
 @app.route('/logout', methods=['GET'])

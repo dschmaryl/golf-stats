@@ -8,37 +8,6 @@ from app import app, db, login_manager
 from app.models import GolfRound, GolfCourse, HoleScore, User
 
 
-@app.route('/user/<username>/change_password', methods=['GET', 'POST'])
-@login_required
-def change_password(username):
-    user = User.query.filter_by(username=username).first()
-
-    if request.method == 'POST':
-        if 'cancel' in request.form:
-            flash('canceled password change')
-            return redirect(url_for('index'))
-
-        for v in ['old_password', 'new_password', 're_password']:
-            if v not in request.form:
-                flash('please fill in every box')
-                return redirect(url_for('change_password', username=username))
-        old_password = request.form['old_password']
-        if user.check_password(old_password):
-            if request.form['new_password'] == request.form['re_password']:
-                user.set_password(request.form['new_password'])
-                db.session.commit()
-                flash('password changed')
-                return redirect(url_for('index'))
-            else:
-                flash('new passwords do not match')
-        else:
-            flash('old password is incorrect')
-        return redirect(url_for('change_password', username=username))
-
-    return render_template('change_password.html', username=username,
-                           title='change password')
-
-
 @app.route('/user/<username>/round_list')
 @login_required
 def round_list(username):
