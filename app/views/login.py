@@ -1,4 +1,4 @@
-from flask import g, redirect, render_template, request, url_for
+from flask import flash, g, redirect, render_template, request, url_for
 from flask_login import login_user, logout_user
 
 from app import app
