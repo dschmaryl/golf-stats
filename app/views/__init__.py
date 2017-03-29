@@ -5,5 +5,6 @@ from . import courses
 from . import errors
 from . import index
 from . import login
+from . import rounds
 from . import static
 from . import users
