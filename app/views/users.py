@@ -29,26 +29,26 @@ def user(username):
 @login_required
 def change_password(username):
     user = User.query.filter_by(username=username).first()
-
     form = ChangePasswordForm(request.form)
+
     if request.method == 'POST':
         if form.cancel.data:
             flash('canceled password change')
             return redirect(url_for('index'))
 
         if form.validate():
-            old_password = form.old_password.data
-            if user.check_password(old_password):
-                if form.new_password.data == form.re_password.data:
-                    user.set_password(form.new_password.data)
-                    db.session.commit()
-                    flash('password changed')
-                    return redirect(url_for('index'))
-                else:
-                    flash('new passwords do not match')
+            if user.check_password(form.old_password.data):
+                user.set_password(form.new_password.data)
+                db.session.commit()
+                flash('password changed')
+                return redirect(url_for('index'))
             else:
                 flash('old password is incorrect')
             return redirect(url_for('change_password', username=username))
+        else:
+            for field, errors in form.errors.items():
+                for error in errors:
+                    flash(error)
 
     return render_template('change_password.html', username=username,
                            title='change password', form=form)
