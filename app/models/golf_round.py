@@ -22,7 +22,7 @@ class GolfRound(db.Model):
     def __init__(self, **kwargs):
         super(GolfRound, self).__init__(**kwargs)
         for i in range(1, 19):
-            self.scores.append(HoleScore(hole=i))
+            self.scores.append(HoleScore(hole=i, score=0, putts=0, gir=0))
 
     def get_score_for_hole(self, hole):
         return self.scores.filter_by(hole=hole).first()
@@ -32,7 +32,7 @@ class GolfRound(db.Model):
         for s in self.scores:
             self.total_score += s.score
             self.total_putts += s.putts
-            self.total_gir += s.gir
+            self.total_gir += s.gir if s.gir else 0
 
     def calc_handicap(self):
         rounds = self.user.get_rounds()
