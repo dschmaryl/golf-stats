@@ -1,4 +1,5 @@
 from app import db
+from .hole_score import HoleScore
 
 
 class GolfRound(db.Model):
@@ -17,6 +18,11 @@ class GolfRound(db.Model):
 
     scores = db.relationship('HoleScore', backref='round', lazy='dynamic',
                              cascade="save-update, delete")
+
+    def __init__(self, **kwargs):
+        super(GolfRound, self).__init__(**kwargs)
+        for i in range(1, 19):
+            self.scores.append(HoleScore(hole=i))
 
     def get_score_for_hole(self, hole):
         return self.scores.filter_by(hole=hole).first()

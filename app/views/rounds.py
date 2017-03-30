@@ -9,6 +9,7 @@ from app.models import GolfRound, GolfCourse, HoleScore, User
 
 from app.forms import NewHoleForm
 
+
 @app.route('/user/<username>/round_list')
 @login_required
 def round_list(username):
@@ -38,8 +39,6 @@ def round_new(username):
         user.rounds.append(new_round)
 
         if 'hole_by_hole' in request.form:
-            for i in range(1, 19):
-                new_round.scores.append(HoleScore(hole=i))
             db.session.commit()
             return redirect(url_for('new_hole', username=username,
                                     round_id=new_round.id, hole_number=1))
@@ -47,12 +46,9 @@ def round_new(username):
         for i in range(1, 19):
             if not request.form['hole%i_score' % i]:
                 continue
-
-            score = HoleScore(
-                hole=i, score=int(request.form['hole%i_score' % i]),
-                putts=int(request.form['hole%i_putts' % i])
-                )
-            new_round.scores.append(score)
+            score = new_round.get_score_for_hole(i)
+            score.score = int(request.form['hole%i_score' % i])
+            score.putts = int(request.form['hole%i_putts' % i])
             score.set_gir(request.form.get('hole%i_gir' % i))
 
         new_round.calc_totals()
@@ -73,7 +69,6 @@ def round_new(username):
 def new_hole(username, round_id, hole_number):
     golf_round = GolfRound.query.get(round_id)
     score = golf_round.get_score_for_hole(int(hole_number))
-    # golf_round.scores.append(score)
 
     form = NewHoleForm(request.form)
     if request.method == 'POST':
@@ -144,17 +139,8 @@ def round_edit(username, round_id):
 
             for i in range(1, 19):
                 score = golf_round.get_score_for_hole(i)
-                if score:
-                    score.score = int(request.form['hole%i_score' % i])
-                    score.putts = int(request.form['hole%i_putts' % i])
-                else:
-                    score_str = request.form.get('hole%i_score' % i)
-                    if score_str:
-                        score = HoleScore(hole=i, score=int(score_str))
-                    putts_str = request.form.get('hole%i_putts' % i)
-                    if putts_str:
-                        score.putts = int(putts_str)
-                    golf_round.scores.append(score)
+                score.score = int(request.form['hole%i_score' % i])
+                score.putts = int(request.form['hole%i_putts' % i])
                 score.set_gir(request.form.get('hole%i_gir' % i))
 
             golf_round.calc_totals()
