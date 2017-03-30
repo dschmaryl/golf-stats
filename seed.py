@@ -63,9 +63,9 @@ def seed_golfers():
                 golf_round = GolfRound(date=parse(row[0]), tee=tee)
                 user.rounds.append(golf_round)
                 for i in range(1, 19):
-                    score = HoleScore(hole=i, score=int(row[i + 3]),
-                                      putts=int(row[i + 21]))
-                    golf_round.scores.append(score)
+                    score = golf_round.get_score_for_hole(i)
+                    score.score = int(row[i + 3])
+                    score.putts = int(row[i + 21])
                     score.set_gir(gir=None)
                 golf_round.calc_totals()
                 golf_round.calc_handicap()
