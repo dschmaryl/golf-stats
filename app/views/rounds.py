@@ -7,6 +7,7 @@ from flask_login import current_user, login_required
 from app import app, db, login_manager
 from app.models import GolfRound, GolfCourse, HoleScore, User
 
+from app.forms import NewHoleForm
 
 @app.route('/user/<username>/round_list')
 @login_required
@@ -37,6 +38,8 @@ def round_new(username):
         user.rounds.append(new_round)
 
         if 'hole_by_hole' in request.form:
+            for i in range(1, 19):
+                new_round.scores.append(HoleScore(hole=i))
             db.session.commit()
             return redirect(url_for('new_hole', username=username,
                                     round_id=new_round.id, hole_number=1))
@@ -69,28 +72,31 @@ def round_new(username):
 @login_required
 def new_hole(username, round_id, hole_number):
     golf_round = GolfRound.query.get(round_id)
-    score = HoleScore(hole=int(hole_number))
-    golf_round.scores.append(score)
+    score = golf_round.get_score_for_hole(int(hole_number))
+    # golf_round.scores.append(score)
 
+    form = NewHoleForm(request.form)
     if request.method == 'POST':
-        if 'cancel' in request.form:
+        if form.cancel.data:
             flash('canceled new round')
             return redirect(url_for('user', username=username))
 
-        score.score = int(request.form['score'])
-        score.putts = int(request.form['putts'])
-        score.set_gir(request.form.get('gir'))
-        db.session.commit()
+        if form.validate():
+            score.score = form.score.data
+            score.putts = form.putts.data
+            score.set_gir(form.gir.data)
+            db.session.commit()
 
-        if int(hole_number) == 18:
-            return redirect(url_for('new_last', round_id=golf_round.id,
-                                    username=golf_round.user.username))
-        return redirect(url_for('new_hole', username=golf_round.user.username,
-                                round_id=golf_round.id,
-                                hole_number=(int(hole_number) + 1)))
+            if int(hole_number) == 18:
+                return redirect(url_for('new_last', round_id=golf_round.id,
+                                        username=golf_round.user.username))
+            return redirect(url_for('new_hole',
+                                    username=golf_round.user.username,
+                                    round_id=golf_round.id,
+                                    hole_number=(int(hole_number) + 1)))
 
     return render_template('hole_new.html', title='new hole',
-                           hole_number=hole_number, form=request.form)
+                           hole_number=hole_number, form=form)
 
 
 @app.route('/user/<username>/round_new/<round_id>/results',

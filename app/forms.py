@@ -1,4 +1,5 @@
-from wtforms import Form, StringField, SubmitField, PasswordField, validators
+from wtforms import (Form, IntegerField, StringField, SubmitField,
+    PasswordField, validators)
 
 
 class LoginForm(Form):
@@ -21,4 +22,15 @@ class ChangePasswordForm(Form):
         validators.DataRequired(message='please re-enter new password'),
         validators.EqualTo('new_password', message='passwords must match')
         ])
+    cancel = SubmitField('cancel')
+
+
+class NewHoleForm(Form):
+    score = IntegerField('score', [
+        validators.DataRequired(message='enter score')
+        ])
+    putts = IntegerField('putts', [
+        validators.DataRequired(message='enter putts')
+        ])
+    gir = IntegerField('gir', [validators.Optional()])
     cancel = SubmitField('cancel')
