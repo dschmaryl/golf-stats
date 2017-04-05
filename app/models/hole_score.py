@@ -8,7 +8,7 @@ class HoleScore(db.Model):
     hole = db.Column(db.Integer)
     score = db.Column(db.Integer)
     putts = db.Column(db.Integer)
-    gir = db.Column(db.Integer)  # 0: false, 1: true, 2: unknown
+    gir = db.Column(db.Integer)  # 0: false, 1: true
 
     adjusted_score = db.Column(db.Integer)
 

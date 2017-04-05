@@ -3,8 +3,8 @@ from flask_login import current_user, login_required
 
 from app import app, db, login_manager
 from app.models import User
-
 from app.forms import ChangePasswordForm
+from .flash_errors import flash_errors
 
 
 @login_manager.user_loader
@@ -46,9 +46,7 @@ def change_password(username):
                 flash('old password is incorrect')
             return redirect(url_for('change_password', username=username))
         else:
-            for field, errors in form.errors.items():
-                for error in errors:
-                    flash(error)
+            flash_errors(form)
 
     return render_template('change_password.html', username=username,
                            title='change password', form=form)

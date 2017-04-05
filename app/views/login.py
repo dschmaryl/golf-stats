@@ -3,8 +3,8 @@ from flask_login import login_user, logout_user
 
 from app import app
 from app.models import User
-
 from app.forms import LoginForm
+from .flash_errors import flash_errors
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -13,18 +13,21 @@ def login():
         return redirect(url_for('index'))
 
     form = LoginForm(request.form)
-    if request.method == 'POST' and form.validate():
-        user = User.query.filter_by(username=form.username.data).first()
-        if user:
-            if user.check_password(form.password.data):
-                login_user(user, remember=True)
+    if request.method == 'POST':
+        if form.validate():
+            user = User.query.filter_by(username=form.username.data).first()
+            if user:
+                if user.check_password(form.password.data):
+                    login_user(user, remember=True)
+                else:
+                    flash('incorrect password')
+                    return redirect(url_for('login'))
             else:
-                flash('incorrect password')
+                flash('username not found')
                 return redirect(url_for('login'))
+            return redirect(url_for('user', username=g.user.username))
         else:
-            flash('username not found')
-            return redirect(url_for('login'))
-        return redirect(url_for('user', username=g.user.username))
+            flash_errors(form)
 
     return render_template('login.html', title='log in',
                            form=form)

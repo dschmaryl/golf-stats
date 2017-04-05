@@ -6,8 +6,8 @@ from flask_login import current_user, login_required
 
 from app import app, db, login_manager
 from app.models import GolfRound, GolfCourse, HoleScore, User
-
 from app.forms import NewHoleForm
+from .flash_errors import flash_errors
 
 
 @app.route('/user/<username>/round_list')
@@ -89,6 +89,8 @@ def new_hole(username, round_id, hole_number):
                                     username=golf_round.user.username,
                                     round_id=golf_round.id,
                                     hole_number=(int(hole_number) + 1)))
+        else:
+            flash_errors(form)
 
     return render_template('hole_new.html', title='new hole',
                            hole_number=hole_number, form=form)
