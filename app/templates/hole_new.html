@@ -14,7 +14,7 @@
       <h4>score:</h4>
     </div>
     <div class="col-xs-6">
-      <input class="form-control number-input" type="number" name="score" />
+      <input class="form-control number-input" type="number" name="score" value='{{ form.score.data if form.score.data else '' }}' />
     </div>
   </div>
 
@@ -23,7 +23,7 @@
       <h4>putts:</h4>
     </div>
     <div class="col-xs-6">
-      <input class="form-control number-input" type="number" name="putts" />
+      <input class="form-control number-input" type="number" name="putts" value='{{ form.putts.data if form.putts.data else '' }}' />
     </div>
   </div>
 
@@ -32,7 +32,7 @@
       <h4>g.i.r.:</h4>
     </div>
     <div class="col-xs-6">
-      <input class="form-control number-input" type="number" name="gir" />
+      <input class="form-control number-input" type="number" name="gir" value='{{ form.gir.data if form.gir.data else '' }}'/>
     </div>
   </div>
 
