@@ -20,7 +20,7 @@ class GolfRound(db.Model):
                              cascade="save-update, delete")
 
     def __init__(self, **kwargs):
-        super(GolfRound, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         for i in range(1, 19):
             self.scores.append(HoleScore(hole=i, score=0, putts=0, gir=0))
 
