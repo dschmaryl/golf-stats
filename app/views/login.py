@@ -13,6 +13,7 @@ def login():
         return redirect(url_for('index'))
 
     form = LoginForm(request.form)
+
     if request.method == 'POST':
         if form.validate():
             user = User.query.filter_by(username=form.username.data).first()

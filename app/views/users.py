@@ -29,8 +29,8 @@ def user(username):
 @login_required
 def change_password(username):
     user = User.query.filter_by(username=username).first()
-
     form = ChangePasswordForm(request.form)
+
     if request.method == 'POST':
         if form.cancel.data:
             flash('canceled password change')

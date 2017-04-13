@@ -11,7 +11,10 @@ class GolfCourse(db.Model):
                            cascade="save-update, delete")
 
     def get_tee_by_color(self, color):
-        return self.tees.filter_by(color=color)[-1]
+        try:
+            return self.tees.filter_by(color=color)[-1]
+        except IndexError:
+            return None
 
     def __repr__(self):
         return '<Course %r>' % (self.name)

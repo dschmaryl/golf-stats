@@ -1,5 +1,4 @@
-from wtforms import (Form, IntegerField, SubmitField, ValidationError,
-    validators)
+from wtforms import Form, IntegerField, SubmitField, validators
 
 
 class NewHoleForm(Form):
@@ -12,6 +11,7 @@ class NewHoleForm(Form):
         validators.NumberRange(min=0, max=20, message='invalid # of putts')
         ])
     gir = IntegerField('gir', [validators.Optional()])
+
     cancel = SubmitField('cancel')
 
     def validate(self):

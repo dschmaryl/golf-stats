@@ -1,12 +1,9 @@
-from datetime import date
-from dateutil.parser import parse
-
 from flask import flash, redirect, render_template, request, url_for
-from flask_login import current_user, login_required
+from flask_login import login_required
 
-from app import app, db, login_manager
-from app.models import GolfRound, GolfCourse, HoleScore, User
-from app.forms import NewHoleForm
+from app import app, db
+from app.models import GolfRound, GolfCourse, User
+from app.forms import GolfRoundForm, NewHoleForm
 from .flash_errors import flash_errors
 
 
@@ -22,45 +19,44 @@ def round_list(username):
 @login_required
 def round_new(username):
     user = User.query.filter_by(username=username).first()
-    courses = GolfCourse.query.all()
+    form = GolfRoundForm(request.form)
+    form.course_data = 'stony'
+    form.tee_color_data = user.default_tees
 
     if request.method == 'POST':
-        if 'cancel' in request.form:
+        if form.cancel.data:
             flash('canceled new round')
             return redirect(url_for('user', username=username))
 
-        new_round = GolfRound(date=parse(request.form['date']),
-                              notes=request.form['notes'])
+        if form.validate():
+            new_round = GolfRound(date=form.date.data, notes=form.notes.data)
+            course = GolfCourse.query.get(form.course.data)
+            new_round.tee = course.get_tee_by_color(form.tee_color_data)
+            user.rounds.append(new_round)
 
-        course = GolfCourse.query.get(request.form['course'])
-        tee = course.get_tee_by_color(request.form['tee_color'])
-        new_round.tee = tee
+            if 'hole_by_hole' in request.form:
+                db.session.commit()
+                return redirect(url_for('new_hole', username=username,
+                                        round_id=new_round.id, hole_number=1))
 
-        user.rounds.append(new_round)
+            for i in range(1, 19):
+                if not request.form['hole%i_score' % i]:
+                    continue
+                score = new_round.get_score_for_hole(i)
+                score.score = int(request.form['hole%i_score' % i])
+                score.putts = int(request.form['hole%i_putts' % i])
+                score.set_gir(request.form.get('hole%i_gir' % i))
 
-        if 'hole_by_hole' in request.form:
+            new_round.calc_totals()
+            new_round.calc_handicap()
             db.session.commit()
-            return redirect(url_for('new_hole', username=username,
-                                    round_id=new_round.id, hole_number=1))
 
-        for i in range(1, 19):
-            if not request.form['hole%i_score' % i]:
-                continue
-            score = new_round.get_score_for_hole(i)
-            score.score = int(request.form['hole%i_score' % i])
-            score.putts = int(request.form['hole%i_putts' % i])
-            score.set_gir(request.form.get('hole%i_gir' % i))
+            flash('added round %i' % new_round.id)
+            return redirect(url_for('round_list', username=username))
+        else:
+            flash_errors(form)
 
-        new_round.calc_totals()
-        new_round.calc_handicap()
-
-        db.session.commit()
-        flash('added round %i' % new_round.id)
-        return redirect(url_for('round_list', username=username))
-
-    return render_template('round_new.html', title='new round',
-                           user=user, courses=courses, date=date.today(),
-                           form=request.form)
+    return render_template('round.html', title='new round', form=form)
 
 
 @app.route('/user/<username>/round_new/<round_id>/hole/<hole_number>',
@@ -69,8 +65,8 @@ def round_new(username):
 def new_hole(username, round_id, hole_number):
     golf_round = GolfRound.query.get(round_id)
     score = golf_round.get_score_for_hole(int(hole_number))
-
     form = NewHoleForm(request.form)
+
     if request.method == 'POST':
         if form.cancel.data:
             flash('canceled new round')
@@ -92,8 +88,8 @@ def new_hole(username, round_id, hole_number):
         else:
             flash_errors(form)
 
-    return render_template('hole_new.html', title='new hole',
-                           hole_number=hole_number, form=form)
+    return render_template('hole_new.html', title='new hole', form=form,
+                           hole_number=hole_number)
 
 
 @app.route('/user/<username>/round_new/<round_id>/results',
@@ -101,6 +97,10 @@ def new_hole(username, round_id, hole_number):
 @login_required
 def new_last(username, round_id):
     golf_round = GolfRound.query.get(round_id)
+    if not golf_round:
+        flash('round %s not found' % round_id)
+        return redirect(url_for('user', username=username))
+
     golf_round.calc_totals()
     golf_round.calc_handicap()
     db.session.commit()
@@ -110,7 +110,9 @@ def new_last(username, round_id):
             db.session.delete(golf_round)
             db.session.commit()
             flash('deleted round %s' % round_id)
-        return redirect(url_for('user', username=golf_round.user.username))
+        flash('saved round %s' % round_id)
+        return redirect(url_for('round_list',
+                                username=golf_round.user.username))
 
     return render_template('hole_last.html', title='results', round=golf_round,
                            form=request.form)
@@ -124,35 +126,44 @@ def round_edit(username, round_id):
         flash('round %s not found' % round_id)
         return redirect(url_for('round_list', username=username))
 
-    courses = GolfCourse.query.all()
+    form = GolfRoundForm(request.form)
+    form.new_round_flag = False
+    form.date.data = golf_round.date
+    form.course_data = golf_round.tee.course.nickname
+    form.tee_color_data = golf_round.tee.color
 
     if request.method == 'POST':
-        if 'cancel' in request.form:
+        if form.cancel.data:
             flash('canceled round %s edit' % round_id)
-        elif 'delete' in request.form:
+            return redirect(url_for('user', username=username))
+
+        if form.delete.data:
             db.session.delete(golf_round)
             db.session.commit()
             flash('deleted round %s' % round_id)
-        else:
-            golf_round.date = parse(request.form['date'])
-            course = GolfCourse.query.get(request.form['course'])
-            tee = course.get_tee_by_color(request.form['tee_color'])
-            golf_round.tee = tee
+            return redirect(url_for('user', username=username))
+
+        if form.validate():
+            golf_round.date = form.date.data
+            course = GolfCourse.query.get(form.course.data)
+            golf_round.tee = course.get_tee_by_color(form.tee_color_data)
 
             for i in range(1, 19):
                 score = golf_round.get_score_for_hole(i)
-                score.score = int(request.form['hole%i_score' % i])
-                score.putts = int(request.form['hole%i_putts' % i])
-                score.set_gir(request.form.get('hole%i_gir' % i))
+                if request.form['hole%i_score' % i]:
+                    score.score = int(request.form['hole%i_score' % i])
+                    score.putts = int(request.form['hole%i_putts' % i])
+                    score.set_gir(request.form.get('hole%i_gir' % i))
 
             golf_round.calc_totals()
             golf_round.calc_handicap()
             golf_round.user.recalc_handicaps(golf_round)
             db.session.commit()
+
             flash('saved round %s' % round_id)
+            return redirect(url_for('round_list', username=username))
+        else:
+            flash_errors(form)
 
-        return redirect(url_for('round_list', username=username))
-
-    return render_template('round_edit.html', title='edit round',
-                           round=golf_round, courses=courses,
-                           form=request.form)
+    return render_template('round_edit.html', title='edit round', form=form,
+                           round=golf_round)

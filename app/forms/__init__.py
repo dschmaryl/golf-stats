@@ -2,5 +2,6 @@
 # -*- coding: utf-8 -*-
 
 from .change_password import ChangePasswordForm
+from .golf_round import GolfRoundForm
 from .login import LoginForm
 from .new_hole import NewHoleForm

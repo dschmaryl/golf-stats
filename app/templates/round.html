@@ -31,16 +31,10 @@
   <br />
 
   <div class="row">
-    <div class="col-xs-5">
+    <div class="col-xs-12">
       <h4>notes:</h4>
       {{ form.notes(class="form-control notes-input") }}
     </div>
-    {% if form.new_round_flag == False %}
-      <div class="col-sm-5">
-        <h4>round stats:</h4>
-        score: {{ round.total_score }}<br />putts: {{ round.total_putts }}<br />handicap: {{  round.handicap_index }}
-      </div>
-    {% endif %}
   </div>
 
   <br />
@@ -72,7 +66,7 @@
         </div>
           {% for i in range(1, 10) %}
             <div class="col-xs-1">
-              <input class="form-control number-input" type="number" name="{{ 'hole%i_score' % i }}" value="{{ round.get_score_for_hole(i).score }}" />
+              <input class="form-control number-input" type="number" name="{{ 'hole%i_score' % i }}" />
             </div>
           {% endfor %}
       </div>
@@ -82,7 +76,7 @@
         </div>
           {% for i in range(1, 10) %}
             <div class="col-xs-1">
-              <input class="form-control number-input" type="number" name="{{ 'hole%i_putts' % i }}" value="{{ round.get_score_for_hole(i).putts }}" />
+              <input class="form-control number-input" type="number" name="{{ 'hole%i_putts' % i }}" />
             </div>
           {% endfor %}
       </div>
@@ -92,7 +86,7 @@
         </div>
           {% for i in range(1, 10) %}
             <div class="col-xs-1">
-              <input class="form-control number-input" type="number" name="{{ 'hole%i_gir' % i }}" value="{{ round.get_score_for_hole(i).gir }}" />
+              <input class="form-control number-input" type="number" name="{{ 'hole%i_gir' % i }}" />
             </div>
           {% endfor %}
       </div>
@@ -113,7 +107,7 @@
         </div>
           {% for i in range(10, 19) %}
             <div class="col-xs-1">
-              <input class="form-control number-input" type="number" name="{{ 'hole%i_score' % i }}" value="{{ round.get_score_for_hole(i).score }}" />
+              <input class="form-control number-input" type="number" name="{{ 'hole%i_score' % i }}" />
             </div>
           {% endfor %}
       </div>
@@ -123,7 +117,7 @@
         </div>
           {% for i in range(10, 19) %}
             <div class="col-xs-1">
-              <input class="form-control number-input" type="number" name="{{ 'hole%i_putts' % i }}" value="{{ round.get_score_for_hole(i).putts }}" />
+              <input class="form-control number-input" type="number" name="{{ 'hole%i_putts' % i }}" />
             </div>
           {% endfor %}
       </div>
@@ -133,7 +127,7 @@
         </div>
           {% for i in range(10, 19) %}
             <div class="col-xs-1">
-              <input class="form-control number-input" type="number" name="{{ 'hole%i_gir' % i }}" value="{{ round.get_score_for_hole(i).gir }}" />
+              <input class="form-control number-input" type="number" name="{{ 'hole%i_gir' % i }}" />
             </div>
           {% endfor %}
       </div>
