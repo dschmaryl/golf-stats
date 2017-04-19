@@ -3,6 +3,8 @@ from wtforms.widgets import PasswordInput
 
 
 class ChangePasswordForm(Form):
+    cancel = SubmitField('cancel')
+
     old_password = StringField(
         'old_password',
         [validators.DataRequired(message='please enter old password')],
@@ -19,4 +21,3 @@ class ChangePasswordForm(Form):
          validators.EqualTo('new_password', message='passwords must match')],
         widget=PasswordInput(hide_value=False)
         )
-    cancel = SubmitField('cancel')

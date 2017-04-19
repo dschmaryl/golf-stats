@@ -5,6 +5,8 @@ from flask_login import login_required
 
 from app import app, db
 from app.models import GolfCourse, Hole, Tee
+from app.forms import GolfCourseForm
+from .flash_errors import flash_errors
 
 
 @app.route('/course_list')
@@ -18,15 +20,27 @@ def course_list():
 @app.route('/course_new', methods=['GET', 'POST'])
 @login_required
 def course_new():
-    if request.method == 'POST':
-        new_course = GolfCourse(name=request.form['name'],
-                                nickname=request.form['nickname'])
-        db.session.add(new_course)
-        db.session.commit()
-        return redirect(url_for('tee_new', course_id=new_course.id))
+    form = GolfCourseForm(request.form)
 
-    return render_template('course_new.html', title='new course',
-                           form=request.form)
+    if request.method == 'POST':
+        if form.cancel.data:
+            flash('canceled new course')
+            return redirect(url_for('course_list'))
+
+        if form.validate():
+            nickname = form.nickname.data
+            if GolfCourse.query.filter_by(nickname=nickname).first():
+                flash('%s already exists' % nickname)
+                return render_template('course.html', title='new course',
+                                       form=form)
+            new_course = GolfCourse(name=form.name.data, nickname=nickname)
+            db.session.add(new_course)
+            db.session.commit()
+            return redirect(url_for('course_list'))
+        else:
+            flash_errors(form)
+
+    return render_template('course.html', title='new course', form=form)
 
 
 @app.route('/course_edit/<course_nickname>/tee_new', methods=['GET', 'POST'])
@@ -120,20 +134,27 @@ def course_edit(course_nickname):
         flash('course %s not found' % course_nickname)
         return redirect(url_for('course_list'))
 
+    form = GolfCourseForm(request.form, obj=course)
+
     if request.method == 'POST':
-        if 'cancel' in request.form:
+        if form.cancel.data:
             flash('canceled %s edit' % course.nickname)
-        elif 'delete' in request.form:
+            return redirect(url_for('course_list'))
+
+        if form.delete.data:
             db.session.delete(course)
             db.session.commit()
             flash('course %s deleted' % course.nickname)
-        else:
-            course.nickname = request.form['nickname']
-            course.name = request.form['name']
+            return redirect(url_for('course_list'))
+
+        if form.validate():
+            course.name = form.name.data
+            course.nickname = form.nickname.data
             db.session.commit()
             flash('saved %s' % course.nickname)
+            return redirect(url_for('course_list'))
+        else:
+            flash_errors(form)
 
-        return redirect(url_for('course_list'))
-
-    return render_template('course_edit.html', title='edit course',
-                           course=course, form=request.form)
+    return render_template('course.html', title='edit course', form=form,
+                           course=course)
