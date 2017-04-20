@@ -89,6 +89,11 @@ def round_edit(username, round_id):
             course = GolfCourse.query.get(form.course.data)
             golf_round.tee = course.get_tee_by_color(form.tee_color_data)
 
+            if 'hole_by_hole' in request.form:
+                db.session.commit()
+                return redirect(url_for('hole_edit', username=username,
+                                        round_id=golf_round.id, hole_number=1))
+
             for i in range(1, 19):
                 score = golf_round.get_score_for_hole(i)
                 if request.form['hole%i_score' % i]:
