@@ -3,7 +3,7 @@ from flask_login import login_required
 
 from app import app, db
 from app.models import GolfRound, GolfCourse, User
-from app.forms import GolfRoundForm, NewHoleForm
+from app.forms import GolfRoundForm
 from .flash_errors import flash_errors
 
 
@@ -36,7 +36,7 @@ def round_new(username):
 
             if 'hole_by_hole' in request.form:
                 db.session.commit()
-                return redirect(url_for('new_hole', username=username,
+                return redirect(url_for('hole_new', username=username,
                                         round_id=new_round.id, hole_number=1))
 
             for i in range(1, 19):
@@ -57,65 +57,6 @@ def round_new(username):
             flash_errors(form)
 
     return render_template('round.html', title='new round', form=form)
-
-
-@app.route('/user/<username>/round_new/<round_id>/hole/<hole_number>',
-           methods=['GET', 'POST'])
-@login_required
-def new_hole(username, round_id, hole_number):
-    golf_round = GolfRound.query.get(round_id)
-    score = golf_round.get_score_for_hole(int(hole_number))
-    form = NewHoleForm(request.form)
-
-    if request.method == 'POST':
-        if form.cancel.data:
-            flash('canceled new round')
-            return redirect(url_for('user', username=username))
-
-        if form.validate():
-            score.score = form.score.data
-            score.putts = form.putts.data
-            score.set_gir(form.gir.data)
-            db.session.commit()
-
-            if int(hole_number) == 18:
-                return redirect(url_for('new_last', round_id=golf_round.id,
-                                        username=golf_round.user.username))
-            return redirect(url_for('new_hole',
-                                    username=golf_round.user.username,
-                                    round_id=golf_round.id,
-                                    hole_number=(int(hole_number) + 1)))
-        else:
-            flash_errors(form)
-
-    return render_template('hole_new.html', title='new hole', form=form,
-                           hole_number=hole_number)
-
-
-@app.route('/user/<username>/round_new/<round_id>/results',
-           methods=['GET', 'POST'])
-@login_required
-def new_last(username, round_id):
-    golf_round = GolfRound.query.get(round_id)
-    if not golf_round:
-        flash('round %s not found' % round_id)
-        return redirect(url_for('user', username=username))
-
-    golf_round.calc_totals()
-    golf_round.calc_handicap()
-    db.session.commit()
-
-    if request.method == 'POST':
-        if 'delete' in request.form:
-            db.session.delete(golf_round)
-            db.session.commit()
-            flash('deleted round %s' % round_id)
-        flash('saved round %s' % round_id)
-        return redirect(url_for('round_list',
-                                username=golf_round.user.username))
-
-    return render_template('hole_last.html', title='results', round=golf_round,
-                           form=request.form)
 
 
 @app.route('/user/<username>/round_edit/<round_id>', methods=['GET', 'POST'])

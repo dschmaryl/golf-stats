@@ -3,6 +3,7 @@
 
 from . import courses
 from . import errors
+from . import holes
 from . import index
 from . import login
 from . import rounds
