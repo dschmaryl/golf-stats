@@ -3,7 +3,7 @@ from flask_login import login_required
 
 from app import app, db
 from app.models import GolfRound
-from app.forms import NewHoleForm
+from app.forms import HoleScoreForm
 from .flash_errors import flash_errors
 
 
@@ -13,11 +13,11 @@ from .flash_errors import flash_errors
 def hole_new(username, round_id, hole_number):
     golf_round = GolfRound.query.get(round_id)
     score = golf_round.get_score_for_hole(int(hole_number))
-    form = NewHoleForm(request.form)
+    form = HoleScoreForm(request.form)
 
     if request.method == 'POST':
         if form.cancel.data:
-            flash('canceled new round')
+            flash('canceled hole')
             return redirect(url_for('user', username=username))
 
         if form.validate():

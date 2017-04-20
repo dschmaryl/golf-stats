@@ -1,7 +1,7 @@
 from wtforms import Form, IntegerField, SubmitField, validators
 
 
-class NewHoleForm(Form):
+class HoleScoreForm(Form):
     cancel = SubmitField('cancel')
 
     score = IntegerField('score', [
