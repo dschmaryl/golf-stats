@@ -1,4 +1,4 @@
-from wtforms import Form, PasswordField, StringField, SubmitField, validators
+from wtforms import Form, StringField, SubmitField, validators
 from wtforms.widgets import PasswordInput
 
 

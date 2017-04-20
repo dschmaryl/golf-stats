@@ -1,6 +1,6 @@
 from datetime import date
 from wtforms import (DateField, Form, SelectField, SubmitField, TextAreaField,
-    validators)
+                     validators)
 
 from app.models import GolfCourse
 
