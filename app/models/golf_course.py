@@ -37,7 +37,7 @@ class Tee(db.Model):
     def get_hole(self, hole):
         return self.holes.filter_by(hole=hole).first()
 
-    def get_par(self):
+    def get_total_par(self):
         return sum([h.par for h in self.holes])
 
     def __repr__(self):

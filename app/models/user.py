@@ -21,6 +21,9 @@ class User(db.Model):
     def get_rounds(self):
         return self.rounds.order_by(GolfRound.date).all()
 
+    def get_latest_round(self):
+        return self.get_rounds()[-1]
+
     def get_previous_round(self, golf_round):
         rounds = self.get_rounds()
         return rounds[rounds.index(golf_round) - 1]
@@ -37,7 +40,7 @@ class User(db.Model):
         return self._mavg(stats, period)
 
     def get_mavg_score_to_par(self, golf_round, period=20):
-        stats = [r.total_score - r.tee.get_par()
+        stats = [r.total_score - r.tee.get_total_par()
                  for r in self.get_rounds_thru(golf_round) if r.total_score]
         return self._mavg(stats, period)
 
@@ -47,6 +50,17 @@ class User(db.Model):
 
     def get_mavg_gir(self, golf_round, period=20):
         stats = [r.total_gir for r in self.get_rounds_thru(golf_round)]
+        return self._mavg(stats, period)
+
+    ##
+    # this all needs to be refactored its stupid
+    ##
+    def get_par_x_mavg(self, golf_round, par, period=20):
+        stats = []
+        for r in self.get_rounds_thru(golf_round)[-20:]:
+            for i in range(1, 19):
+                if r.tee.get_hole(i).par == par:
+                    stats.append(r.get_score_for_hole(i).score)
         return self._mavg(stats, period)
 
     def recalc_handicaps(self, golf_round):

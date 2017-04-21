@@ -8,6 +8,10 @@ div.row {
   padding-bottom: 4px;
 }
 
+.table > tbody > tr > td {
+  border: none;
+}
+
 nav, a {
   min-width: 48px;
   min-height: 48px;
