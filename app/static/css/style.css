@@ -8,8 +8,13 @@ div.row {
   padding-bottom: 4px;
 }
 
+.table > thead > tr > th,
 .table > tbody > tr > td {
   border: none;
+}
+
+.align-right {
+  text-align: right;
 }
 
 nav, a {
