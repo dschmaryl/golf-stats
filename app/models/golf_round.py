@@ -19,12 +19,16 @@ class GolfRound(db.Model):
     scores = db.relationship('HoleScore', backref='round', lazy='dynamic',
                              cascade="save-update, delete")
 
+    par_3_avg = db.Column(db.Float)
+    par_4_avg = db.Column(db.Float)
+    par_5_avg = db.Column(db.Float)
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         for i in range(1, 19):
             self.scores.append(HoleScore(hole=i, score=0, putts=0, gir=0))
 
-    def get_score_for_hole(self, hole):
+    def get_hole(self, hole):
         return self.scores.filter_by(hole=hole).first()
 
     def calc_totals(self):

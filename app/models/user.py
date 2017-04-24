@@ -60,7 +60,7 @@ class User(db.Model):
         for r in self.get_rounds_thru(golf_round)[-20:]:
             for i in range(1, 19):
                 if r.tee.get_hole(i).par == par:
-                    stats.append(r.get_score_for_hole(i).score)
+                    stats.append(r.get_hole(i).score)
         return self._mavg(stats, period)
 
     def recalc_handicaps(self, golf_round):

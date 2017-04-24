@@ -42,7 +42,7 @@ def round_new(username):
             for i in range(1, 19):
                 if not request.form['hole%i_score' % i]:
                     continue
-                score = new_round.get_score_for_hole(i)
+                score = new_round.get_hole(i)
                 score.score = int(request.form['hole%i_score' % i])
                 score.putts = int(request.form['hole%i_putts' % i])
                 score.set_gir(request.form.get('hole%i_gir' % i))
@@ -94,7 +94,7 @@ def round_edit(username, round_id):
                                         round_id=golf_round.id, hole_number=1))
 
             for i in range(1, 19):
-                score = golf_round.get_score_for_hole(i)
+                score = golf_round.get_hole(i)
                 if request.form['hole%i_score' % i]:
                     score.score = int(request.form['hole%i_score' % i])
                     score.putts = int(request.form['hole%i_putts' % i])

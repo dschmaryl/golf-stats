@@ -12,7 +12,7 @@ from .flash_errors import flash_errors
 @login_required
 def hole_new(username, round_id, hole_number):
     golf_round = GolfRound.query.get(round_id)
-    score = golf_round.get_score_for_hole(int(hole_number))
+    score = golf_round.get_hole(int(hole_number))
     form = HoleScoreForm(request.form)
 
     if request.method == 'POST':
@@ -46,7 +46,7 @@ def hole_new(username, round_id, hole_number):
 @login_required
 def hole_edit(username, round_id, hole_number):
     golf_round = GolfRound.query.get(round_id)
-    score = golf_round.get_score_for_hole(int(hole_number))
+    score = golf_round.get_hole(int(hole_number))
     form = HoleScoreForm(request.form, obj=score)
 
     if request.method == 'POST':
