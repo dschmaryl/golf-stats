@@ -99,14 +99,18 @@ def tee_edit(course_nickname, tee_id):
             flash('%s tee deleted' % tee.color)
         else:
             tee.date = parse(request.form['date'])
-            tee.rating = int(request.form['rating'])
+            tee.rating = float(request.form['rating'])
             tee.slope = int(request.form['slope'])
-            tee.color = int(request.form['tee_color'])
+            tee.color = request.form['tee_color']
 
             for i in range(1, 19):
-                par = int(request.form['hole%i_par' % i])
-                yardage = int(request.form['hole%i_yardage' % i])
-                handicap = int(request.form['hole%i_handicap' % i])
+                # TODO: fix this once you get forms
+                if request.form['hole%i_par' % i]:
+                    par = int(request.form['hole%i_par' % i])
+                if request.form['hole%i_yardage' % i]:
+                    yardage = int(request.form['hole%i_yardage' % i])
+                if request.form['hole%i_handicap' % i]:
+                    handicap = int(request.form['hole%i_handicap' % i])
 
                 hole = tee.holes.filter_by(hole=i).first()
                 if hole:

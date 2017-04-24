@@ -10,6 +10,10 @@ class HoleScore(db.Model):
     putts = db.Column(db.Integer)
     gir = db.Column(db.Integer)  # 0: false, 1: true
 
+    par = db.Column(db.Integer)
+    yardage = db.Column(db.Integer)
+    handicap = db.Column(db.Integer)
+
     adjusted_score = db.Column(db.Integer)
 
     def get_par(self):
@@ -17,6 +21,12 @@ class HoleScore(db.Model):
 
     def set_gir(self, gir):
         self.gir = int(gir) if gir else self._calc_gir()
+
+    def set_hole_stats(self):
+        course_hole_data = self.round.tee.get_hole(self.hole)
+        self.par = course_hole_data.par
+        self.yardage = course_hole_data.yardage
+        self.handicap = course_hole_data.handicap
 
     def _calc_gir(self):
         par = self.get_par()
