@@ -38,14 +38,22 @@ class GolfRound(db.Model):
         rounds = self.user.get_rounds()
         round_idx = rounds.index(self)
         rounds = rounds[max(0, round_idx - 19):round_idx + 1]
-        if len(rounds) < 5:
-            # not enough rounds yet
-            self.handicap_index = 50.0
-            return
+
+        # if len(rounds) < 5:
+        #     # not enough rounds yet
+        #     self.handicap_index = 50.0
+        #     return
+        # num_of_diffs_used = {
+        #     5: 1, 6: 1, 7: 2, 8: 2, 9: 3, 10: 3, 11: 4, 12: 4,
+        #     13: 5, 14: 5, 15: 6, 16: 6, 17: 7, 18: 8, 19: 9, 20: 10
+        #     }[len(rounds)]
+
+        # my own version of num_of_diffs_used
         num_of_diffs_used = {
-            5: 1, 6: 1, 7: 2, 8: 2, 9: 3, 10: 3, 11: 4, 12: 4,
-            13: 5, 14: 5, 15: 6, 16: 6, 17: 7, 18: 8, 19: 9, 20: 10
+            1: 1, 2: 1, 3: 2, 4: 2, 5: 3, 6: 3, 7: 4, 8: 4, 9: 5, 10: 5, 11: 6,
+            12: 6, 13: 7, 14: 7, 15: 8, 16: 8, 17: 9, 18: 9, 19: 10, 20: 10
             }[len(rounds)]
+
         diffs = sorted([r.calc_diff() for r in rounds])[:num_of_diffs_used]
         handicap_str = str(sum(diffs) / len(diffs) * .96)
         self.handicap_index = float(handicap_str[:handicap_str.find('.') + 2])
