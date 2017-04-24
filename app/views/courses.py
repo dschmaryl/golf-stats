@@ -104,7 +104,7 @@ def tee_edit(course_nickname, tee_id):
             tee.color = request.form['tee_color']
 
             for i in range(1, 19):
-                # TODO: fix this once you get forms
+                # TODO: fix this with forms
                 if request.form['hole%i_par' % i]:
                     par = int(request.form['hole%i_par' % i])
                 if request.form['hole%i_yardage' % i]:
