@@ -9,7 +9,6 @@ TEE_COLORS = ['white', 'red', 'blue']
 
 
 class GolfRoundForm(Form):
-    new_round_flag = True
     cancel = SubmitField('cancel')
     delete = SubmitField('delete')
 
@@ -28,7 +27,7 @@ class GolfRoundForm(Form):
         ])
 
     def validate(self):
-        # these need to be set for both valid and invalid forms
+        # these need to be set for both valid and invalid forms, for now
         self.course_data = self.course.choices[self.course.data - 1][1]
         self.tee_color_data = TEE_COLORS[self.tee_color.data]
 

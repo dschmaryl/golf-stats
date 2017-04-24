@@ -69,7 +69,6 @@ def round_edit(username, round_id):
         return redirect(url_for('round_list', username=username))
 
     form = GolfRoundForm(request.form, obj=golf_round)
-    form.new_round_flag = False
     form.course_data = golf_round.tee.course.nickname
     form.tee_color_data = golf_round.tee.color
 
