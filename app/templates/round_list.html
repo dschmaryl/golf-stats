@@ -14,7 +14,6 @@
             <th class="align-right">gir %</th>
           </tr>
         </thead>
-
         <tbody>
           {% for round in rounds %}
             <tr onclick="location.href='{{ url_for('round_edit', username=g.user.username, round_id=round.id) }}'">
