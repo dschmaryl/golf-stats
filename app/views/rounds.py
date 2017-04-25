@@ -72,7 +72,7 @@ def round_edit(username, round_id):
     form.course_data = golf_round.tee.course.nickname
     form.tee_color_data = golf_round.tee.color
 
-    form.tee_color.default = 0
+    form.tee_color.default = 2
 
     if request.method == 'POST':
         if form.cancel.data:
