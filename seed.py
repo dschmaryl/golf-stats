@@ -63,7 +63,7 @@ def seed_golfers():
                 golf_round = GolfRound(date=parse(row[0]), tee=tee)
                 user.rounds.append(golf_round)
                 for i in range(1, 19):
-                    score = golf_round.get_score_for_hole(i)
+                    score = golf_round.get_hole(i)
                     score.score = int(row[i + 3])
                     score.putts = int(row[i + 21])
                     score.set_gir(gir=None)
