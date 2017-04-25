@@ -5,7 +5,7 @@ from wtforms import (DateField, Form, SelectField, SubmitField, TextAreaField,
 from app.models import GolfCourse
 
 
-TEE_COLORS = ['white', 'red', 'blue']
+TEES = ['white', 'red', 'blue']
 
 
 class GolfRoundForm(Form):
@@ -18,7 +18,7 @@ class GolfRoundForm(Form):
     choices = [(course.id, course.nickname) for course in courses]
     course = SelectField('course', choices=choices, coerce=int)
 
-    choices = [(i, TEE_COLORS[i]) for i in range(len(TEE_COLORS))]
+    choices = [(i, TEES[i]) for i in range(len(TEES))]
     tee_color = SelectField('tee_color', choices=choices, coerce=int)
 
     notes = TextAreaField('notes', [
@@ -27,10 +27,6 @@ class GolfRoundForm(Form):
         ])
 
     def validate(self):
-        # these need to be set for both valid and invalid forms, for now
-        self.course_data = self.course.choices[self.course.data - 1][1]
-        self.tee_color_data = TEE_COLORS[self.tee_color.data]
-
         if not super().validate():
             return False
 
@@ -39,10 +35,9 @@ class GolfRoundForm(Form):
             self.course.errors.append('course not found')
             return False
 
-        if not course.get_tee_by_color(self.tee_color_data):
-            self.tee_color.errors.append('%s tees not found for %s' %
-                                         (self.tee_color_data,
-                                          self.course_data))
+        if not course.get_tee_by_color(TEES[self.tee_color.data]):
+            self.tee_color.errors.append('%s tees not found' %
+                                         TEES[self.tee_color.data])
             return False
 
         return True

@@ -7,6 +7,9 @@ from app.forms import GolfRoundForm
 from .flash_errors import flash_errors
 
 
+TEES = ['white', 'red', 'blue']
+
+
 @app.route('/user/<username>/round_list')
 @login_required
 def round_list(username):
@@ -20,8 +23,8 @@ def round_list(username):
 def round_new(username):
     user = User.query.filter_by(username=username).first()
     form = GolfRoundForm(request.form)
-    form.course_data = 'stony'
-    form.tee_color_data = user.default_tees
+    form.course.data = GolfCourse.query.filter_by(nickname='stony').first().id
+    form.tee_color.data = TEES.index(user.default_tees)
 
     if request.method == 'POST':
         if form.cancel.data:
@@ -31,7 +34,7 @@ def round_new(username):
         if form.validate():
             new_round = GolfRound(date=form.date.data, notes=form.notes.data)
             course = GolfCourse.query.get(form.course.data)
-            new_round.tee = course.get_tee_by_color(form.tee_color_data)
+            new_round.tee = course.get_tee_by_color(TEES[form.tee_color.data])
             user.rounds.append(new_round)
 
             if 'hole_by_hole' in request.form:
@@ -69,10 +72,10 @@ def round_edit(username, round_id):
         return redirect(url_for('round_list', username=username))
 
     form = GolfRoundForm(request.form, obj=golf_round)
-    form.course_data = golf_round.tee.course.nickname
-    form.tee_color_data = golf_round.tee.color
+    form.course.data = golf_round.tee.course.id
 
-    form.tee_color.data = 2
+    #TODO: put tees into a global of some sort
+    form.tee_color.data = TEES.index(golf_round.tee.color)
 
     if request.method == 'POST':
         if form.cancel.data:
@@ -88,7 +91,7 @@ def round_edit(username, round_id):
         if form.validate():
             golf_round.date = form.date.data
             course = GolfCourse.query.get(form.course.data)
-            golf_round.tee = course.get_tee_by_color(form.tee_color_data)
+            golf_round.tee = course.get_tee_by_color(TEES[form.tee_color.data])
 
             if 'hole_by_hole' in request.form:
                 db.session.commit()
