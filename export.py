@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+import pathlib
 import pickle
 
 from app.models import *
 
 
 def dump(data, name):
-    filename = 'app/static/' + name
-    with open(filename, 'wb') as f:
+    fn = pathlib.Path(__file__).resolve().parent / 'app' / 'static' / name
+    with open(fn, 'wb') as f:
         pickle.dump(data, f)
 
 
@@ -66,5 +67,8 @@ def dictify_users():
 
 
 if __name__ == '__main__':
-    dump(dictify_courses(), 'courses.pk')
-    dump(dictify_users(), 'users.pk')
+    courses = dictify_courses()
+    dump(courses, 'courses.pk')
+
+    users = dictify_users()
+    dump(users, 'users.pk')
