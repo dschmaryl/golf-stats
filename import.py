@@ -63,9 +63,13 @@ def add_users(users):
                 hole.putts = round_data['scores'][i]['putts']
                 hole.gir = round_data['scores'][i]['gir']
 
+            golf_round.calc_totals()
+            golf_round.calc_handicap()
+
     db.session.commit()
 
 
 if __name__ == '__main__':
-    add_courses(get('courses.pk'))
-    add_users(get('users.pk'))
+    export_data = get('export_data.pk')
+    add_courses(export_data['courses'])
+    add_users(export_data['users'])

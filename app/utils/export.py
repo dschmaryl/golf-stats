@@ -8,8 +8,9 @@ from app.models import *
 
 
 def dump(data, name):
-    fn = pathlib.Path(__file__).resolve().parent / 'app' / 'static' / name
-    with open(fn, 'wb') as f:
+    path = pathlib.Path(__file__).resolve().parent.parent.parent / 'data'
+    filename = str(path / name)
+    with open(filename, 'wb') as f:
         pickle.dump(data, f)
 
 
@@ -66,9 +67,10 @@ def dictify_users():
     return data
 
 
-if __name__ == '__main__':
-    courses = dictify_courses()
-    dump(courses, 'courses.pk')
+def run_export():
+    export_data = {'courses': dictify_courses(), 'users': dictify_users()}
+    dump(export_data, 'export_data.pk')
 
-    users = dictify_users()
-    dump(users, 'users.pk')
+
+if __name__ == '__main__':
+    run_export()
