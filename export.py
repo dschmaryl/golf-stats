@@ -50,7 +50,7 @@ def dictify_users():
             }
         for r in user.rounds:
             data[user.username]['rounds'][r.id] = {
-                'data': r.date,
+                'date': r.date,
                 'notes': r.notes,
                 'course': r.tee.course.nickname,
                 'tee_color': r.tee.color,

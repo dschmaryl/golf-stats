@@ -17,22 +17,24 @@ def get(name):
 
 def add_courses(courses):
     for course_name, course_data in courses.items():
-        course = Course(
+        course = GolfCourse(
             nickname=course_name,
-            name=course_data.name,
+            name=course_data['name']
             )
-        for tee_color, tee_data in course_data.tees.items():
+        db.session.add(course)
+
+        for tee_color, tee_data in course_data['tees'].items():
             tee = course.get_new_tee()
-            tee.date = tee_data.date
+            tee.date = tee_data['date']
             tee.color = tee_color
-            tee.rating = tee_data.rating
-            tee.slope = tee_data.slope
+            tee.rating = tee_data['rating']
+            tee.slope = tee_data['slope']
 
             for i in range(1, 19):
                 hole = tee.get_hole(i)
-                hole.par = tee_data.holes[i].par
-                hole.yardage = tee_data.holes[i].yardage
-                hole.handicap = tee_data.holes[i].handicap
+                hole.par = tee_data['holes'][i]['par']
+                hole.yardage = tee_data['holes'][i]['yardage']
+                hole.handicap = tee_data['holes'][i]['handicap']
 
     db.session.commit()
 
@@ -41,23 +43,25 @@ def add_users(users):
     for username, user_data in users.items():
         user = User(
             username=username,
-            password=user_data.password,
-            default_tees=user_data.default_tees
+            password=user_data['password'],
+            default_tees=user_data['default_tees']
             )
-        for round_id, round_data in user_data.rounds.items():
+        db.session.add(user)
+
+        for round_id, round_data in user_data['rounds'].items():
             course = GolfCourse.query.filter_by(
-                nickname=round_data.course
+                nickname=round_data['course']
                 ).first()
-            tee = course.get_tee_by_color(round_data.tee_color)
-            golf_round = GolfRound(date=round_data.date, tee=tee,
-                                   notes=round_data.notes)
+            tee = course.get_tee_by_color(round_data['tee_color'])
+            golf_round = GolfRound(date=round_data['date'], tee=tee,
+                                   notes=round_data['notes'])
             user.rounds.append(golf_round)
 
             for i in range(1, 19):
                 hole = golf_round.get_hole(i)
-                hole.score = round_data.scores[i].strokes
-                hole.putts = round_data.scores[i].putts
-                hole.gir = round_data.scores[i].gir
+                hole.score = round_data['scores'][i]['strokes']
+                hole.putts = round_data['scores'][i]['putts']
+                hole.gir = round_data['scores'][i]['gir']
 
     db.session.commit()
 
