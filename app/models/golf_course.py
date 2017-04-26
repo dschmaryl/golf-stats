@@ -1,3 +1,5 @@
+from datetime import date
+
 from app import db
 
 
@@ -16,6 +18,11 @@ class GolfCourse(db.Model):
         except IndexError:
             return None
 
+    def get_new_tee(self):
+        tee = Tee(date=date.today())
+        self.tees.append(tee)
+        return tee
+
     def __repr__(self):
         return '<Course %r>' % (self.name)
 
@@ -33,6 +40,11 @@ class Tee(db.Model):
                             cascade="save-update, delete")
 
     rounds = db.relationship('GolfRound', backref='tee', lazy='dynamic')
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        for i in range(1, 19):
+            self.holes.append(Hole(hole=i))
 
     def get_hole(self, hole):
         return self.holes.filter_by(hole=hole).first()

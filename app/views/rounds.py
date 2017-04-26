@@ -74,7 +74,7 @@ def round_edit(username, round_id):
     form = GolfRoundForm(request.form, obj=golf_round)
     form.course.data = golf_round.tee.course.id
 
-    #TODO: put tees into a global of some sort
+    # TODO: put tees into a global of some sort
     form.tee_color.data = TEES.index(golf_round.tee.color)
 
     if request.method == 'POST':

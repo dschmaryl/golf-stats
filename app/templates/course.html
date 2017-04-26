@@ -44,8 +44,10 @@
       <input class="btn btn-default" type="submit" value="save" />
       {% if course %}
         <input class="btn btn-default" type="submit" name="delete" value="delete" onclick="return confirm('Delete this course?');return false;" />
+        <input class="btn btn-default" type="submit" name="cancel" value="cancel" />
+      {% else %}
+        <input class="btn btn-default" type="submit" name="cancel" value="cancel" onclick="return confirm('Cancel new course?');return false;" />
       {% endif %}
-      <input class="btn btn-default" type="submit" name="cancel" value="cancel" onclick="return confirm('Cancel new course?');return false;" />
     </div>
   </div>
 

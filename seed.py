@@ -31,20 +31,23 @@ def get_golfer(golfer):
 def seed_courses():
     names = {'stony': 'Stony Ford', 'hickory': 'Hickory Hill'}
     courses = get_courses()
+
     for course_name in courses.keys():
         course = GolfCourse(nickname=course_name, name=names[course_name])
         db.session.add(course)
+
         for color in ['white', 'red']:
-            rating = courses[course_name][color]['rating']
-            slope = courses[course_name][color]['slope']
-            tee = Tee(date=date.today(), color=color, rating=rating,
-                      slope=slope)
+            tee = course.get_new_tee()
+            tee.date = date.today()
+            tee.color = color
+            tee.rating = courses[course_name][color]['rating']
+            tee.slope = courses[course_name][color]['slope']
+
             for i in range(1, 19):
-                tee.holes.append(Hole(
-                    hole=i, par=courses[course_name]['par'][i-1],
-                    yardage=courses[course_name][color]['yards'][i-1]
-                    ))
-            course.tees.append(tee)
+                hole = tee.get_hole(i)
+                hole.par = courses[course_name]['par'][i-1]
+                hole.yardage = courses[course_name][color]['yards'][i-1]
+
     db.session.commit()
 
 
@@ -62,13 +65,16 @@ def seed_golfers():
                 tee = course.get_tee_by_color(user.default_tees)
                 golf_round = GolfRound(date=parse(row[0]), tee=tee)
                 user.rounds.append(golf_round)
+
                 for i in range(1, 19):
                     score = golf_round.get_hole(i)
                     score.score = int(row[i + 3])
                     score.putts = int(row[i + 21])
                     score.set_gir(gir=None)
+
                 golf_round.calc_totals()
                 golf_round.calc_handicap()
+
     db.session.commit()
 
 

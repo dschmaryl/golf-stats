@@ -4,7 +4,7 @@ from flask import flash, redirect, render_template, request, url_for
 from flask_login import login_required
 
 from app import app, db
-from app.models import GolfCourse, Hole, Tee
+from app.models import GolfCourse
 from app.forms import GolfCourseForm
 from .flash_errors import flash_errors
 
@@ -57,19 +57,17 @@ def tee_new(course_nickname):
             return redirect(url_for('course_edit', title='edit course',
                                     course_nickname=course.nickname))
 
-        tee = Tee(date=parse(request.form['date']),
-                  color=request.form['tee_color'],
-                  rating=int(request.form['rating']),
-                  slope=int(request.form['slope']))
-        course.tees.append(tee)
+        tee = course.get_new_tee()
+        tee.color = request.form['tee_color']
+        tee.rating = int(request.form['rating'])
+        tee.slope = int(request.form['slope'])
 
         for i in range(1, 19):
-            tee.holes.append(Hole(
-                hole=i,
-                par=int(request.form['hole%i_par' % i]),
-                yardage=int(request.form['hole%i_yardage' % i]),
-                handicap=int(request.form['hole%i_handicap' % i])
-                ))
+            hole = tee.get_hole(i)
+            hole.par = int(request.form['hole%i_par' % i])
+            hole.yardage = int(request.form['hole%i_yardage' % i])
+            hole.handicap = int(request.form['hole%i_handicap' % i])
+
         db.session.commit()
 
         flash('saved %s tees' % tee.color)
@@ -105,6 +103,7 @@ def tee_edit(course_nickname, tee_id):
 
             for i in range(1, 19):
                 # TODO: fix this with forms
+                par, yardage, handicap = 0, 0, 0
                 if request.form['hole%i_par' % i]:
                     par = int(request.form['hole%i_par' % i])
                 if request.form['hole%i_yardage' % i]:
@@ -112,14 +111,12 @@ def tee_edit(course_nickname, tee_id):
                 if request.form['hole%i_handicap' % i]:
                     handicap = int(request.form['hole%i_handicap' % i])
 
-                hole = tee.holes.filter_by(hole=i).first()
-                if hole:
-                    hole.par = par
-                    hole.yardage = yardage
-                    hole.handicap = handicap
-                else:
-                    tee.holes.append(Hole(hole=i, par=par, yardage=yardage,
-                                          handicap=handicap))
+                hole = tee.get_hole(i)
+
+                hole.par = par
+                hole.yardage = yardage
+                hole.handicap = handicap
+
             db.session.commit()
             flash('saved %s tees' % tee.color)
 
