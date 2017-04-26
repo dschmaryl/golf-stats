@@ -146,8 +146,10 @@
       <input class="btn btn-default" type="submit" value="save" />
       {% if round %}
         <input class="btn btn-default" type="submit" name="delete" value="delete" onclick="return confirm('Delete this round?');return false;" />
+        <input class="btn btn-default" type="submit" name="cancel" value="cancel" />
+      {% else %}
+        <input class="btn btn-default" type="submit" name="cancel" value="cancel" onclick="return confirm('Cancel round?');return false;" />
       {% endif %}
-      <input class="btn btn-default" type="submit" name="cancel" value="cancel" onclick="return confirm('Cancel round?');return false;" />
     </div>
   </div>
 
