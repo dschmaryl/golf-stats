@@ -62,7 +62,10 @@ def add_users(users):
                 hole = golf_round.get_hole(i)
                 hole.strokes = round_data['scores'][i]['strokes']
                 hole.putts = round_data['scores'][i]['putts']
-                hole.gir = round_data['scores'][i]['gir']
+                if round_data['scores'][i]['gir'] == 1:
+                    hole.gir = True
+                else:
+                    hole.gir = False
                 hole.set_course_hole_data()
 
             golf_round.calc_totals()
