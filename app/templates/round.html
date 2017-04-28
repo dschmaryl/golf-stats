@@ -38,7 +38,7 @@
     {% if round %}
       <div class="col-sm-6">
         <h4>round stats:</h4>
-        score: {{ round.total_score }}<br />putts: {{ round.total_putts }}<br />handicap: {{  round.handicap_index }}
+        score: {{ round.total_strokes }}<br />putts: {{ round.total_putts }}<br />handicap: {{  round.handicap_index }}
       </div>
     {% endif %}
   </div>
@@ -71,7 +71,7 @@
         </div>
           {% for i in range(1, 10) %}
             <div class="col-xs-1">
-              <input class="form-control number-input" type="number" name="{{ 'hole%i_score' % i }}" value="{{ round.get_hole(i).score if round else '' }}" />
+              <input class="form-control number-input" type="number" name="{{ 'hole%i_strokes' % i }}" value="{{ round.get_hole(i).strokes if round else '' }}" />
             </div>
           {% endfor %}
       </div>
@@ -91,7 +91,9 @@
         </div>
           {% for i in range(1, 10) %}
             <div class="col-xs-1">
-              <input class="form-control number-input" type="number" name="{{ 'hole%i_gir' % i }}" value="{{ round.get_hole(i).gir if round else '' }}" />
+              <div class="center">
+                <input class="checkbox" type="checkbox" name="{{ 'hole%i_gir' % i }}" {{ 'checked' if round and round.get_hole(i).gir else '' }} />
+              </div>
             </div>
           {% endfor %}
       </div>
@@ -112,7 +114,7 @@
         </div>
           {% for i in range(10, 19) %}
             <div class="col-xs-1">
-              <input class="form-control number-input" type="number" name="{{ 'hole%i_score' % i }}" value="{{ round.get_hole(i).score if round else '' }}" />
+              <input class="form-control number-input" type="number" name="{{ 'hole%i_strokes' % i }}" value="{{ round.get_hole(i).strokes if round else '' }}" />
             </div>
           {% endfor %}
       </div>
@@ -132,7 +134,9 @@
         </div>
           {% for i in range(10, 19) %}
             <div class="col-xs-1">
-              <input class="form-control number-input" type="number" name="{{ 'hole%i_gir' % i }}" value="{{ round.get_hole(i).gir if round else '' }}" />
+              <div class="center">
+                <input class="checkbox" type="checkbox" name="{{ 'hole%i_gir' % i }}" {{ 'checked' if round and round.get_hole(i).gir else '' }} />
+              </div>
             </div>
           {% endfor %}
       </div>

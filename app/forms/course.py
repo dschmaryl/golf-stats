@@ -1,7 +1,7 @@
 from wtforms import Form, StringField, SubmitField, validators
 
 
-class GolfCourseForm(Form):
+class CourseForm(Form):
     cancel = SubmitField('cancel')
     delete = SubmitField('delete')
 

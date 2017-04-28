@@ -2,19 +2,19 @@ from datetime import date
 from wtforms import (DateField, Form, SelectField, SubmitField, TextAreaField,
                      validators)
 
-from app.models import GolfCourse
+from app.models import Course
 
 
 TEES = ['white', 'red', 'blue']
 
 
-class GolfRoundForm(Form):
+class RoundForm(Form):
     cancel = SubmitField('cancel')
     delete = SubmitField('delete')
 
     date = DateField('date', default=date.today())
 
-    courses = GolfCourse.query.all()
+    courses = Course.query.all()
     choices = [(course.id, course.nickname) for course in courses]
     course = SelectField('course', choices=choices, coerce=int)
 
@@ -30,7 +30,7 @@ class GolfRoundForm(Form):
         if not super().validate():
             return False
 
-        course = GolfCourse.query.get(self.course.data)
+        course = Course.query.get(self.course.data)
         if not course:
             self.course.errors.append('course not found')
             return False

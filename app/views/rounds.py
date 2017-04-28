@@ -2,8 +2,8 @@ from flask import flash, redirect, render_template, request, url_for
 from flask_login import login_required
 
 from app import app, db
-from app.models import GolfRound, GolfCourse, User
-from app.forms import GolfRoundForm
+from app.models import Round, Course, User
+from app.forms import RoundForm
 from .flash_errors import flash_errors
 
 
@@ -22,8 +22,8 @@ def round_list(username):
 @login_required
 def round_new(username):
     user = User.query.filter_by(username=username).first()
-    form = GolfRoundForm(request.form)
-    form.course.data = GolfCourse.query.filter_by(nickname='stony').first().id
+    form = RoundForm(request.form)
+    form.course.data = Course.query.filter_by(nickname='stony').first().id
     form.tee_color.data = TEES.index(user.default_tees)
 
     if request.method == 'POST':
@@ -32,8 +32,8 @@ def round_new(username):
             return redirect(url_for('user', username=username))
 
         if form.validate():
-            new_round = GolfRound(date=form.date.data, notes=form.notes.data)
-            course = GolfCourse.query.get(form.course.data)
+            new_round = Round(date=form.date.data, notes=form.notes.data)
+            course = Course.query.get(form.course.data)
             new_round.tee = course.get_tee_by_color(TEES[form.tee_color.data])
             user.rounds.append(new_round)
 
@@ -43,12 +43,13 @@ def round_new(username):
                                         round_id=new_round.id, hole_number=1))
 
             for i in range(1, 19):
-                if not request.form['hole%i_score' % i]:
+                if not request.form['hole%i_strokes' % i]:
                     continue
-                score = new_round.get_hole(i)
-                score.score = int(request.form['hole%i_score' % i])
-                score.putts = int(request.form['hole%i_putts' % i])
-                score.set_gir(request.form.get('hole%i_gir' % i))
+                hole = new_round.get_hole(i)
+                hole.set_course_hole_data()
+                hole.strokes = int(request.form['hole%i_strokes' % i])
+                hole.putts = int(request.form['hole%i_putts' % i])
+                hole.set_gir(request.form.get('hole%i_gir' % i))
 
             new_round.calc_totals()
             new_round.calc_handicap()
@@ -66,12 +67,12 @@ def round_new(username):
 @app.route('/user/<username>/round_edit/<round_id>', methods=['GET', 'POST'])
 @login_required
 def round_edit(username, round_id):
-    golf_round = GolfRound.query.get(round_id)
+    golf_round = Round.query.get(round_id)
     if not golf_round:
         flash('round %s not found' % round_id)
         return redirect(url_for('round_list', username=username))
 
-    form = GolfRoundForm(request.form, obj=golf_round)
+    form = RoundForm(request.form, obj=golf_round)
     form.course.data = golf_round.tee.course.id
 
     # TODO: put tees into a global of some sort
@@ -90,8 +91,11 @@ def round_edit(username, round_id):
 
         if form.validate():
             golf_round.date = form.date.data
-            course = GolfCourse.query.get(form.course.data)
-            golf_round.tee = course.get_tee_by_color(TEES[form.tee_color.data])
+            golf_round.notes = form.notes.data
+            course = Course.query.get(form.course.data)
+            tee_color = TEES[form.tee_color.data]
+            if tee_color != golf_round.tee.color:
+                golf_round.tee = course.get_tee_by_color(tee_color)
 
             if 'hole_by_hole' in request.form:
                 db.session.commit()
@@ -99,11 +103,11 @@ def round_edit(username, round_id):
                                         round_id=golf_round.id, hole_number=1))
 
             for i in range(1, 19):
-                score = golf_round.get_hole(i)
-                if request.form['hole%i_score' % i]:
-                    score.score = int(request.form['hole%i_score' % i])
-                    score.putts = int(request.form['hole%i_putts' % i])
-                    score.set_gir(request.form.get('hole%i_gir' % i))
+                hole = golf_round.get_hole(i)
+                if request.form['hole%i_strokes' % i]:
+                    hole.strokes = int(request.form['hole%i_strokes' % i])
+                    hole.putts = int(request.form['hole%i_putts' % i])
+                    hole.set_gir(request.form.get('hole%i_gir' % i))
 
             golf_round.calc_totals()
             golf_round.calc_handicap()

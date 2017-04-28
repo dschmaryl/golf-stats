@@ -2,8 +2,8 @@ from flask import flash, redirect, render_template, request, url_for
 from flask_login import login_required
 
 from app import app, db
-from app.models import GolfRound
-from app.forms import HoleScoreForm
+from app.models import Round
+from app.forms import HoleForm
 from .flash_errors import flash_errors
 
 
@@ -11,9 +11,9 @@ from .flash_errors import flash_errors
            methods=['GET', 'POST'])
 @login_required
 def hole_new(username, round_id, hole_number):
-    golf_round = GolfRound.query.get(round_id)
-    score = golf_round.get_hole(int(hole_number))
-    form = HoleScoreForm(request.form)
+    golf_round = Round.query.get(round_id)
+    hole = golf_round.get_hole(int(hole_number))
+    form = HoleForm(request.form)
 
     if request.method == 'POST':
         if form.cancel.data:
@@ -21,9 +21,9 @@ def hole_new(username, round_id, hole_number):
             return redirect(url_for('user', username=username))
 
         if form.validate():
-            score.score = form.score.data
-            score.putts = form.putts.data
-            score.set_gir(form.gir.data)
+            hole.strokes = form.strokes.data
+            hole.putts = form.putts.data
+            hole.set_gir(form.gir.data)
             db.session.commit()
 
             if int(hole_number) == 18:
@@ -45,9 +45,9 @@ def hole_new(username, round_id, hole_number):
            methods=['GET', 'POST'])
 @login_required
 def hole_edit(username, round_id, hole_number):
-    golf_round = GolfRound.query.get(round_id)
-    score = golf_round.get_hole(int(hole_number))
-    form = HoleScoreForm(request.form, obj=score)
+    golf_round = Round.query.get(round_id)
+    hole = golf_round.get_hole(int(hole_number))
+    form = HoleForm(request.form, obj=hole)
 
     if request.method == 'POST':
         if form.cancel.data:
@@ -55,9 +55,9 @@ def hole_edit(username, round_id, hole_number):
             return redirect(url_for('user', username=username))
 
         if form.validate():
-            score.score = form.score.data
-            score.putts = form.putts.data
-            score.set_gir(form.gir.data)
+            hole.strokes = form.strokes.data
+            hole.putts = form.putts.data
+            hole.set_gir(form.gir.data)
             db.session.commit()
 
             if int(hole_number) == 18:
@@ -79,7 +79,7 @@ def hole_edit(username, round_id, hole_number):
            methods=['GET', 'POST'])
 @login_required
 def hole_last(username, round_id):
-    golf_round = GolfRound.query.get(round_id)
+    golf_round = Round.query.get(round_id)
     if not golf_round:
         flash('round %s not found' % round_id)
         return redirect(url_for('user', username=username))

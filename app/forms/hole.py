@@ -1,25 +1,25 @@
-from wtforms import Form, IntegerField, SubmitField, validators
+from wtforms import BooleanField, Form, IntegerField, SubmitField, validators
 
 
-class HoleScoreForm(Form):
+class HoleForm(Form):
     cancel = SubmitField('cancel')
 
-    score = IntegerField('score', [
-        validators.InputRequired(message='enter score'),
-        validators.NumberRange(min=1, max=30, message='invalid score')
+    strokes = IntegerField('strokes', [
+        validators.InputRequired(message='enter strokes'),
+        validators.NumberRange(min=1, max=30, message='invalid strokes')
         ])
     putts = IntegerField('putts', [
         validators.InputRequired(message='enter putts'),
         validators.NumberRange(min=0, max=20, message='invalid # of putts')
         ])
-    gir = IntegerField('gir', [validators.Optional()])
+    gir = BooleanField('gir')
 
     def validate(self):
         if not super().validate():
             return False
 
-        if self.score.data <= self.putts.data:
-            self.score.errors.append('score must be greater than putts')
+        if self.strokes.data <= self.putts.data:
+            self.strokes.errors.append('strokes must be greater than putts')
             return False
 
         if self.gir.data not in [0, 1, None]:

@@ -4,15 +4,15 @@ from flask import flash, redirect, render_template, request, url_for
 from flask_login import login_required
 
 from app import app, db
-from app.models import GolfCourse
-from app.forms import GolfCourseForm
+from app.models import Course
+from app.forms import CourseForm
 from .flash_errors import flash_errors
 
 
 @app.route('/course_list')
 @login_required
 def course_list():
-    courses = GolfCourse.query.all()
+    courses = Course.query.all()
     return render_template('course_list.html', title='courses',
                            courses=courses)
 
@@ -20,7 +20,7 @@ def course_list():
 @app.route('/course_new', methods=['GET', 'POST'])
 @login_required
 def course_new():
-    form = GolfCourseForm(request.form)
+    form = CourseForm(request.form)
 
     if request.method == 'POST':
         if form.cancel.data:
@@ -29,11 +29,11 @@ def course_new():
 
         if form.validate():
             nickname = form.nickname.data
-            if GolfCourse.query.filter_by(nickname=nickname).first():
+            if Course.query.filter_by(nickname=nickname).first():
                 flash('%s already exists' % nickname)
                 return render_template('course.html', title='new course',
                                        form=form)
-            new_course = GolfCourse(name=form.name.data, nickname=nickname)
+            new_course = Course(name=form.name.data, nickname=nickname)
             db.session.add(new_course)
             db.session.commit()
             return redirect(url_for('course_list'))
@@ -46,7 +46,7 @@ def course_new():
 @app.route('/course_edit/<course_nickname>/tee_new', methods=['GET', 'POST'])
 @login_required
 def tee_new(course_nickname):
-    course = GolfCourse.query.filter_by(nickname=course_nickname).first()
+    course = Course.query.filter_by(nickname=course_nickname).first()
     if not course:
         flash('course not found')
         return redirect(url_for('course_list'))
@@ -63,10 +63,10 @@ def tee_new(course_nickname):
         tee.slope = int(request.form['slope'])
 
         for i in range(1, 19):
-            hole = tee.get_hole(i)
-            hole.par = int(request.form['hole%i_par' % i])
-            hole.yardage = int(request.form['hole%i_yardage' % i])
-            hole.handicap = int(request.form['hole%i_handicap' % i])
+            course_hole = tee.get_hole(i)
+            course_hole.par = int(request.form['hole%i_par' % i])
+            course_hole.yardage = int(request.form['hole%i_yardage' % i])
+            course_hole.handicap = int(request.form['hole%i_handicap' % i])
 
         db.session.commit()
 
@@ -82,7 +82,7 @@ def tee_new(course_nickname):
            methods=['GET', 'POST'])
 @login_required
 def tee_edit(course_nickname, tee_id):
-    course = GolfCourse.query.filter_by(nickname=course_nickname).first()
+    course = Course.query.filter_by(nickname=course_nickname).first()
     if not course:
         flash('course not found')
 
@@ -130,12 +130,12 @@ def tee_edit(course_nickname, tee_id):
 @app.route('/course_edit/<course_nickname>', methods=['GET', 'POST'])
 @login_required
 def course_edit(course_nickname):
-    course = GolfCourse.query.filter_by(nickname=course_nickname).first()
+    course = Course.query.filter_by(nickname=course_nickname).first()
     if not course:
         flash('course %s not found' % course_nickname)
         return redirect(url_for('course_list'))
 
-    form = GolfCourseForm(request.form, obj=course)
+    form = CourseForm(request.form, obj=course)
 
     if request.method == 'POST':
         if form.cancel.data:

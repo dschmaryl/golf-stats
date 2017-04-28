@@ -34,6 +34,6 @@ class AdminView(ModelView):
 
 
 admin.add_view(AdminView(models.User, db.session))
-admin.add_view(AdminView(models.GolfRound, db.session))
-admin.add_view(AdminView(models.HoleScore, db.session))
-admin.add_view(AdminView(models.GolfCourse, db.session))
+admin.add_view(AdminView(models.Round, db.session))
+admin.add_view(AdminView(models.Hole, db.session))
+admin.add_view(AdminView(models.Course, db.session))
