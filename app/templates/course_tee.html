@@ -3,7 +3,7 @@
 
 <div class="row">
   <div class="col-xs-12">
-    <h3>new tees</h3>
+    <h3>{{ title }}</h3>
   </div>
 </div>
 
@@ -12,17 +12,11 @@
   <div class="row">
     <div class="col-sm-3">
       <h4>date:</h4>
-      <input class="form-control date-input" type="date" name="date" />
+      {{ form.date(class="form-control date-input", type="date") }}
     </div>
     <div class="col-sm-3">
       <h4>tee:</h4>
-      <select name="tee_color" class="form-control">
-        {% for color in ['white', 'red', 'blue'] %}
-          <option value="{{ color }}" {{ 'selected="selected"' if color == 'white'}} >
-            {{ color }}
-          </option>
-        {% endfor %}
-      </select>
+      {{ form.color(class="form-control") }}
     </div>
   </div>
 
@@ -31,13 +25,11 @@
   <div class="row">
     <div class="col-xs-3">
       <h4>rating:</h4>
-      <input class="form-control number-input" type="float" name="rating" />
+      {{ form.rating(class="form-control number-input") }}
     </div>
-  </div>
-  <div class="row">
-    <div class="col-xs-12">
+    <div class="col-xs-3">
       <h4>slope:</h4>
-      <input class="form-control number-input" type="number" name="slope" />
+      {{ form.slope(class="form-control number-input") }}
     </div>
   </div>
 
@@ -61,7 +53,7 @@
         </div>
           {% for i in range(1, 10) %}
             <div class="col-xs-1">
-              <input class="form-control number-input" type="number" name="{{ 'hole%i_par' % i }}" />
+              <input class="form-control number-input" type="number" name="{{ 'hole%i_par' % i }}" value="{{ tee.get_hole(i).par if tee else '' }}" />
             </div>
           {% endfor %}
       </div>
@@ -71,20 +63,21 @@
         </div>
           {% for i in range(1, 10) %}
             <div class="col-xs-1">
-              <input class="form-control number-input" type="number" name="{{ 'hole%i_yardage' % i }}" />
+              <input class="form-control number-input" type="number" name="{{ 'hole%i_yardage' % i }}" value="{{ tee.get_hole(i).yardage if tee else '' }}" />
             </div>
           {% endfor %}
       </div>
       <div class="row">
         <div class="col-xs-2 col-sm-1">
-          <h4>hole:</h4>
+          <h4>hc:</h4>
         </div>
           {% for i in range(1, 10) %}
             <div class="col-xs-1">
-              <input class="form-control number-input" type="number" name="{{ 'hole%i_handicap' % i }}" />
+              <input class="form-control number-input" type="number" name="{{ 'hole%i_handicap' % i }}" value="{{ tee.get_hole(i).handicap if tee else '' }}" />
             </div>
           {% endfor %}
       </div>
+      <br />
       <div class="row">
         <div class="col-xs-2 col-sm-1">
           <h4>hole:</h4>
@@ -97,31 +90,31 @@
       </div>
       <div class="row">
         <div class="col-xs-2 col-sm-1">
-          <h4>par</h4>
+          <h4>par:</h4>
         </div>
           {% for i in range(10, 19) %}
             <div class="col-xs-1">
-              <input class="form-control number-input" type="number" name="{{ 'hole%i_par' % i }}" />
+              <input class="form-control number-input" type="number" name="{{ 'hole%i_par' % i }}" value="{{ tee.get_hole(i).par if tee else '' }}" />
             </div>
           {% endfor %}
       </div>
       <div class="row">
         <div class="col-xs-2 col-sm-1">
-          <h4>yardage</h4>
+          <h4>yards:</h4>
         </div>
           {% for i in range(10, 19) %}
             <div class="col-xs-1">
-              <input class="form-control number-input" type="number" name="{{ 'hole%i_yardage' % i }}" />
+              <input class="form-control number-input" type="number" name="{{ 'hole%i_yardage' % i }}" value="{{ tee.get_hole(i).yardage if tee else '' }}" />
             </div>
           {% endfor %}
       </div>
       <div class="row">
         <div class="col-xs-2 col-sm-1">
-          <h4>handicap</h4>
+          <h4>hc:</h4>
         </div>
           {% for i in range(10, 19) %}
             <div class="col-xs-1">
-              <input class="form-control number-input" type="number" name="{{ 'hole%i_handicap' % i }}" />
+              <input class="form-control number-input" type="number" name="{{ 'hole%i_handicap' % i }}" value="{{ tee.get_hole(i).handicap if tee else '' }}" />
             </div>
           {% endfor %}
       </div>
@@ -133,7 +126,12 @@
   <div class="row">
     <div class="col-xs-12">
       <input class="btn btn-default" type="submit" value="save" />
-      <input class="btn btn-default" type="submit" name="cancel" value="cancel" onclick="return confirm('Cancel new tee?');return false;" />
+      {% if tee %}
+        <input class="btn btn-default" type="submit" name="delete" value="delete" onclick="return confirm('Delete this tee?');return false;" />
+        <input class="btn btn-default" type="submit" name="cancel" value="cancel" />
+      {% else %}
+        <input class="btn btn-default" type="submit" name="cancel" value="cancel" onclick="return confirm('Cancel tee?');return false;" />
+      {% endif %}
     </div>
   </div>
 
