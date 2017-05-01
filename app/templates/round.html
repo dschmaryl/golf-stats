@@ -13,7 +13,10 @@ function calcTotal(nine, stat) {
     }
   } else {
     for (i = 10; i < 19; i++) {
-      total += parseInt(document.getElementById('hole' + i + '_' + stat).value);
+      var value = parseInt(document.getElementById('hole' + i + '_' + stat).value);
+      if (!isNaN(value)) {
+        total += value;
+      }
     }
   }
   document.getElementById('total_' + nine + '_9_' + stat).innerHTML = total;

@@ -29,7 +29,7 @@ def round_new(username):
     if request.method == 'POST':
         if form.cancel.data:
             flash('canceled new round')
-            return redirect(url_for('user', username=username))
+            return redirect(url_for('round_list', username=username))
 
         if form.validate():
             new_round = Round(date=form.date.data, notes=form.notes.data)
@@ -81,13 +81,13 @@ def round_edit(username, round_id):
     if request.method == 'POST':
         if form.cancel.data:
             flash('canceled round %s edit' % round_id)
-            return redirect(url_for('user', username=username))
+            return redirect(url_for('round_list', username=username))
 
         if form.delete.data:
             db.session.delete(golf_round)
             db.session.commit()
             flash('deleted round %s' % round_id)
-            return redirect(url_for('user', username=username))
+            return redirect(url_for('round_list', username=username))
 
         if form.validate():
             golf_round.date = form.date.data
