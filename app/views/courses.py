@@ -1,5 +1,3 @@
-from dateutil.parser import parse
-
 from flask import flash, redirect, render_template, request, url_for
 from flask_login import login_required
 
@@ -81,48 +79,10 @@ def course_edit(course_nickname):
 
 
 @app.route('/course_edit/<course_nickname>/tee_new', methods=['GET', 'POST'])
-@login_required
-def tee_new(course_nickname):
-    course = Course.query.filter_by(nickname=course_nickname).first()
-    if not course:
-        flash('course not found')
-        return redirect(url_for('course_list'))
-
-    form = CourseTeeForm(request.form)
-
-    if request.method == 'POST':
-        if form.cancel.data:
-            flash('canceled new tee')
-            return redirect(url_for('course_edit', title='edit course',
-                                    course_nickname=course.nickname))
-
-        if form.validate():
-            course_tee = course.get_new_tee(TEES[form.color.data])
-            course_tee.date = form.date.data
-            course_tee.rating = float(form.rating.data)
-            course_tee.slope = int(form.slope.data)
-
-            for i in range(1, 19):
-                course_hole = course_tee.get_hole(i)
-                course_hole.par = int(request.form['hole%i_par' % i])
-                course_hole.yardage = int(request.form['hole%i_yardage' % i])
-                course_hole.handicap = int(request.form['hole%i_handicap' % i])
-
-            db.session.commit()
-            flash('saved %s tees' % course_tee.color)
-            return redirect(url_for('course_edit', title='edit course',
-                                    course_nickname=course.nickname))
-        else:
-            flash_errors(form)
-
-    return render_template('course_tee.html', title='new tee', tee=None,
-                           form=form)
-
-
-@app.route('/course_edit/<course_nickname>/tee_edit/<tee_id>',
+@app.route('/course_edit/<course_nickname>/course_tee/<tee_id>',
            methods=['GET', 'POST'])
 @login_required
-def tee_edit(course_nickname, tee_id):
+def course_tee(course_nickname, tee_id=None):
     course = Course.query.filter_by(nickname=course_nickname).first()
     if not course:
         flash('course not found')
@@ -135,20 +95,23 @@ def tee_edit(course_nickname, tee_id):
         if form.cancel.data:
             flash('canceled %s tees edit' % course_tee.color)
             return redirect(url_for('course_edit', title='edit course',
-                                            course_nickname=course.nickname))
+                                    course_nickname=course.nickname))
 
         if form.delete.data:
             db.session.delete(course_tee)
             db.session.commit()
             flash('deleted %s tee' % course_tee.color)
             return redirect(url_for('course_edit', title='edit course',
-                                            course_nickname=course.nickname))
+                                    course_nickname=course.nickname))
 
         if form.validate():
+            if course_tee:
+                course_tee.color = TEES[form.color.data]
+            else:
+                course_tee = course.get_new_tee(TEES[form.color.data])
             course_tee.date = form.date.data
             course_tee.rating = float(form.rating.data)
             course_tee.slope = int(form.slope.data)
-            course_tee.color = TEES[form.color.data]
 
             for i in range(1, 19):
                 course_hole = course_tee.get_hole(i)

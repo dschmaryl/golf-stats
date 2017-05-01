@@ -1,7 +1,7 @@
 from datetime import date
 
 from wtforms import (DateField, FloatField, Form, IntegerField, SelectField,
-                     StringField, SubmitField, TextAreaField, validators)
+                     StringField, SubmitField, validators)
 
 from app.models import Course
 

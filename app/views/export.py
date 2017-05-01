@@ -6,6 +6,7 @@ from app import app
 
 from app.utils import run_export
 
+
 @app.route('/export', methods=['GET', 'POST'])
 @login_required
 def export_data():

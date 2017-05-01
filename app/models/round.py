@@ -29,7 +29,7 @@ class Round(db.Model):
     handicap_index = db.Column(db.Float)
 
     holes = db.relationship('Hole', backref='round', lazy='dynamic',
-                             cascade="save-update, delete")
+                            cascade="save-update, delete")
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
