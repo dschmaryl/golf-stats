@@ -56,6 +56,10 @@ div.center {
   width: 50%;
 }
 
+div.vcenter {
+  padding-top: 6px;
+}
+
 footer {
   margin-top: 10px;
 }

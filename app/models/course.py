@@ -60,7 +60,7 @@ class CourseTee(db.Model):
         return self.course_holes.filter_by(hole_number=hole_number).first()
 
     def get_total_par(self):
-        return sum([hole.par for hole in self.course_holes])
+        return sum([course_hole.par for course_hole in self.course_holes])
 
     def __repr__(self):
         return '<Tee %r>' % (self.color)
