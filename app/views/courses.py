@@ -1,13 +1,10 @@
 from flask import flash, redirect, render_template, request, url_for
 from flask_login import login_required
 
-from app import app, db
+from app import app, db, TEES
 from app.models import Course
 from app.forms import CourseForm, CourseTeeForm
 from .flash_errors import flash_errors
-
-
-TEES = ['white', 'red', 'blue']
 
 
 @app.route('/course_list')

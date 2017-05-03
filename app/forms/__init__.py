@@ -6,3 +6,4 @@ from .course import CourseForm, CourseTeeForm
 from .hole import HoleForm
 from .login import LoginForm
 from .round import RoundForm
+from .user import UserForm

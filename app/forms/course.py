@@ -4,9 +4,7 @@ from wtforms import (DateField, FloatField, Form, IntegerField, SelectField,
                      StringField, SubmitField, validators)
 
 from app.models import Course
-
-
-TEES = ['white', 'red', 'blue']
+from app import TEES
 
 
 class CourseForm(Form):

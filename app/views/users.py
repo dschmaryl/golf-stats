@@ -1,9 +1,9 @@
 from flask import flash, g, render_template, redirect, request, url_for
 from flask_login import current_user, login_required
 
-from app import app, db, login_manager
+from app import app, db, login_manager, TEES
 from app.models import User
-from app.forms import ChangePasswordForm
+from app.forms import ChangePasswordForm, UserForm
 from .flash_errors import flash_errors
 
 
@@ -50,3 +50,25 @@ def change_password(username):
 
     return render_template('change_password.html', username=username,
                            title='change password', form=form)
+
+
+@app.route('/user_new', methods=['GET', 'POST'])
+def user_new():
+    form = UserForm(request.form)
+
+    if request.method == 'POST':
+        if form.cancel.data:
+            flash('canceled new user registration')
+            return redirect(url_for('index'))
+
+        if form.validate():
+            user = User(username=form.username.data)
+            user.set_password(form.password.data)
+            user.default_tees = TEES[form.default_tees.data]
+
+            flash('user %s added' % user.username)
+            return redirect(url_for('user', username=user.username))
+        else:
+            flash_errors(form)
+
+    return render_template('user_new.html', title='new user', form=form)

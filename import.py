@@ -5,7 +5,7 @@ import pathlib
 import pickle
 
 from app import db
-from app.models import *
+from app.models import Course, Round, User
 
 
 def get(name):

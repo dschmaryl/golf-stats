@@ -3,9 +3,7 @@ from wtforms import (DateField, Form, SelectField, SubmitField, TextAreaField,
                      validators)
 
 from app.models import Course
-
-
-TEES = ['white', 'red', 'blue']
+from app import TEES
 
 
 class RoundForm(Form):
