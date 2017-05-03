@@ -1,5 +1,3 @@
-import os
-
 from wtforms import Form, SelectField, StringField, SubmitField, validators
 from wtforms.widgets import PasswordInput
 from flask_wtf import RecaptchaField
