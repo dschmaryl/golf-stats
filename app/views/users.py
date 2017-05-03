@@ -63,11 +63,12 @@ def user_new():
 
         if form.validate():
             user = User(username=form.username.data)
+            db.session.add(user)
             user.set_password(form.password.data)
             user.default_tees = TEES[form.default_tees.data]
-
+            db.session.commit()
             flash('user %s added' % user.username)
-            return redirect(url_for('user', username=user.username))
+            return redirect(url_for('login'))
         else:
             flash_errors(form)
 
