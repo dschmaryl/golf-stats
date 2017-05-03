@@ -1,5 +1,8 @@
+import os
+
 from wtforms import Form, SelectField, StringField, SubmitField, validators
 from wtforms.widgets import PasswordInput
+from flask_wtf import RecaptchaField
 
 from app.models import User
 from app import TEES
@@ -7,6 +10,8 @@ from app import TEES
 
 class UserForm(Form):
     cancel = SubmitField('cancel')
+
+    recaptcha = RecaptchaField()
 
     username = StringField(
         'username',
