@@ -31,7 +31,7 @@ class UserForm(Form):
         if not super().validate():
             return False
 
-        if User.query.filter_by(username=self.username).first():
+        if User.query.filter_by(username=self.username.data).first():
             self.username.errors.append('username already exists')
             return False
 
