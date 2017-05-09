@@ -3,10 +3,9 @@
 
 from flask import Flask
 from flask_admin import Admin
-from flask_admin.contrib.sqla import ModelView
-from flask_login import LoginManager, current_user
-from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
+from flask_login import LoginManager
+from flask_sqlalchemy import SQLAlchemy
 
 
 app = Flask(__name__)
@@ -28,16 +27,3 @@ TEES = ['white', 'red', 'blue']
 
 
 from app import views, models
-
-
-class AdminView(ModelView):
-    def is_accessible(self):
-        if not current_user.is_authenticated:
-            return False
-        return current_user.username == 'daryl'
-
-
-admin.add_view(AdminView(models.User, db.session))
-admin.add_view(AdminView(models.Round, db.session))
-admin.add_view(AdminView(models.Hole, db.session))
-admin.add_view(AdminView(models.Course, db.session))

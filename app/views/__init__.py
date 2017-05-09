@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+from . import admin
 from . import courses
 from . import errors
 from . import export
