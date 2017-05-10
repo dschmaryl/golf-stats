@@ -12,10 +12,7 @@ class AdminView(ModelView):
         return current_user.username == 'daryl'
 
 
-@app.route('/admin', methods=['GET', 'POST'])
-@login_required
-def add_admin():
-    admin.add_view(AdminView(User, db.session))
-    admin.add_view(AdminView(Round, db.session))
-    admin.add_view(AdminView(Hole, db.session))
-    admin.add_view(AdminView(Course, db.session))
+admin.add_view(AdminView(User, db.session))
+admin.add_view(AdminView(Round, db.session))
+admin.add_view(AdminView(Hole, db.session))
+admin.add_view(AdminView(Course, db.session))
