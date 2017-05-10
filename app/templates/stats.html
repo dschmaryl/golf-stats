@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="row">
+  <div class="col-xs-12">
+    <h3>stats as of {{ user.get_latest_round().date.strftime('%-m-%-d-%Y') }}:</h3>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xs-10 col-sm-6 col-md-5">
+    {% if user.get_rounds() %}
+      {% set latest_round = user.get_latest_round() %}
+        <table class="table table-condensed">
+          <tbody>
+            <tr>
+              <td><h4>handicap:</h4></td>
+              <td><h4>{{ user.get_handicap(latest_round.id) }}</h4></td>
+            </tr>
+            <tr>
+              <td><h4>scoring avg:</h4></td>
+              <td><h4>{{ "%.1f" % user.get_mavg_score(latest_round) }}</h4></td>
+            </tr>
+            <tr>
+              <td><h4>avg score to par:</h4></td>
+              <td><h4>{{ "%.1f" % user.get_mavg_score_to_par(latest_round) }}</h4></td>
+            </tr>
+            <tr>
+              <td><h4>putts per round:</h4></td>
+              <td><h4>{{ "%.1f" % user.get_mavg_putts(latest_round) }}</h4></td>
+            </tr>
+            <tr>
+              <td><h4>putts per hole:</h4></td>
+              <td><h4>{{ "%.2f" % (user.get_mavg_putts(latest_round) / 18) }}</h4></td>
+            </tr>
+            <tr>
+              <td><h4>g.i.r. avg %:</h4></td>
+              <td><h4>{{ "%.1f" % (user.get_mavg_gir(latest_round) / 18 * 100) }}</h4></td>
+            </tr>
+            <!-- {% set mavgs = user.get_par_mavgs(latest_round) %}
+            {% for k, v in {'par3': 'par 3 avg:', 'par4': 'par 4 avg:', 'par5': 'par 5 avg:'}.items() %}
+              <tr>
+                <td><h4>{{ v }}</h4></td>
+                <td><h4>{{ "%.2f" % mavgs[k] }}</h4></td>
+              </tr>
+            {% endfor %} -->
+          </tbody>
+        </table>
+
+    {% else %}
+      no rounds found
+    {% endif %}
+  </div>
+</div>
+
+<br />
+
+<div class="row">
+  <div class="col-xs-12">
+    <a href="{{ url_for('round_new', username=g.user.username) }}"><button class="btn btn-default">new round</button></a>
+    <a href="{{ url_for('round_list', username=g.user.username) }}"><button class="btn btn-default">old rounds</button></a>
+    <a href="{{ url_for('index') }}"><button class="btn btn-default">back to main</button></a>
+  </div>
+</div>
+
+{% endblock %}

@@ -18,12 +18,12 @@ def before_request():
     g.user = current_user
 
 
-@app.route('/user/<username>')
+@app.route('/user/<username>/stats')
 @login_required
-def user(username):
+def stats(username):
     user = User.query.filter_by(username=username).first()
     title = 'stats for ' + username
-    return render_template('user.html', user=user, title=title)
+    return render_template('stats.html', user=user, title=title)
 
 
 @app.route('/user/<username>/change_password', methods=['GET', 'POST'])
@@ -53,7 +53,32 @@ def change_password(username):
                            title='change password', form=form)
 
 
-@app.route('/user_new', methods=['GET', 'POST'])
+@app.route('/user/<username>/settings', methods=['GET', 'POST'])
+@login_required
+def user(username):
+    user = User.query.filter_by(username=username).first()
+    form = UserForm(request.form, obj=user)
+    form.default_tees.choices = [(i, TEES[i]) for i in range(len(TEES))]
+
+    if request.method == 'POST':
+        if form.cancel.data:
+            return redirect(url_for('index'))
+
+        if form.validate():
+            user.username = form.username.data
+            user.set_password(form.password.data)
+            user.default_tees = TEES[int(request.form.get('default_tees'))]
+            db.session.commit()
+
+            flash('settings saved')
+            return redirect(url_for('index'))
+        else:
+            flash_errors(form)
+
+    return render_template('user.html', title='settings', form=form)
+
+
+@app.route('/user/new/', methods=['GET', 'POST'])
 def user_new():
     form = UserForm(request.form)
     form.default_tees.choices = [(i, TEES[i]) for i in range(len(TEES))]
@@ -64,14 +89,20 @@ def user_new():
             return redirect(url_for('index'))
 
         if form.validate():
+            if User.query.filter_by(username=form.username.data).first():
+                flash('username already taken')
+                return redirect(url_for('user_new'))
+
             user = User(username=form.username.data)
             db.session.add(user)
+
             user.set_password(form.password.data)
             user.default_tees = TEES[int(request.form.get('default_tees'))]
             db.session.commit()
-            flash('user %s added' % user.username)
+
+            flash('added user %s' % user.username)
             return redirect(url_for('login'))
         else:
             flash_errors(form)
 
-    return render_template('user_new.html', title='new user', form=form)
+    return render_template('user.html', title='new user', form=form)

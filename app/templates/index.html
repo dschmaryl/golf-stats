@@ -10,11 +10,12 @@
 <div class="row">
   <div class="col-xs-12">
     {% if g.user.is_authenticated %}
-        <a href="{{ url_for('user', username=g.user.username) }}"><button class="btn btn-default">my stats</button></a>
+        <a href="{{ url_for('stats', username=g.user.username) }}"><button class="btn btn-default">my stats</button></a>
         <a href="{{ url_for('change_password', username=g.user.username) }}"><button class="btn btn-default">change password</button></a>
         <a href="{{ url_for('logout') }}"><button class="btn btn-default">logout</button></a>
     {% else %}
         <a href="{{ url_for('login') }}"><button class="btn btn-default">login</button></a>
+        <a href="{{ url_for('user_new') }}"><button class="btn btn-default">register</button></a>
     {% endif %}
   </div>
 </div>

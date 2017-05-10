@@ -18,7 +18,7 @@ def hole_new(username, round_id, hole_number):
     if request.method == 'POST':
         if form.cancel.data:
             flash('canceled hole')
-            return redirect(url_for('user', username=username))
+            return redirect(url_for('stats', username=username))
 
         if form.validate():
             hole.strokes = form.strokes.data
@@ -52,7 +52,7 @@ def hole_edit(username, round_id, hole_number):
     if request.method == 'POST':
         if form.cancel.data:
             flash('canceled hole')
-            return redirect(url_for('user', username=username))
+            return redirect(url_for('stats', username=username))
 
         if form.validate():
             hole.strokes = form.strokes.data
@@ -82,7 +82,7 @@ def hole_last(username, round_id):
     golf_round = Round.query.get(round_id)
     if not golf_round:
         flash('round %s not found' % round_id)
-        return redirect(url_for('user', username=username))
+        return redirect(url_for('stats', username=username))
 
     golf_round.calc_totals()
     golf_round.calc_handicap()

@@ -26,7 +26,7 @@ def login():
             else:
                 flash('username not found')
                 return redirect(url_for('login'))
-            return redirect(url_for('user', username=g.user.username))
+            return redirect(url_for('stats', username=g.user.username))
         else:
             flash_errors(form)
 
