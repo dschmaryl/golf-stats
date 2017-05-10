@@ -1,9 +1,10 @@
 from datetime import date
+
+from flask import request
 from wtforms import (DateField, Form, SelectField, SubmitField, TextAreaField,
                      validators)
 
 from app.models import Course
-from app import TEES
 
 
 class RoundForm(Form):
@@ -11,13 +12,8 @@ class RoundForm(Form):
     delete = SubmitField('delete')
 
     date = DateField('date', default=date.today())
-
-    courses = Course.query.all()
-    choices = [(course.id, course.nickname) for course in courses]
-    course = SelectField('course', choices=choices, coerce=int)
-
-    choices = [(i, TEES[i]) for i in range(len(TEES))]
-    tee_color = SelectField('tee_color', choices=choices, coerce=int)
+    course = SelectField('course', coerce=int)
+    tee_color = SelectField('tee_color', coerce=int)
 
     notes = TextAreaField('notes', [
         validators.Optional(),
@@ -25,6 +21,9 @@ class RoundForm(Form):
         ])
 
     def validate(self):
+        self.course.data = int(request.form.get('course'))
+        self.tee_color.data = int(request.form.get('tee_color'))
+
         if not super().validate():
             return False
 
@@ -33,9 +32,10 @@ class RoundForm(Form):
             self.course.errors.append('course not found')
             return False
 
-        if not course.get_tee_by_color(TEES[self.tee_color.data]):
-            self.tee_color.errors.append('%s tees not found' %
-                                         TEES[self.tee_color.data])
+        tee_colors = [color for k, color in self.tee_color.choices]
+        tee_color = tee_colors[self.tee_color.data]
+        if not course.get_tee_by_color(tee_color):
+            self.tee_color.errors.append('%s tees not found' % tee_color)
             return False
 
         return True

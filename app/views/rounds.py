@@ -20,7 +20,12 @@ def round_list(username):
 def round_new(username):
     user = User.query.filter_by(username=username).first()
     form = RoundForm(request.form)
-    form.course.data = Course.query.filter_by(nickname='stony').first().id
+
+    courses = Course.query.all()
+    form.course.choices = [(course.id, course.nickname) for course in courses]
+    form.course.data = user.get_latest_round().tee.course.id
+
+    form.tee_color.choices = [(i, TEES[i]) for i in range(len(TEES))]
     form.tee_color.data = TEES.index(user.default_tees)
 
     if request.method == 'POST':
@@ -30,8 +35,11 @@ def round_new(username):
 
         if form.validate():
             new_round = Round(date=form.date.data, notes=form.notes.data)
-            course = Course.query.get(form.course.data)
-            new_round.tee = course.get_tee_by_color(TEES[form.tee_color.data])
+            course = Course.query.get(int(request.form.get('course')))
+
+            new_round.tee = course.get_tee_by_color(
+                TEES[int(request.form.get('tee_color'))]
+                )
             user.rounds.append(new_round)
 
             if 'hole_by_hole' in request.form:
@@ -70,9 +78,12 @@ def round_edit(username, round_id):
         return redirect(url_for('round_list', username=username))
 
     form = RoundForm(request.form, obj=golf_round)
+
+    courses = Course.query.all()
+    form.course.choices = [(course.id, course.nickname) for course in courses]
     form.course.data = golf_round.tee.course.id
 
-    # TODO: put tees into a global of some sort
+    form.tee_color.choices = [(i, TEES[i]) for i in range(len(TEES))]
     form.tee_color.data = TEES.index(golf_round.tee.color)
 
     if request.method == 'POST':
@@ -89,8 +100,8 @@ def round_edit(username, round_id):
         if form.validate():
             golf_round.date = form.date.data
             golf_round.notes = form.notes.data
-            course = Course.query.get(form.course.data)
-            tee_color = TEES[form.tee_color.data]
+            course = Course.query.get(int(request.form.get('course')))
+            tee_color = TEES[int(request.form.get('tee_color'))]
             if tee_color != golf_round.tee.color:
                 golf_round.tee = course.get_tee_by_color(tee_color)
 
