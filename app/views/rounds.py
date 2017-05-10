@@ -24,7 +24,9 @@ def round_new(username):
 
     courses = Course.query.all()
     form.course.choices = [(course.id, course.nickname) for course in courses]
-    form.course.data = user.get_latest_round().tee.course.id
+
+    if user.rounds:
+        form.course.data = user.get_latest_round().tee.course.id
 
     form.tee_color.choices = [(i, TEES[i]) for i in range(len(TEES))]
     form.tee_color.data = TEES.index(user.default_tees)
