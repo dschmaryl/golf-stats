@@ -54,8 +54,11 @@ def add_users(users):
                 nickname=round_data['course']
                 ).first()
             course_tee = course.get_tee_by_color(round_data['tee_color'])
-            golf_round = Round(date=round_data['date'], tee=course_tee,
-                               notes=round_data['notes'])
+            golf_round = Round(
+                date=round_data['date'],
+                tee=course_tee,
+                notes=round_data['notes']
+                )
             user.rounds.append(golf_round)
 
             for i in range(1, 19):
