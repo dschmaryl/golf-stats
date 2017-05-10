@@ -27,6 +27,8 @@ def round_new(username):
 
     if user.rounds:
         form.course.data = user.get_latest_round().tee.course.id
+    else:
+        form.course.data = 1
 
     form.tee_color.choices = [(i, TEES[i]) for i in range(len(TEES))]
     form.tee_color.data = TEES.index(user.default_tees)
