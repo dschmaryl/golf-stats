@@ -22,8 +22,4 @@ login_manager.init_app(app)
 login_manager.login_view = 'login'
 
 
-# TODO: put this somewhere better
-TEES = ['white', 'red', 'blue']
-
-
 from app import views, models

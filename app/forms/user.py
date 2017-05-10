@@ -3,7 +3,6 @@ from wtforms.widgets import PasswordInput
 from flask_wtf import RecaptchaField
 
 from app.models import User
-from app import TEES
 
 
 class UserForm(Form):
@@ -22,8 +21,7 @@ class UserForm(Form):
         widget=PasswordInput(hide_value=False),
         )
 
-    choices = [(i, TEES[i]) for i in range(len(TEES))]
-    default_tees = SelectField('color', choices=choices, coerce=int)
+    default_tees = SelectField('color', coerce=int)
 
     def validate(self):
         if not super().validate():

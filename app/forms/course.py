@@ -4,7 +4,6 @@ from wtforms import (DateField, FloatField, Form, IntegerField, SelectField,
                      StringField, SubmitField, validators)
 
 from app.models import Course
-from app import TEES
 
 
 class CourseForm(Form):
@@ -41,8 +40,7 @@ class CourseTeeForm(Form):
 
     date = DateField('date', default=date.today())
 
-    choices = [(i, TEES[i]) for i in range(len(TEES))]
-    color = SelectField('color', choices=choices, coerce=int)
+    color = SelectField('color', coerce=int)
 
     rating = FloatField('rating', [validators.InputRequired('enter rating')])
     slope = IntegerField('slope', [validators.InputRequired('enter slope')])

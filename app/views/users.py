@@ -1,10 +1,11 @@
 from flask import flash, g, render_template, redirect, request, url_for
 from flask_login import current_user, login_required
 
-from app import app, db, login_manager, TEES
+from app import app, db, login_manager
 from app.models import User
 from app.forms import ChangePasswordForm, UserForm
 from .flash_errors import flash_errors
+from .tees import TEES
 
 
 @login_manager.user_loader
@@ -55,6 +56,7 @@ def change_password(username):
 @app.route('/user_new', methods=['GET', 'POST'])
 def user_new():
     form = UserForm(request.form)
+    form.default_tees.choices = [(i, TEES[i]) for i in range(len(TEES))]
 
     if request.method == 'POST':
         if form.cancel.data:
@@ -65,7 +67,7 @@ def user_new():
             user = User(username=form.username.data)
             db.session.add(user)
             user.set_password(form.password.data)
-            user.default_tees = TEES[form.default_tees.data]
+            user.default_tees = TEES[int(request.form.get('default_tees'))]
             db.session.commit()
             flash('user %s added' % user.username)
             return redirect(url_for('login'))

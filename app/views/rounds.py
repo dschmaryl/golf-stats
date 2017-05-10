@@ -1,10 +1,11 @@
 from flask import flash, redirect, render_template, request, url_for
 from flask_login import login_required
 
-from app import app, db, TEES
+from app import app, db
 from app.models import Round, Course, User
 from app.forms import RoundForm
 from .flash_errors import flash_errors
+from .tees import TEES
 
 
 @app.route('/user/<username>/round_list')
