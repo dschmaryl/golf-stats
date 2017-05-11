@@ -25,7 +25,7 @@ def round_new(username):
     courses = Course.query.all()
     form.course.choices = [(course.id, course.nickname) for course in courses]
 
-    if user.rounds:
+    if user.get_rounds():
         form.course.data = user.get_latest_round().tee.course.id
     else:
         form.course.data = 1
