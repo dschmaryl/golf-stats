@@ -1,4 +1,4 @@
-from flask import flash, redirect, render_template, request, url_for
+from flask import flash, g, redirect, render_template, request, url_for
 from flask_login import login_required
 
 from app import app, db
@@ -6,11 +6,15 @@ from app.models import Round, Course, User
 from app.forms import RoundForm
 from .flash_errors import flash_errors
 from .tees import TEES
+from .users import check_user
 
 
 @app.route('/user/<username>/round_list')
 @login_required
 def round_list(username):
+    if not check_user(username):
+        return redirect(url_for('round_list', username=g.user.username))
+
     user = User.query.filter_by(username=username).first()
     return render_template('round_list.html', title='rounds',
                            rounds=reversed(user.get_rounds()))
@@ -19,6 +23,9 @@ def round_list(username):
 @app.route('/user/<username>/round_new', methods=['GET', 'POST'])
 @login_required
 def round_new(username):
+    if not check_user(username):
+        return redirect(url_for('round_list', username=g.user.username))
+
     user = User.query.filter_by(username=username).first()
     form = RoundForm(request.form)
 
@@ -77,6 +84,9 @@ def round_new(username):
 @app.route('/user/<username>/round_edit/<round_id>', methods=['GET', 'POST'])
 @login_required
 def round_edit(username, round_id):
+    if not check_user(username):
+        return redirect(url_for('round_list', username=g.user.username))
+
     golf_round = Round.query.get(round_id)
     if not golf_round:
         flash('round %s not found' % round_id)

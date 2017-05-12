@@ -5,12 +5,16 @@ from app import app, db
 from app.models import Round
 from app.forms import HoleForm
 from .flash_errors import flash_errors
+from .users import check_user
 
 
 @app.route('/user/<username>/round_new/<round_id>/hole/<hole_number>',
            methods=['GET', 'POST'])
 @login_required
 def hole_new(username, round_id, hole_number):
+    if not check_user(username):
+        return redirect(url_for('round_list', username=g.user.username))
+
     golf_round = Round.query.get(round_id)
     hole = golf_round.get_hole(int(hole_number))
     form = HoleForm(request.form)
@@ -45,6 +49,9 @@ def hole_new(username, round_id, hole_number):
            methods=['GET', 'POST'])
 @login_required
 def hole_edit(username, round_id, hole_number):
+    if not check_user(username):
+        return redirect(url_for('round_list', username=g.user.username))
+
     golf_round = Round.query.get(round_id)
     hole = golf_round.get_hole(int(hole_number))
     form = HoleForm(request.form, obj=hole)
@@ -79,6 +86,9 @@ def hole_edit(username, round_id, hole_number):
            methods=['GET', 'POST'])
 @login_required
 def hole_last(username, round_id):
+    if not check_user(username):
+        return redirect(url_for('round_list', username=g.user.username))
+
     golf_round = Round.query.get(round_id)
     if not golf_round:
         flash('round %s not found' % round_id)

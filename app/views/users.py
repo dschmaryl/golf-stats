@@ -8,6 +8,13 @@ from .flash_errors import flash_errors
 from .tees import TEES
 
 
+def check_user(username):
+    if g.user.username != username:
+        flash('wrong user!')
+        return False
+    return True
+
+
 @login_manager.user_loader
 def load_user(id):
     return User.query.get(int(id))
@@ -21,6 +28,9 @@ def before_request():
 @app.route('/user/<username>/stats')
 @login_required
 def stats(username):
+    if not check_user(username):
+        return redirect(url_for('stats', username=g.user.username))
+
     user = User.query.filter_by(username=username).first()
     title = 'stats for ' + username
     return render_template('stats.html', user=user, title=title)
@@ -29,6 +39,9 @@ def stats(username):
 @app.route('/user/<username>/change_password', methods=['GET', 'POST'])
 @login_required
 def change_password(username):
+    if not check_user(username):
+        return redirect(url_for('change_password', username=g.user.username))
+
     user = User.query.filter_by(username=username).first()
     form = ChangePasswordForm(request.form)
 
@@ -56,6 +69,9 @@ def change_password(username):
 @app.route('/user/<username>/settings', methods=['GET', 'POST'])
 @login_required
 def user(username):
+    if not check_user(username):
+        return redirect(url_for('user', username=g.user.username))
+
     user = User.query.filter_by(username=username).first()
     form = UserForm(request.form, obj=user)
     form.default_tees.choices = [(i, TEES[i]) for i in range(len(TEES))]
