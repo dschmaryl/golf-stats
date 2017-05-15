@@ -14,20 +14,19 @@ function calcNineHoleTotal(nine, stat) {
   var total = 0;
   var other_nine;
   if (nine == 'front') {
-    other_nine = 'back';
     for (i = 1; i < 10; i++) {
       total += getValue('hole' + i + '_' + stat);
     }
+    otherNineTotal = parseInt(document.getElementById('total_back_9_' + stat).innerHTML);
   } else {
-    other_nine = 'front';
     for (i = 10; i < 19; i++) {
       total += getValue('hole' + i + '_' + stat);
     }
+    otherNineTotal = parseInt(document.getElementById('total_front_9_' + stat).innerHTML);
   }
   document.getElementById('total_' + nine + '_9_' + stat).innerHTML = total;
-  document.getElementById('total_' + stat).innerHTML = total + parseInt(document.getElementById('total_' + other_nine + '_9_' + stat).innerHTML);
+  document.getElementById('total_' + stat).innerHTML = total + otherNineTotal;
 }
-
 function calcAllTotals() {
   calcNineHoleTotal('front', 'strokes');
   calcNineHoleTotal('front', 'putts');
