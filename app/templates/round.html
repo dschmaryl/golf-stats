@@ -2,30 +2,37 @@
 {% block content %}
 
 <script>
-function calcTotal(nine, stat) {
+function getValue(id) {
+  var value = parseInt(document.getElementById(id).value);
+  if (!isNaN(value)) {
+    return value;
+  } else {
+    return 0;
+  }
+}
+function calcNineHoleTotal(nine, stat) {
   var total = 0;
+  var other_nine;
   if (nine == 'front') {
+    other_nine = 'back';
     for (i = 1; i < 10; i++) {
-      var value = parseInt(document.getElementById('hole' + i + '_' + stat).value);
-      if (!isNaN(value)) {
-        total += value;
-      }
+      total += getValue('hole' + i + '_' + stat);
     }
   } else {
+    other_nine = 'front';
     for (i = 10; i < 19; i++) {
-      var value = parseInt(document.getElementById('hole' + i + '_' + stat).value);
-      if (!isNaN(value)) {
-        total += value;
-      }
+      total += getValue('hole' + i + '_' + stat);
     }
   }
   document.getElementById('total_' + nine + '_9_' + stat).innerHTML = total;
+  document.getElementById('total_' + stat).innerHTML = total + parseInt(document.getElementById('total_' + other_nine + '_9_' + stat).innerHTML);
 }
+
 function calcAllTotals() {
-  calcTotal('front', 'strokes');
-  calcTotal('front', 'putts');
-  calcTotal('back', 'strokes');
-  calcTotal('back', 'putts');
+  calcNineHoleTotal('front', 'strokes');
+  calcNineHoleTotal('front', 'putts');
+  calcNineHoleTotal('back', 'strokes');
+  calcNineHoleTotal('back', 'putts');
 }
 window.onload = function() {
   calcAllTotals();
@@ -71,6 +78,11 @@ window.onload = function() {
         <h4>round stats:</h4>
         score: {{ round.total_strokes }}<br />putts: {{ round.total_putts }}<br />handicap: {{  round.handicap_index }}
       </div>
+    {% else %}
+      <div class="col-sm-6">
+        <h4>round stats:</h4>
+        score: <span id="total_strokes">0</span><br />putts: <span id="total_putts">0</span>
+      </div>
     {% endif %}
   </div>
 
@@ -105,7 +117,7 @@ window.onload = function() {
         </div>
         {% for i in range(1, 10) %}
           <div class="col-xs-1">
-            <input class="form-control number-input" type="number" name="{{ 'hole%i_strokes' % i }}" id="{{ 'hole%i_strokes' % i }}" value="{{ round.get_hole(i).strokes if round else '' }}" oninput="calcTotal('front', 'strokes')" />
+            <input class="form-control number-input" type="number" name="{{ 'hole%i_strokes' % i }}" id="{{ 'hole%i_strokes' % i }}" value="{{ round.get_hole(i).strokes if round else '' }}" oninput="calcNineHoleTotal('front', 'strokes')" />
           </div>
         {% endfor %}
         <div class="col-xs-1 text-center">
@@ -118,7 +130,7 @@ window.onload = function() {
         </div>
         {% for i in range(1, 10) %}
           <div class="col-xs-1">
-            <input class="form-control number-input" type="number" name="{{ 'hole%i_putts' % i }}" id="{{ 'hole%i_putts' % i }}" value="{{ round.get_hole(i).putts if round else '' }}" oninput="calcTotal('front', 'putts')" />
+            <input class="form-control number-input" type="number" name="{{ 'hole%i_putts' % i }}" id="{{ 'hole%i_putts' % i }}" value="{{ round.get_hole(i).putts if round else '' }}" oninput="calcNineHoleTotal('front', 'putts')" />
           </div>
         {% endfor %}
         <div class="col-xs-1 text-center">
@@ -157,7 +169,7 @@ window.onload = function() {
         </div>
         {% for i in range(10, 19) %}
           <div class="col-xs-1">
-            <input class="form-control number-input" type="number" name="{{ 'hole%i_strokes' % i }}" id="{{ 'hole%i_strokes' % i }}" value="{{ round.get_hole(i).strokes if round else '' }}" oninput="calcTotal('back', 'strokes')" />
+            <input class="form-control number-input" type="number" name="{{ 'hole%i_strokes' % i }}" id="{{ 'hole%i_strokes' % i }}" value="{{ round.get_hole(i).strokes if round else '' }}" oninput="calcNineHoleTotal('back', 'strokes')" />
           </div>
         {% endfor %}
         <div class="col-xs-1 text-center">
@@ -170,7 +182,7 @@ window.onload = function() {
         </div>
         {% for i in range(10, 19) %}
           <div class="col-xs-1">
-            <input class="form-control number-input" type="number" name="{{ 'hole%i_putts' % i }}" id="{{ 'hole%i_putts' % i }}" value="{{ round.get_hole(i).putts if round else '' }}" oninput="calcTotal('back', 'putts')" />
+            <input class="form-control number-input" type="number" name="{{ 'hole%i_putts' % i }}" id="{{ 'hole%i_putts' % i }}" value="{{ round.get_hole(i).putts if round else '' }}" oninput="calcNineHoleTotal('back', 'putts')" />
           </div>
         {% endfor %}
         <div class="col-xs-1 text-center">
