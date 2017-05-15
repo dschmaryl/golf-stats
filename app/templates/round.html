@@ -72,17 +72,15 @@ window.onload = function() {
       <h4>notes:</h4>
       {{ form.notes(class="form-control notes-input") }}
     </div>
-    {% if round %}
-      <div class="col-sm-6">
-        <h4>round stats:</h4>
-        score: {{ round.total_strokes }}<br />putts: {{ round.total_putts }}<br />handicap: {{  round.handicap_index }}
-      </div>
-    {% else %}
-      <div class="col-sm-6">
-        <h4>round stats:</h4>
-        score: <span id="total_strokes">0</span><br />putts: <span id="total_putts">0</span>
-      </div>
-    {% endif %}
+
+    <div class="col-sm-6">
+      <h4>round stats:</h4>
+      score: <span id="total_strokes">0</span><br />
+      putts: <span id="total_putts">0</span><br />
+      {% if round %}
+        handicap: {{  round.handicap_index }}
+      {% endif %}
+    </div>
   </div>
 
   <br />
