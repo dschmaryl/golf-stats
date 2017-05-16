@@ -77,38 +77,50 @@ class Round(db.Model):
         self.total_gir = self.front_9_gir + self.back_9_gir
 
     def calc_handicap(self):
+        rounds = self.get_twenty_rounds()
+        num_of_diffs_used = self.get_num_of_diffs(rounds)
+        diffs = sorted([r.calc_diff() for r in rounds])[:num_of_diffs_used]
+
+        # calculate handicap and strip to one decimal place
+        handicap_str = str(sum(diffs) / len(diffs) * .96)
+        handicap = float(handicap_str[:handicap_str.find('.') + 2])
+
+        self.handicap_index = min(handicap, 50)
+
+    def get_twenty_rounds(self):
+        # get rounds and slice to no more than 20 rounds with
+        # self being the last round in the list
         rounds = self.user.get_rounds()
         round_idx = rounds.index(self)
-        rounds = rounds[max(0, round_idx - 19):round_idx + 1]
+        return rounds[max(0, round_idx - 19):round_idx + 1]
 
-        # if len(rounds) < 5:
-        #     # not enough rounds yet
-        #     self.handicap_index = 50.0
-        #     return
+    def get_num_of_diffs(self, rounds):
         # num_of_diffs_used = {
         #     5: 1, 6: 1, 7: 2, 8: 2, 9: 3, 10: 3, 11: 4, 12: 4,
         #     13: 5, 14: 5, 15: 6, 16: 6, 17: 7, 18: 8, 19: 9, 20: 10
         #     }[len(rounds)]
 
-        # my own version of num_of_diffs_used
+        # my own version of num_of_diffs_used; i use this to make the
+        # handicap more fair for a golfer with only a few rounds
         num_of_diffs_used = {
             1: 1, 2: 1, 3: 2, 4: 2, 5: 3, 6: 3, 7: 4, 8: 4, 9: 5, 10: 5, 11: 6,
             12: 6, 13: 7, 14: 7, 15: 8, 16: 8, 17: 9, 18: 9, 19: 10, 20: 10
             }[len(rounds)]
 
-        diffs = sorted([r.calc_diff() for r in rounds])[:num_of_diffs_used]
-        handicap_str = str(sum(diffs) / len(diffs) * .96)
-        self.handicap_index = min(
-            50,
-            float(handicap_str[:handicap_str.find('.') + 2])
-            )
+        return num_of_diffs_used
 
     def calc_diff(self):
         if self == self.user.get_rounds()[0]:
             return self.total_strokes
         if len(self.holes.all()) == 0:
-            # large value so as not to be included. this is stupid
+            # TODO: fix this, it was a temporary solution:
+            # large value so as not to be included; just to handle
+            # the case where a round is missing hole data
             return 1000
+
+        # previous handicap is needed to calculate the course handicap
+        # going into the current round for the purpose of adjusting the
+        # total strokes according to the ESC guidelines
         old_handicap = self.user.get_previous_round(self).handicap_index
         course_handicap = round(old_handicap * self.tee.slope / 113, 0)
         if course_handicap < 10:
@@ -117,10 +129,19 @@ class Round(db.Model):
         else:
             max_score = int(course_handicap / 10 + 6)
 
-        adj_score = sum([min(max_score, hole.strokes) for hole in self.holes])
+        adjusted_score = 0
+        for hole in self.holes:
+            adjusted_score += min(max_score, hole.strokes)
+
+        # TODO: probably just remove this;
+        # these are calculated as (x * num_holes_played / 18) to
+        # normalize rounds which were incomplete
         rating = self.tee.rating * len(self.holes.all()) / 18
         slope = self.tee.slope * len(self.holes.all()) / 18
-        return (adj_score - rating) * 113 / slope
+
+        diff = (adjusted_score - rating) * 113 / slope
+
+        return diff
 
     def __repr__(self):
         return '<Round %r>' % (self.date)
