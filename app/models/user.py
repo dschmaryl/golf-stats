@@ -26,7 +26,11 @@ class User(db.Model):
 
     def get_previous_round(self, golf_round):
         rounds = self.get_rounds()
-        return rounds[rounds.index(golf_round) - 1]
+        round_idx = rounds.index(golf_round)
+        if round_idx == 0:
+            return None
+        else:
+            return rounds[round_idx - 1]
 
     def get_rounds_thru(self, golf_round):
         rounds = self.get_rounds()
