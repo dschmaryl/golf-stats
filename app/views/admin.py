@@ -1,7 +1,7 @@
 from flask_admin.contrib.sqla import ModelView
-from flask_login import current_user, login_required
+from flask_login import current_user
 
-from app import app, admin, db
+from app import admin, db
 from app.models import Course, Hole, Round, User
 
 

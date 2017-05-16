@@ -8,7 +8,7 @@ from app.models import User
 class UserForm(Form):
     cancel = SubmitField('cancel')
 
-    # recaptcha = RecaptchaField()
+    recaptcha = RecaptchaField()
 
     username = StringField(
         'username',
