@@ -2,37 +2,51 @@
 {% block content %}
 
 <script>
-function getValue(id) {
-  var value = parseInt(document.getElementById(id).value);
+function asNumber(value) {
   if (!isNaN(value)) {
     return value;
   } else {
     return 0;
   }
 }
+
+function getValue(id) {
+  return asNumber(parseInt(document.getElementById(id).value));
+}
+
+function getInner(id) {
+   return asNumber(parseInt(document.getElementById(id).innerHTML));
+}
+
+function updateValue(id, value) {
+  document.getElementById(id).innerHTML = value;
+}
+
 function calcNineHoleTotal(nine, stat) {
-  var total = 0;
-  var other_nine;
+  var nineHoleTotal = 0;
+  var otherNinetotal;
   if (nine == 'front') {
     for (i = 1; i < 10; i++) {
-      total += getValue('hole' + i + '_' + stat);
+      nineHoleTotal += getValue('hole' + i + '_' + stat);
     }
-    otherNineTotal = parseInt(document.getElementById('total_back_9_' + stat).innerHTML);
+    otherNinetotal = getInner('total_back_9_' + stat);
   } else {
     for (i = 10; i < 19; i++) {
-      total += getValue('hole' + i + '_' + stat);
+      nineHoleTotal += getValue('hole' + i + '_' + stat);
     }
-    otherNineTotal = parseInt(document.getElementById('total_front_9_' + stat).innerHTML);
+    otherNinetotal = getInner('total_front_9_' + stat);
   }
-  document.getElementById('total_' + nine + '_9_' + stat).innerHTML = total;
-  document.getElementById('total_' + stat).innerHTML = total + otherNineTotal;
+  updateValue('total_' + nine + '_9_' + stat, nineHoleTotal);
+  updateValue('total_' + stat, nineHoleTotal + otherNinetotal);
 }
+
 function calcAllTotals() {
   calcNineHoleTotal('front', 'strokes');
   calcNineHoleTotal('front', 'putts');
   calcNineHoleTotal('back', 'strokes');
   calcNineHoleTotal('back', 'putts');
 }
+
 window.onload = function() {
   calcAllTotals();
 }
@@ -75,8 +89,8 @@ window.onload = function() {
 
     <div class="col-sm-6">
       <h4>round stats:</h4>
-      score: <span id="total_strokes">0</span><br />
-      putts: <span id="total_putts">0</span><br />
+      score: <span id="total_strokes"></span><br />
+      putts: <span id="total_putts"></span><br />
       {% if round %}
         handicap: {{  round.handicap_index }}
       {% endif %}
