@@ -24,20 +24,19 @@ function updateValue(id, value) {
 
 function calcNineHoleTotal(nine, stat) {
   var nineHoleTotal = 0;
-  var otherNinetotal;
   if (nine == 'front') {
     for (i = 1; i < 10; i++) {
       nineHoleTotal += getValue('hole' + i + '_' + stat);
     }
-    otherNinetotal = getInner('total_back_9_' + stat);
+    var otherNineTotal = getInner('total_back_9_' + stat);
   } else {
     for (i = 10; i < 19; i++) {
       nineHoleTotal += getValue('hole' + i + '_' + stat);
     }
-    otherNinetotal = getInner('total_front_9_' + stat);
+    var otherNineTotal = getInner('total_front_9_' + stat);
   }
   updateValue('total_' + nine + '_9_' + stat, nineHoleTotal);
-  updateValue('total_' + stat, nineHoleTotal + otherNinetotal);
+  updateValue('total_' + stat, nineHoleTotal + otherNineTotal);
 }
 
 function calcAllTotals() {
