@@ -36,40 +36,48 @@ class User(db.Model):
         rounds = self.get_rounds()
         return rounds[:rounds.index(golf_round) + 1]
 
+    def get_average(self, stat, golf_round=None, mavg=False, period=20):
+        if not golf_round:
+            golf_round = self.get_latest_round()
+        rounds = self.get_rounds_thru(golf_round)
+
+        if stat == 'score':
+            stats = [r.total_strokes for r in rounds]
+        elif stat == 'putts':
+            stats = [r.total_putts for r in rounds]
+        elif stat == 'gir':
+            stats = [r.total_gir for r in rounds]
+        elif stat == 'score_to_par':
+            stats = [r.total_strokes - r.tee.get_total_par() for r in rounds]
+
+        avgs = self._mavg(stats, period) if mavg else self._avg(stats)
+        return avgs
+
+    def get_par_avgs(self, golf_round=None, mavg=False, period=20):
+        if not golf_round:
+            golf_round = self.get_latest_round()
+        rounds = self.get_rounds_thru(golf_round)
+
+        stats = {'par3': [], 'par4': [], 'par5': []}
+        for r in rounds:
+            stats['par3'].append(r.par_3_avg)
+            stats['par4'].append(r.par_4_avg)
+            stats['par5'].append(r.par_5_avg)
+
+        avgs = {'par3': 0, 'par4': 0, 'par5': 0}
+        for k in avgs.keys():
+            if mavg:
+                avgs[k] = self._mavg(stats[k], period)
+            else:
+                avgs[k] = self._avg(stats[k])
+
+        return avgs
+
+    def _avg(self, stats):
+        return sum(stats) / len(stats)
+
     def _mavg(self, stats, period):
         return Series(stats).ewm(period).mean().iloc[-1]
-
-    def get_mavg_score(self, golf_round, period=20):
-        stats = [r.total_strokes
-                 for r in self.get_rounds_thru(golf_round)]
-        return self._mavg(stats, period)
-
-    def get_mavg_score_to_par(self, golf_round, period=20):
-        stats = [r.total_strokes - r.tee.get_total_par()
-                 for r in self.get_rounds_thru(golf_round)
-                 if r.total_strokes]
-        return self._mavg(stats, period)
-
-    def get_mavg_putts(self, golf_round, period=20):
-        stats = [r.total_putts for r in self.get_rounds_thru(golf_round)]
-        return self._mavg(stats, period)
-
-    def get_mavg_gir(self, golf_round, period=20):
-        stats = [r.total_gir for r in self.get_rounds_thru(golf_round)]
-        return self._mavg(stats, period)
-
-    def get_par_mavgs(self, golf_round, period=20):
-        par3, par4, par5 = [], [], []
-        for golf_round in self.get_rounds():
-            par3.append(golf_round.par_3_avg)
-            par4.append(golf_round.par_4_avg)
-            par5.append(golf_round.par_5_avg)
-        mavgs = {
-            'par3': self._mavg(par3, period),
-            'par4': self._mavg(par4, period),
-            'par5': self._mavg(par5, period)
-            }
-        return mavgs
 
     def recalc_handicaps(self, golf_round):
         rounds = self.get_rounds()

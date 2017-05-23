@@ -17,40 +17,40 @@
             <td>handicap:</td>
             <td>{{ user.get_handicap(latest_round.id) }}</td>
           </tr>
-
           <tr>
             <td>scoring average:</td>
-            <td>{{ "%.1f" % user.get_mavg_score(latest_round) }}</td>
+            <td>{{ "%.1f" % user.get_average('score') }}</td>
           </tr>
           <tr>
             <td>avg relative to par:</td>
-            <td>{{ "%.1f" % user.get_mavg_score_to_par(latest_round) }}</td>
+            <td>{{ "%.1f" % user.get_average('score_to_par') }}</td>
           </tr>
 
+          {% set avg_putts = user.get_average('putts') %}
           <tr>
             <td>putts per round:</td>
-            <td>{{ "%.1f" % user.get_mavg_putts(latest_round) }}</td>
+            <td>{{ "%.1f" % avg_putts }}</td>
           </tr>
           <tr>
             <td>putts per hole:</td>
-            <td>{{ "%.2f" % (user.get_mavg_putts(latest_round) / 18) }}</td>
+            <td>{{ "%.2f" % (avg_putts / 18) }}</td>
           </tr>
 
-          {% set greens = user.get_mavg_gir(latest_round) %}
+          {% set avg_gir = user.get_average('gir') %}
           <tr>
             <td>greens per round:</td>
-            <td>{{ "%.1f" % greens }}</td>
+            <td>{{ "%.1f" % avg_gir }}</td>
           </tr>
           <tr>
             <td>g.i.r. avg %:</td>
-            <td>{{ "%.1f" % (greens / 18 * 100) }}</td>
+            <td>{{ "%.1f" % (avg_gir / 18 * 100) }}</td>
           </tr>
 
-          {% set mavgs = user.get_par_mavgs(latest_round) %}
+          {% set avgs = user.get_par_avgs(latest_round) %}
           {% for k, v in {'par3': 'par 3 avg:', 'par4': 'par 4 avg:', 'par5': 'par 5 avg:'}.items() %}
             <tr>
               <td>{{ v }}</td>
-              <td>{{ "%.2f" % mavgs[k] }}</td>
+              <td>{{ "%.2f" % avgs[k] }}</td>
             </tr>
           {% endfor %}
         </tbody>
