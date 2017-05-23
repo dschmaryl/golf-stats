@@ -14,7 +14,7 @@ function getInner(id) {
    return asNumber(parseInt(document.getElementById(id).innerHTML));
 }
 
-function updateValue(id, value) {
+function updateInner(id, value) {
   document.getElementById(id).innerHTML = value;
 }
 
@@ -31,8 +31,8 @@ function calcNineHoleTotal(nine, stat) {
     }
     var otherNineTotal = getInner('total_front_9_' + stat);
   }
-  updateValue('total_' + nine + '_9_' + stat, nineHoleTotal);
-  updateValue('total_' + stat, nineHoleTotal + otherNineTotal);
+  updateInner('total_' + nine + '_9_' + stat, nineHoleTotal);
+  updateInner('total_' + stat, nineHoleTotal + otherNineTotal);
 }
 
 function calcAllTotals() {
