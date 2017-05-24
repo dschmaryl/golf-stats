@@ -40,7 +40,7 @@ class User(db.Model):
     def get_season_rounds(self, season):
         rounds = self.rounds.filter(Round.date >= date(season, 1, 1))
         rounds = rounds.filter(Round.date <= date(season, 12, 31))
-        return rounds.order_by(Round.date)
+        return rounds.order_by(Round.date).all()
 
     def get_average(self, stat, season=None, mavg=False, period=20):
         if season:
