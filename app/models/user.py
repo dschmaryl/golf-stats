@@ -1,6 +1,7 @@
-from app import bcrypt, db
+from datetime import date
 from pandas import Series
 
+from app import bcrypt, db
 from .round import Round
 
 
@@ -35,6 +36,11 @@ class User(db.Model):
     def get_rounds_thru(self, golf_round):
         rounds = self.get_rounds()
         return rounds[:rounds.index(golf_round) + 1]
+
+    def get_season_rounds(self, season):
+        rounds = self.rounds.filter(Round.date >= date(season, 1, 1))
+        rounds = rounds.filter(Round.date <= date(season, 12, 31))
+        return rounds.order_by(Round.date)
 
     def get_average(self, stat, golf_round=None, mavg=False, period=20):
         if not golf_round:
