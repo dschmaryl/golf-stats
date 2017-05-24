@@ -11,7 +11,7 @@
             <th>course</th>
             <th class="align-right">score</th>
             <th class="align-right">putts</th>
-            <th class="align-right">gir %</th>
+            <th class="align-right">girs</th>
             <th class="align-right">hdcp</th>
           </tr>
         </thead>
@@ -22,7 +22,7 @@
                 <td>{{ round.tee.course.name }}</td>
                 <td class="align-right">{{ round.total_strokes }}</td>
                 <td class="align-right">{{ round.total_putts }}</td>
-                <td class="align-right">{{ "%.0f" % (round.total_gir / 18 * 100) if round.total_gir else '' }}</td>
+                <td class="align-right">{{ round.total_gir }}</td>
                 <td class="align-right">{{ round.handicap_index }}</td>
             </tr>
           {% endfor %}

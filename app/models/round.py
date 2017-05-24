@@ -68,9 +68,9 @@ class Round(db.Model):
                 sum5 += hole.strokes
                 den5 += 1
 
-        self.par_3_avg = sum3 / den3
-        self.par_4_avg = sum4 / den4
-        self.par_5_avg = sum5 / den5
+        self.par_3_avg = sum3 / den3 if den3 > 0 else 0
+        self.par_4_avg = sum4 / den4 if den4 > 0 else 0
+        self.par_5_avg = sum5 / den5 if den5 > 0 else 0
 
         self.total_strokes = self.front_9_strokes + self.back_9_strokes
         self.total_putts = self.front_9_putts + self.back_9_putts
