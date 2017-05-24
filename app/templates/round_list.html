@@ -18,7 +18,7 @@
         <tbody>
           {% for round in rounds %}
             <tr onclick="location.href='{{ url_for('round_edit', username=g.user.username, round_id=round.id) }}'">
-                <td>{{ round.date.strftime('%-m-%-d-%Y') }}</td>
+                <td>{{ round.date.strftime('%Y-%m-%d') }}</td>
                 <td>{{ round.tee.course.name }}</td>
                 <td class="align-right">{{ round.total_strokes }}</td>
                 <td class="align-right">{{ round.total_putts }}</td>
