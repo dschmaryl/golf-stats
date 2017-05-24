@@ -42,10 +42,11 @@ class User(db.Model):
         rounds = rounds.filter(Round.date <= date(season, 12, 31))
         return rounds.order_by(Round.date)
 
-    def get_average(self, stat, golf_round=None, mavg=False, period=20):
-        if not golf_round:
-            golf_round = self.get_latest_round()
-        rounds = self.get_rounds_thru(golf_round)
+    def get_average(self, stat, season=None, mavg=False, period=20):
+        if season:
+            rounds = self.get_season_rounds(season)
+        else:
+            rounds = self.get_rounds()
 
         if stat == 'score':
             stats = [r.total_strokes for r in rounds]
@@ -59,10 +60,11 @@ class User(db.Model):
         avgs = self._mavg(stats, period) if mavg else self._avg(stats)
         return avgs
 
-    def get_par_avgs(self, golf_round=None, mavg=False, period=20):
-        if not golf_round:
-            golf_round = self.get_latest_round()
-        rounds = self.get_rounds_thru(golf_round)
+    def get_par_avgs(self, season=None, mavg=False, period=20):
+        if season:
+            rounds = self.get_season_rounds(season)
+        else:
+            rounds = self.get_rounds()
 
         stats = {'par3': [], 'par4': [], 'par5': []}
         for r in rounds:
