@@ -2,8 +2,8 @@
 {% block content %}
 
 <div class="row">
-  {% if seasons %}
-    <div class="col-xs-12 col-sm-8 col-md-6">
+  <div class="col-xs-12 col-sm-8 col-md-6">
+    {% if seasons %}
       <table class="table table-condensed">
         <thead>
           <tr>
@@ -47,7 +47,7 @@
           <tr>
             <td>greens per round:</td>
             {% for season in seasons %}
-              <td>{{ "%.1f" % user.get_average('gir', season=season) }}</td>
+              <td>{{ "%.2f" % user.get_average('gir', season=season) }}</td>
             {% endfor %}
           </tr>
           <tr>
@@ -68,14 +68,10 @@
           {% endfor %}
         </tbody>
       </table>
-    </div>
-  {% else %}
-    <div class="row">
-      <div class="col-xs-12">
-        <h4>no rounds found</h4>
-      </div>
-    </div>
-  {% endif %}
+    {% else %}
+      <h4>no rounds found</h4>
+    {% endif %}
+  </div>
 </div>
 
 <br />
