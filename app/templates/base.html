@@ -14,18 +14,12 @@
   </head>
   <body>
     <div class="container">
-
-      <div class="row">
+      <header class="row">
         <div class="col-xs-12">
           <h1>golf-stats</h1>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-xs-12">
           <hr />
         </div>
-      </div>
+      </header>
 
       {% with messages = get_flashed_messages() %}
         {% if messages %}
@@ -46,21 +40,14 @@
       {% block content %}
       {% endblock %}
 
-      <br />
-
-      <div class="row">
+      <footer class="row">
         <div class="col-xs-12">
           <hr />
-        </div>
-      </div>
-
-      {% if not title %}
-        <footer class="row">
-          <div class="col-xs-12">
+          {% if not title %}
             <a href="https://github.com/dschmaryl/golf-flask" style="text-decoration: none; color: #AAA;">see this code on github</a>
-          </div>
-        </footer>
-      {% endif %}
+          {% endif %}
+        </div>
+      </footer>
     </div>
   </body>
 </html>
