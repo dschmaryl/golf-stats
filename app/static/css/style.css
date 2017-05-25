@@ -39,11 +39,6 @@ table {
     cursor: pointer;
 }
 
-.table-pad {
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
-
 td input[type="checkbox"] {
     float: left;
     width: 100%;
