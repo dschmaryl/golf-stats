@@ -17,22 +17,21 @@ window.onload = function() {
 <form action="" method="post" name="new_round">
 
   <div class="row">
-    <div class="col-xs-12">
-      <div class="row">
-        <div class="col-xs-8 col-sm-3">
-          <h4>date:</h4>
-          {{ form.date(class="form-control date-input", type="date") }}
-        </div>
-        <div class="col-xs-6 col-sm-3">
-          <h4>course:</h4>
-          {{ form.course(class="form-control") }}
-        </div>
-        <div class="col-xs-6 col-sm-3">
-          <h4>tee:</h4>
-          {{ form.tee_color(class="form-control") }}
-        </div>
-      </div>
+    <div class="col-xs-8 col-sm-3">
+      <h4>date:</h4>
+      {{ form.date(class="form-control date-input", type="date") }}
     </div>
+
+    <div class="col-xs-6 col-sm-3">
+      <h4>course:</h4>
+      {{ form.course(class="form-control") }}
+    </div>
+
+    <div class="col-xs-6 col-sm-3">
+      <h4>tee:</h4>
+      {{ form.tee_color(class="form-control") }}
+    </div>
+
   </div>
 
   <div class="row">
@@ -64,111 +63,95 @@ window.onload = function() {
     </div>
   </div>
 
-  <div class="row text-right">
-    <div class="col-xs-12">
-      <div class="row">
-        <div class="col-xs-2 col-sm-1">
-          <h4>hole:</h4>
-        </div>
-        {% for i in range(1, 10) %}
-          <div class="col-xs-1 text-center">
-            <h4>{{ i }}</h4>
-          </div>
-        {% endfor %}
-        <div class="col-xs-1 text-center">
-          <h4>total</h4>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-xs-2 col-sm-1">
-          <h4>score:</h4>
-        </div>
-        {% for i in range(1, 10) %}
-          <div class="col-xs-1">
-            <input class="form-control number-input" type="number" name="{{ 'hole%i_strokes' % i }}" id="{{ 'hole%i_strokes' % i }}" value="{{ round.get_hole(i).strokes if round else '' }}" oninput="calcNineHoleTotal('front', 'strokes')" />
-          </div>
-        {% endfor %}
-        <div class="col-xs-1 text-center">
-          <div class="vcenter" id="total_front_9_strokes"></div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-xs-2 col-sm-1">
-          <h4>putts:</h4>
-        </div>
-        {% for i in range(1, 10) %}
-          <div class="col-xs-1">
-            <input class="form-control number-input" type="number" name="{{ 'hole%i_putts' % i }}" id="{{ 'hole%i_putts' % i }}" value="{{ round.get_hole(i).putts if round else '' }}" oninput="calcNineHoleTotal('front', 'putts')" />
-          </div>
-        {% endfor %}
-        <div class="col-xs-1 text-center">
-          <div class="vcenter" id="total_front_9_putts"></div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-xs-2 col-sm-1">
-          <h4>g.i.r.:</h4>
-        </div>
-        {% for i in range(1, 10) %}
-          <div class="col-xs-1">
-            <div class="center">
-              <input class="checkbox" type="checkbox" name="{{ 'hole%i_gir' % i }}" {{ 'checked' if round and round.get_hole(i).gir else '' }} />
-            </div>
-          </div>
-        {% endfor %}
-      </div>
+  <div class="row">
+    <div class="col-xs-12 col-sm-10 col-md-9">
+      <table class="table-pad">
+        <thead>
+          <tr class="tr-pad">
+            <th><h4>hole:</h4></th>
+            {% for i in range(1, 10) %}
+              <th class="pad align-center"><h4>{{ i }}</h4></th>
+            {% endfor %}
+            <th class="pad align-right"><h4>total</h4></th>
+          </tr>
+        </thead>
 
-      <div class="row">
-        <div class="col-xs-2 col-sm-1">
-          <h4>hole:</h4>
-        </div>
-        {% for i in range(10, 19) %}
-          <div class="col-xs-1 text-center">
-            <h4>{{ i }}</h4>
-          </div>
-        {% endfor %}
-        <div class="col-xs-1 text-center">
-          <h4>total</h4>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-xs-2 col-sm-1">
-          <h4>score:</h4>
-        </div>
-        {% for i in range(10, 19) %}
-          <div class="col-xs-1">
-            <input class="form-control number-input" type="number" name="{{ 'hole%i_strokes' % i }}" id="{{ 'hole%i_strokes' % i }}" value="{{ round.get_hole(i).strokes if round else '' }}" oninput="calcNineHoleTotal('back', 'strokes')" />
-          </div>
-        {% endfor %}
-        <div class="col-xs-1 text-center">
-          <div class="vcenter" id="total_back_9_strokes"></div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-xs-2 col-sm-1">
-          <h4>putts:</h4>
-        </div>
-        {% for i in range(10, 19) %}
-          <div class="col-xs-1">
-            <input class="form-control number-input" type="number" name="{{ 'hole%i_putts' % i }}" id="{{ 'hole%i_putts' % i }}" value="{{ round.get_hole(i).putts if round else '' }}" oninput="calcNineHoleTotal('back', 'putts')" />
-          </div>
-        {% endfor %}
-        <div class="col-xs-1 text-center">
-          <div class="vcenter" id="total_back_9_putts"></div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-xs-2 col-sm-1">
-          <h4>g.i.r.:</h4>
-        </div>
-        {% for i in range(10, 19) %}
-          <div class="col-xs-1">
-            <div class="center">
-              <input class="checkbox" type="checkbox" name="{{ 'hole%i_gir' % i }}" {{ 'checked' if round and round.get_hole(i).gir else '' }} />
-            </div>
-          </div>
-        {% endfor %}
-      </div>
+        <tbody>
+          <tr class="tr-pad">
+            <td>score:</td>
+            {% for i in range(1, 10) %}
+              <td>
+                <input class="form-control number-input" type="number" name="{{ 'hole%i_strokes' % i }}" id="{{ 'hole%i_strokes' % i }}" value="{{ round.get_hole(i).strokes if round else '' }}" oninput="calcNineHoleTotal('front', 'strokes')" />
+              </td>
+            {% endfor %}
+            <td class="align-right"><div id="total_front_9_strokes"></div></td>
+          </tr>
+          <tr class="tr-pad">
+            <td>putts:</td>
+            {% for i in range(1, 10) %}
+              <td>
+                <input class="form-control number-input" type="number" name="{{ 'hole%i_putts' % i }}" id="{{ 'hole%i_putts' % i }}" value="{{ round.get_hole(i).putts if round else '' }}" oninput="calcNineHoleTotal('front', 'putts')" />
+              </td>
+            {% endfor %}
+            <td class="align-right"><div id="total_front_9_putts"></div></td>
+          </tr>
+          <tr class="tr-pad">
+            <td>g.i.r.:</td>
+            {% for i in range(1, 10) %}
+              <td>
+                <input class="checkbox" type="checkbox" name="{{ 'hole%i_gir' % i }}" {{ 'checked' if round and round.get_hole(i).gir else '' }} />
+              </td>
+            {% endfor %}
+            <td class="align-right"><div id="total_front_9_gir"></div></td>
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-xs-12 col-sm-10 col-md-9">
+      <table class="table-pad">
+        <thead>
+          <tr class="tr-pad">
+            <th><h4>hole:</h4></th>
+            {% for i in range(10, 19) %}
+              <th class="pad align-center"><h4>{{ i }}</h4></th>
+            {% endfor %}
+            <th class="pad align-right"><h4>total</h4></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="tr-pad">
+            <td>score:</td>
+            {% for i in range(10, 19) %}
+              <td>
+                <input class="form-control number-input" type="number" name="{{ 'hole%i_strokes' % i }}" id="{{ 'hole%i_strokes' % i }}" value="{{ round.get_hole(i).strokes if round else '' }}" oninput="calcNineHoleTotal('back', 'strokes')" />
+              </td>
+            {% endfor %}
+            <td class="align-right"><div id="total_back_9_strokes"></div></td>
+          </tr>
+          <tr class="tr-pad">
+            <td>putts:</td>
+            {% for i in range(10, 19) %}
+              <td>
+                <input class="form-control number-input" type="number" name="{{ 'hole%i_putts' % i }}" id="{{ 'hole%i_putts' % i }}" value="{{ round.get_hole(i).putts if round else '' }}" oninput="calcNineHoleTotal('back', 'putts')" />
+              </td>
+            {% endfor %}
+            <td class="align-right"><div id="total_back_9_putts"></div></td>
+          </tr>
+          <tr class="tr-pad">
+            <td>g.i.r.:</td>
+            {% for i in range(10, 19) %}
+              <td>
+                <input class="checkbox" type="checkbox" name="{{ 'hole%i_gir' % i }}" {{ 'checked' if round and round.get_hole(i).gir else '' }} />
+              </td>
+            {% endfor %}
+            <td class="align-right"><div id="total_back_9_gir"></div></td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 
