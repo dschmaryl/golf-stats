@@ -122,7 +122,7 @@ class Round(db.Model):
 
     def get_adjusted_score(self):
         # previous handicap is needed to calculate the course handicap
-        # going into the current round for adjusting score
+        # going into the current round which is used to adjust score
         previous_round = self.user.get_previous_round(self)
         if not previous_round:
             return self.total_strokes
