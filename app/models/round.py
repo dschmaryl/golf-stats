@@ -135,9 +135,7 @@ class Round(db.Model):
         else:
             max_score = int(course_handicap / 10 + 6)
 
-        adjusted_score = 0
-        for hole in self.holes:
-            adjusted_score += min(max_score, hole.strokes)
+        adj_score = sum([min(max_score, hole.strokes) for hole in self.holes])
 
         return adjusted_score
 
