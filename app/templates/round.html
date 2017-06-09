@@ -77,6 +77,14 @@ window.onload = function() {
         </thead>
 
         <tbody>
+
+          <tr class="tr-pad">
+            <td>par:</td>
+            {% for i in range(1, 10) %}
+              <td class="align-center"><span id="{{ 'hole%i_par' % i }}"></span></td>
+            {% endfor %}
+          </tr>
+
           <tr class="tr-pad">
             <td>score:</td>
             {% for i in range(1, 10) %}
@@ -123,6 +131,14 @@ window.onload = function() {
           </tr>
         </thead>
         <tbody>
+
+          <tr class="tr-pad">
+            <td>par:</td>
+            {% for i in range(1, 10) %}
+              <td class="align-center"><span id="{{ 'hole%i_par' % i }}"></span></td>
+            {% endfor %}
+          </tr>
+
           <tr class="tr-pad">
             <td>score:</td>
             {% for i in range(10, 19) %}
