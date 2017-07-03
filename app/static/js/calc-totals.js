@@ -1,8 +1,8 @@
 function asNumber(value) {
-  if (!isNaN(value)) {
-    return value;
-  } else {
+  if (isNaN(value)) {
     return 0;
+  } else {
+    return value;
   }
 }
 
@@ -21,12 +21,12 @@ function updateInner(id, value) {
 function calcNineHoleTotal(nine, stat) {
   var nineHoleTotal = 0;
   if (nine == 'front') {
-    for (i = 1; i < 10; i++) {
+    for (var i = 1; i < 10; i++) {
       nineHoleTotal += getValue('hole' + i + '_' + stat);
     }
     var otherNineTotal = getInner('total_back_9_' + stat);
   } else {
-    for (i = 10; i < 19; i++) {
+    for (var i = 10; i < 19; i++) {
       nineHoleTotal += getValue('hole' + i + '_' + stat);
     }
     var otherNineTotal = getInner('total_front_9_' + stat);
