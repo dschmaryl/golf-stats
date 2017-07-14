@@ -25,6 +25,7 @@ def hole_new(username, round_id, hole_number):
             return redirect(url_for('stats', username=username))
 
         if form.validate():
+            hole.set_course_hole_data()
             hole.strokes = form.strokes.data
             hole.putts = form.putts.data
             hole.set_gir(form.gir.data)
