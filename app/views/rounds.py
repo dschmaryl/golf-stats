@@ -78,7 +78,7 @@ def round_new(username):
             flash_errors(form)
 
     return render_template('round.html', title='new round', form=form,
-                           round=None)
+                           round=None, holes=None)
 
 
 @app.route('/user/<username>/round_edit/<round_id>', methods=['GET', 'POST'])
@@ -100,6 +100,9 @@ def round_edit(username, round_id):
 
     form.tee_color.choices = [(i, TEES[i]) for i in range(len(TEES))]
     form.tee_color.data = TEES.index(golf_round.tee.color)
+
+    holes = [golf_round.get_hole(i) for i in range(1, 19)]
+
 
     if request.method == 'POST':
         if form.cancel.data:
@@ -143,4 +146,4 @@ def round_edit(username, round_id):
             flash_errors(form)
 
     return render_template('round.html', title='edit round', form=form,
-                           round=golf_round)
+                           round=golf_round, holes=holes)
