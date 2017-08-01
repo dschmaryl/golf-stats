@@ -1,9 +1,12 @@
 {% extends "base.html" %}
 {% block content %}
 
+<script src="{{ url_for('static', filename='js/utils.js') }}"></script>
+<script src="{{ url_for('static', filename='js/show-pars.js') }}"></script>
 <script src="{{ url_for('static', filename='js/calc-totals.js') }}"></script>
 <script>
 window.onload = function() {
+  updatePars();
   calcAllTotals();
 }
 </script>
@@ -24,12 +27,12 @@ window.onload = function() {
 
     <div class="col-xs-6 col-sm-3">
       <h4>course:</h4>
-      {{ form.course(class="form-control") }}
+      {{ form.course(class="form-control", id="course", onchange="updatePars()") }}
     </div>
 
     <div class="col-xs-6 col-sm-3">
       <h4>tee:</h4>
-      {{ form.tee_color(class="form-control") }}
+      {{ form.tee_color(class="form-control", id="tee_color", onchange="updatePars()") }}
     </div>
 
   </div>
@@ -75,16 +78,13 @@ window.onload = function() {
             <th class="pad align-right"><h4>total</h4></th>
           </tr>
         </thead>
-
         <tbody>
-
           <tr class="tr-pad">
             <td>par:</td>
             {% for i in range(1, 10) %}
-              <td class="align-center"><span id="{{ 'hole%i_par' % i }}">{{ holes[i - 1].par if holes else '' }}</span></td>
+              <td class="align-center"><span id="{{ 'hole%i_par' % i }}"></span></td>
             {% endfor %}
           </tr>
-
           <tr class="tr-pad">
             <td>score:</td>
             {% for i in range(1, 10) %}
@@ -114,7 +114,6 @@ window.onload = function() {
           </tr>
         </tbody>
       </table>
-
     </div>
   </div>
 
@@ -131,14 +130,12 @@ window.onload = function() {
           </tr>
         </thead>
         <tbody>
-
           <tr class="tr-pad">
             <td>par:</td>
-            {% for i in range(1, 10) %}
-              <td class="align-center"><span id="{{ 'hole%i_par' % i }}">{{ holes[i - 1].par if holes else '' }}</span></td>
+            {% for i in range(10, 19) %}
+              <td class="align-center"><span id="{{ 'hole%i_par' % i }}"></span></td>
             {% endfor %}
           </tr>
-
           <tr class="tr-pad">
             <td>score:</td>
             {% for i in range(10, 19) %}
@@ -184,5 +181,15 @@ window.onload = function() {
   </div>
 
 </form>
+
+<div id="course-data" style="display:none;">
+{% for course in courses %}
+  {% for tee in course.tees %}
+    {% for i in range(1, 19) %}
+      <span id="{{ "%s_%s_%i" % (course.nickname, tee.color, i) }}">{{ tee.get_hole(i).par }}</span>
+    {% endfor %}
+  {% endfor %}
+{% endfor %}
+</div>
 
 {% endblock %}

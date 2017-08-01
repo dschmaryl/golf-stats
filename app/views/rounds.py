@@ -78,7 +78,7 @@ def round_new(username):
             flash_errors(form)
 
     return render_template('round.html', title='new round', form=form,
-                           round=None, holes=None)
+                           round=None, holes=None, courses=courses)
 
 
 @app.route('/user/<username>/round_edit/<round_id>', methods=['GET', 'POST'])
@@ -146,4 +146,4 @@ def round_edit(username, round_id):
             flash_errors(form)
 
     return render_template('round.html', title='edit round', form=form,
-                           round=golf_round, holes=holes)
+                           round=golf_round, holes=holes, courses=courses)
