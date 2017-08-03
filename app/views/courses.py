@@ -90,6 +90,8 @@ def course_tee(course_nickname, tee_id=None):
     form = CourseTeeForm(request.form, obj=course_tee)
     form.color.choices = [(i, TEES[i]) for i in range(len(TEES))]
 
+    title = '%s tees edit' % course_tee.color if course_tee else 'new tee'
+
     if request.method == 'POST':
         if form.cancel.data:
             flash('canceled %s tees edit' % course_tee.color)
@@ -125,5 +127,5 @@ def course_tee(course_nickname, tee_id=None):
         else:
             flash_errors(form)
 
-    return render_template('course_tee.html', title='new tee', tee=course_tee,
+    return render_template('course_tee.html', title=title, tee=course_tee,
                            form=form)
