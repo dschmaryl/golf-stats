@@ -1,6 +1,6 @@
 function calcNineHoleTotal(nine, stat) {
   var nineHoleTotal = 0;
-  if (nine == 'front') {
+  if (nine === 'front') {
     for (var i = 1; i < 10; i++) {
       nineHoleTotal += getValue('hole' + i + '_' + stat);
     }
