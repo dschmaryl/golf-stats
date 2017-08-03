@@ -94,7 +94,10 @@ def course_tee(course_nickname, tee_id=None):
 
     if request.method == 'POST':
         if form.cancel.data:
-            flash('canceled %s tees edit' % course_tee.color)
+            if course_tee:
+                flash('canceled %s tees edit' % course_tee.color)
+            else:
+                flash('canceled new tee')
             return redirect(url_for('course_edit', title='edit course',
                                     course_nickname=course.nickname))
 
