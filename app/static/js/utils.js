@@ -14,6 +14,11 @@ function getInner(id) {
    return asNumber(parseInt(document.getElementById(id).innerHTML));
 }
 
+function getSelected(elementId) {
+  var element = document.getElementById(elementId);
+  return element.options[element.selectedIndex].text;
+}
+
 function updateInner(id, value) {
   document.getElementById(id).innerHTML = value;
 }
