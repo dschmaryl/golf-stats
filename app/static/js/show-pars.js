@@ -6,10 +6,7 @@ function putPars(pars) {
   }
 }
 
-function getPars() {
-  var courseName = getSelected("course"),
-      teeColor = getSelected("tee_color");
-
+function getPars(courseName, teeColor) {
   var pars = [];
   for (var i = 1; i < 19; i++) {
     var id = courseName + "_" + teeColor + "_" + i;
@@ -19,5 +16,7 @@ function getPars() {
 }
 
 function updatePars() {
-  putPars(getPars());
+  var courseName = getSelected("course"),
+      teeColor = getSelected("tee_color");
+  putPars(getPars(courseName, teeColor));
 }
