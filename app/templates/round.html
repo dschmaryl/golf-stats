@@ -8,7 +8,7 @@
 window.onload = function() {
   updatePars();
   calcAllTotals();
-}
+};
 </script>
 
 <div class="row">
@@ -92,7 +92,7 @@ window.onload = function() {
                 <input class="form-control number-input" type="number" name="{{ 'hole%i_strokes' % i }}" id="{{ 'hole%i_strokes' % i }}" value="{{ holes[i - 1].strokes if holes else '' }}" oninput="calcNineHoleTotal('front', 'strokes')" />
               </td>
             {% endfor %}
-            <td class="align-right"><div id="total_front_9_strokes"></div></td>
+            <td class="align-right"><div id="total_front_strokes"></div></td>
           </tr>
           <tr class="tr-pad">
             <td>putts:</td>
@@ -101,7 +101,7 @@ window.onload = function() {
                 <input class="form-control number-input" type="number" name="{{ 'hole%i_putts' % i }}" id="{{ 'hole%i_putts' % i }}" value="{{ holes[i - 1].putts if holes else '' }}" oninput="calcNineHoleTotal('front', 'putts')" />
               </td>
             {% endfor %}
-            <td class="align-right"><div id="total_front_9_putts"></div></td>
+            <td class="align-right"><div id="total_front_putts"></div></td>
           </tr>
           <tr class="tr-pad">
             <td>g.i.r.:</td>
@@ -110,7 +110,7 @@ window.onload = function() {
                 <input class="checkbox" type="checkbox" name="{{ 'hole%i_gir' % i }}" {{ 'checked' if round and holes[i - 1].gir else '' }} />
               </td>
             {% endfor %}
-            <td class="align-right"><div id="total_front_9_gir"></div></td>
+            <td class="align-right"><div id="total_front_gir"></div></td>
           </tr>
         </tbody>
       </table>
@@ -143,7 +143,7 @@ window.onload = function() {
                 <input class="form-control number-input" type="number" name="{{ 'hole%i_strokes' % i }}" id="{{ 'hole%i_strokes' % i }}" value="{{ holes[i - 1].strokes if holes else '' }}" oninput="calcNineHoleTotal('back', 'strokes')" />
               </td>
             {% endfor %}
-            <td class="align-right"><div id="total_back_9_strokes"></div></td>
+            <td class="align-right"><div id="total_back_strokes"></div></td>
           </tr>
           <tr class="tr-pad">
             <td>putts:</td>
@@ -152,7 +152,7 @@ window.onload = function() {
                 <input class="form-control number-input" type="number" name="{{ 'hole%i_putts' % i }}" id="{{ 'hole%i_putts' % i }}" value="{{ holes[i - 1].putts if holes else '' }}" oninput="calcNineHoleTotal('back', 'putts')" />
               </td>
             {% endfor %}
-            <td class="align-right"><div id="total_back_9_putts"></div></td>
+            <td class="align-right"><div id="total_back_putts"></div></td>
           </tr>
           <tr class="tr-pad">
             <td>g.i.r.:</td>
@@ -161,7 +161,7 @@ window.onload = function() {
                 <input class="checkbox" type="checkbox" name="{{ 'hole%i_gir' % i }}" {{ 'checked' if round and holes[i - 1].gir else '' }} />
               </td>
             {% endfor %}
-            <td class="align-right"><div id="total_back_9_gir"></div></td>
+            <td class="align-right"><div id="total_back_gir"></div></td>
           </tr>
         </tbody>
       </table>

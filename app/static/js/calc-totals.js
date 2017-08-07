@@ -4,14 +4,14 @@ function calcNineHoleTotal(nine, stat) {
     for (var hole = 1; hole < 10; hole++) {
       nineHoleTotal += getValue('hole' + hole + '_' + stat);
     }
-    var otherNineTotal = getInner('total_back_9_' + stat);
+    var otherNineTotal = getInner('total_back_' + stat);
   } else {
     for (var hole = 10; hole < 19; hole++) {
       nineHoleTotal += getValue('hole' + hole + '_' + stat);
     }
-    var otherNineTotal = getInner('total_front_9_' + stat);
+    var otherNineTotal = getInner('total_front_' + stat);
   }
-  updateInner('total_' + nine + '_9_' + stat, nineHoleTotal);
+  updateInner('total_' + nine + '_' + stat, nineHoleTotal);
   updateInner('total_' + stat, nineHoleTotal + otherNineTotal);
 }
 
