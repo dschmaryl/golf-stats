@@ -2,12 +2,12 @@
 {% block content %}
 
 <script src="{{ url_for('static', filename='js/utils.js') }}"></script>
-<script src="{{ url_for('static', filename='js/calc-totals.js') }}"></script>
+<script src="{{ url_for('static', filename='js/update-totals.js') }}"></script>
 <script>
 
 window.onload = function() {
-  calcTotals('par');
-  calcTotals('yardage');
+  updateTotals('par');
+  updateTotals('yardage');
 };
 </script>
 
@@ -73,14 +73,14 @@ window.onload = function() {
           <tr class="tr-pad">
             <td><h4>par:</h4></td>
             {% for i in range(1, 10) %}
-              <td><input class="form-control number-input" type="number" name="{{ 'hole%i_par' % i }}" id="{{ 'hole%i_par' % i }}" value="{{ tee.get_hole(i).par if tee else '' }}" oninput="calcNineHoleTotal('front', 'par')" /></td>
+              <td><input class="form-control number-input" type="number" name="{{ 'hole%i_par' % i }}" id="{{ 'hole%i_par' % i }}" value="{{ tee.get_hole(i).par if tee else '' }}" oninput="updateNineHoleTotal('front', 'par')" /></td>
             {% endfor %}
             <td class="align-right"><div id="total_front_par"></div></td>
           </tr>
           <tr class="tr-pad">
             <td><h4>yards:</h4></td>
             {% for i in range(1, 10) %}
-              <td><input class="form-control number-input" type="number" name="{{ 'hole%i_yardage' % i }}" id="{{ 'hole%i_yardage' % i }}" value="{{ tee.get_hole(i).yardage if tee else '' }}" oninput="calcNineHoleTotal('front', 'yardage')" /></td>
+              <td><input class="form-control number-input" type="number" name="{{ 'hole%i_yardage' % i }}" id="{{ 'hole%i_yardage' % i }}" value="{{ tee.get_hole(i).yardage if tee else '' }}" oninput="updateNineHoleTotal('front', 'yardage')" /></td>
             {% endfor %}
             <td class="align-right"><div id="total_front_yardage"></div></td>
           </tr>
@@ -112,14 +112,14 @@ window.onload = function() {
           <tr class="tr-pad">
             <td><h4>par:</h4></td>
             {% for i in range(10, 19) %}
-              <td><input class="form-control number-input" type="number" name="{{ 'hole%i_par' % i }}" id="{{ 'hole%i_par' % i }}" value="{{ tee.get_hole(i).par if tee else '' }}" oninput="calcNineHoleTotal('back', 'par')" /></td>
+              <td><input class="form-control number-input" type="number" name="{{ 'hole%i_par' % i }}" id="{{ 'hole%i_par' % i }}" value="{{ tee.get_hole(i).par if tee else '' }}" oninput="updateNineHoleTotal('back', 'par')" /></td>
             {% endfor %}
             <td class="align-right"><div id="total_back_par"></div></td>
           </tr>
           <tr class="tr-pad">
             <td><h4>yards:</h4></td>
             {% for i in range(10, 19) %}
-              <td><input class="form-control number-input" type="number" name="{{ 'hole%i_yardage' % i }}" id="{{ 'hole%i_yardage' % i }}" value="{{ tee.get_hole(i).yardage if tee else '' }}" oninput="calcNineHoleTotal('back', 'yardage')" /></td>
+              <td><input class="form-control number-input" type="number" name="{{ 'hole%i_yardage' % i }}" id="{{ 'hole%i_yardage' % i }}" value="{{ tee.get_hole(i).yardage if tee else '' }}" oninput="updateNineHoleTotal('back', 'yardage')" /></td>
             {% endfor %}
             <td class="align-right"><div id="total_back_yardage"></div></td>
           </tr>

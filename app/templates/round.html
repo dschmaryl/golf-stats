@@ -3,12 +3,12 @@
 
 <script src="{{ url_for('static', filename='js/utils.js') }}"></script>
 <script src="{{ url_for('static', filename='js/update-pars.js') }}"></script>
-<script src="{{ url_for('static', filename='js/calc-totals.js') }}"></script>
+<script src="{{ url_for('static', filename='js/update-totals.js') }}"></script>
 <script>
 window.onload = function() {
   updatePars();
-  calcTotals('strokes');
-  calcTotals('putts');
+  updateTotals('strokes');
+  updateTotals('putts');
 };
 </script>
 
@@ -90,7 +90,7 @@ window.onload = function() {
             <td>score:</td>
             {% for i in range(1, 10) %}
               <td>
-                <input class="form-control number-input" type="number" name="{{ 'hole%i_strokes' % i }}" id="{{ 'hole%i_strokes' % i }}" value="{{ holes[i - 1].strokes if holes else '' }}" oninput="calcNineHoleTotal('front', 'strokes')" />
+                <input class="form-control number-input" type="number" name="{{ 'hole%i_strokes' % i }}" id="{{ 'hole%i_strokes' % i }}" value="{{ holes[i - 1].strokes if holes else '' }}" oninput="updateNineHoleTotal('front', 'strokes')" />
               </td>
             {% endfor %}
             <td class="align-right"><div id="total_front_strokes"></div></td>
@@ -99,7 +99,7 @@ window.onload = function() {
             <td>putts:</td>
             {% for i in range(1, 10) %}
               <td>
-                <input class="form-control number-input" type="number" name="{{ 'hole%i_putts' % i }}" id="{{ 'hole%i_putts' % i }}" value="{{ holes[i - 1].putts if holes else '' }}" oninput="calcNineHoleTotal('front', 'putts')" />
+                <input class="form-control number-input" type="number" name="{{ 'hole%i_putts' % i }}" id="{{ 'hole%i_putts' % i }}" value="{{ holes[i - 1].putts if holes else '' }}" oninput="updateNineHoleTotal('front', 'putts')" />
               </td>
             {% endfor %}
             <td class="align-right"><div id="total_front_putts"></div></td>
@@ -141,7 +141,7 @@ window.onload = function() {
             <td>score:</td>
             {% for i in range(10, 19) %}
               <td>
-                <input class="form-control number-input" type="number" name="{{ 'hole%i_strokes' % i }}" id="{{ 'hole%i_strokes' % i }}" value="{{ holes[i - 1].strokes if holes else '' }}" oninput="calcNineHoleTotal('back', 'strokes')" />
+                <input class="form-control number-input" type="number" name="{{ 'hole%i_strokes' % i }}" id="{{ 'hole%i_strokes' % i }}" value="{{ holes[i - 1].strokes if holes else '' }}" oninput="updateNineHoleTotal('back', 'strokes')" />
               </td>
             {% endfor %}
             <td class="align-right"><div id="total_back_strokes"></div></td>
@@ -150,7 +150,7 @@ window.onload = function() {
             <td>putts:</td>
             {% for i in range(10, 19) %}
               <td>
-                <input class="form-control number-input" type="number" name="{{ 'hole%i_putts' % i }}" id="{{ 'hole%i_putts' % i }}" value="{{ holes[i - 1].putts if holes else '' }}" oninput="calcNineHoleTotal('back', 'putts')" />
+                <input class="form-control number-input" type="number" name="{{ 'hole%i_putts' % i }}" id="{{ 'hole%i_putts' % i }}" value="{{ holes[i - 1].putts if holes else '' }}" oninput="updateNineHoleTotal('back', 'putts')" />
               </td>
             {% endfor %}
             <td class="align-right"><div id="total_back_putts"></div></td>
