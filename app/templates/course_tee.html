@@ -5,15 +5,9 @@
 <script src="{{ url_for('static', filename='js/calc-totals.js') }}"></script>
 <script>
 
-function calcTotals() {
-  calcNineHoleTotal('front', 'par');
-  calcNineHoleTotal('front', 'yardage');
-  calcNineHoleTotal('back', 'par');
-  calcNineHoleTotal('back', 'yardage');
-}
-
 window.onload = function() {
-  calcTotals();
+  calcTotals('par');
+  calcTotals('yardage');
 };
 </script>
 

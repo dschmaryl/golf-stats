@@ -1,4 +1,4 @@
-function calcNineHoleTotal(nine, stat) {
+var calcNineHoleTotal = function(nine, stat) {
   var nineHoleTotal = 0;
   if (nine === 'front') {
     for (var hole = 1; hole < 10; hole++) {
@@ -13,11 +13,9 @@ function calcNineHoleTotal(nine, stat) {
   }
   updateInner('total_' + nine + '_' + stat, nineHoleTotal);
   updateInner('total_' + stat, nineHoleTotal + otherNineTotal);
-}
+};
 
-function calcAllTotals() {
-  calcNineHoleTotal('front', 'strokes');
-  calcNineHoleTotal('front', 'putts');
-  calcNineHoleTotal('back', 'strokes');
-  calcNineHoleTotal('back', 'putts');
-}
+var calcTotals = function(stat) {
+  calcNineHoleTotal('front', stat);
+  calcNineHoleTotal('back', stat);
+};
