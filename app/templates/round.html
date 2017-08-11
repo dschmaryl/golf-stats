@@ -6,8 +6,8 @@
 <script src="{{ url_for('static', filename='js/update-totals.js') }}"></script>
 <script>
 window.onload = function() {
-  updatePars = pars();
-  updatePars();
+  pars = loadPars();
+  pars.update();
   updateTotals('strokes');
   updateTotals('putts');
 };
@@ -29,12 +29,12 @@ window.onload = function() {
 
     <div class="col-xs-6 col-sm-3">
       <h4>course:</h4>
-      {{ form.course(class="form-control", id="course", onchange="updatePars()") }}
+      {{ form.course(class="form-control", id="course", onchange="pars.update()") }}
     </div>
 
     <div class="col-xs-6 col-sm-3">
       <h4>tee:</h4>
-      {{ form.tee_color(class="form-control", id="tee-color", onchange="updatePars()") }}
+      {{ form.tee_color(class="form-control", id="tee-color", onchange="pars.update()") }}
     </div>
 
   </div>
