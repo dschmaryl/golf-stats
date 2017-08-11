@@ -19,6 +19,10 @@ var getSelected = function(elementId) {
   return element.options[element.selectedIndex].text;
 };
 
+var getJson = function(elementId) {
+  return JSON.parse(document.getElementById(elementId).innerHTML);
+};
+
 var updateInner = function(id, value) {
   document.getElementById(id).innerHTML = value;
 };

@@ -1,3 +1,5 @@
+import json
+
 from flask import flash, g, redirect, render_template, request, url_for
 from flask_login import login_required
 
@@ -5,7 +7,7 @@ from app import app, db
 from app.models import Round, Course, User
 from app.forms import RoundForm
 from .flash_errors import flash_errors
-from .tees import TEES
+from .tees import get_json_tees, TEES
 from .users import check_user
 
 
@@ -39,6 +41,8 @@ def round_new(username):
 
     form.tee_color.choices = [(i, TEES[i]) for i in range(len(TEES))]
     form.tee_color.data = TEES.index(user.default_tees)
+
+    tees_json = get_json_tees()
 
     if request.method == 'POST':
         if form.cancel.data:
@@ -78,7 +82,7 @@ def round_new(username):
             flash_errors(form)
 
     return render_template('round.html', title='new round', form=form,
-                           round=None, holes=None, courses=courses)
+                           round=None, holes=None, tees_json=tees_json)
 
 
 @app.route('/user/<username>/round_edit/<round_id>', methods=['GET', 'POST'])
@@ -102,7 +106,7 @@ def round_edit(username, round_id):
     form.tee_color.data = TEES.index(golf_round.tee.color)
 
     holes = [golf_round.get_hole(i) for i in range(1, 19)]
-
+    tees_json = get_json_tees()
 
     if request.method == 'POST':
         if form.cancel.data:
@@ -146,4 +150,4 @@ def round_edit(username, round_id):
             flash_errors(form)
 
     return render_template('round.html', title='edit round', form=form,
-                           round=golf_round, holes=holes, courses=courses)
+                           round=golf_round, holes=holes, tees_json=tees_json)

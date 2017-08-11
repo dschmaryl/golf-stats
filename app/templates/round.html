@@ -6,6 +6,7 @@
 <script src="{{ url_for('static', filename='js/update-totals.js') }}"></script>
 <script>
 window.onload = function() {
+  updatePars = writePars();
   updatePars();
   updateTotals('strokes');
   updateTotals('putts');
@@ -183,14 +184,8 @@ window.onload = function() {
 
 </form>
 
-<div id="course-data" style="display:none;">
-{% for course in courses %}
-  {% for tee in course.tees %}
-    {% for i in range(1, 19) %}
-      <span id="{{ "%s_%s_%i" % (course.nickname, tee.color, i) }}">{{ tee.get_hole(i).par }}</span>
-    {% endfor %}
-  {% endfor %}
-{% endfor %}
+<div id="tees-data" style="display:none;">
+  <span id="tees_json">{{ tees_json }}</span>
 </div>
 
 {% endblock %}

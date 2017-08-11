@@ -1,9 +1,11 @@
-var updatePars = function() {
-  var courseName = getSelected("course"),
-      teeColor = getSelected("tee_color");
+var writePars = function() {
+  var tees = getJson("tees_json");
 
-  for (var hole = 1; hole < 19; hole++) {
-    var par = getInner(courseName + "_" + teeColor + "_" + hole);
-    updateInner("hole" + hole + "_par", par);
-  }
+  return function() {
+    var selectedCourse = getSelected("course"),
+        selectedTeeColor = getSelected("tee_color");
+    tees[selectedCourse][selectedTeeColor].forEach( function(par, i) {
+      updateInner("hole" + (i + 1) + "_par", par);
+    })
+  };
 };
