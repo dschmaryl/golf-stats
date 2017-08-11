@@ -6,19 +6,27 @@ var getNineHoleTotal = function(start, stop, stat) {
   return nineHoleTotal;
 };
 
-var updateNineHoleTotal = function(nine, stat) {
-  if (nine === 'front') {
-    var nineHoleTotal = getNineHoleTotal(1, 10, stat),
-        otherNineTotal = getInner('total-back-' + stat);
-  } else {
-    var nineHoleTotal = getNineHoleTotal(10, 19, stat),
-        otherNineTotal = getInner('total-front-' + stat);
-  }
-  updateInner('total-' + nine + '-' + stat, nineHoleTotal);
-  updateInner('total-' + stat, nineHoleTotal + otherNineTotal);
-};
+var createTotal = function(stat) {
+  var frontNineTotal = 0,
+      backNineTotal = 0;
 
-var updateTotals = function(stat) {
-  updateNineHoleTotal('front', stat);
-  updateNineHoleTotal('back', stat);
+  var updateTotals = function(nine, nineHoleTotal) {
+    updateInner('total-' + nine + '-' + stat, nineHoleTotal);
+    updateInner('total-' + stat, frontNineTotal + backNineTotal);
+  }
+
+  return {
+    updateFront: function() {
+      frontNineTotal = getNineHoleTotal(1, 10, stat);
+      updateTotals('front', frontNineTotal);
+    },
+    updateBack: function() {
+      backNineTotal = getNineHoleTotal(10, 19, stat);
+      updateTotals('back', backNineTotal);
+    },
+    update: function() {
+      this.updateFront();
+      this.updateBack();
+    }
+  }
 };
