@@ -6,7 +6,7 @@
 <script src="{{ url_for('static', filename='js/update-totals.js') }}"></script>
 <script>
 window.onload = function() {
-  updatePars = writePars();
+  updatePars = pars();
   updatePars();
   updateTotals('strokes');
   updateTotals('putts');
@@ -34,7 +34,7 @@ window.onload = function() {
 
     <div class="col-xs-6 col-sm-3">
       <h4>tee:</h4>
-      {{ form.tee_color(class="form-control", id="tee_color", onchange="updatePars()") }}
+      {{ form.tee_color(class="form-control", id="tee-color", onchange="updatePars()") }}
     </div>
 
   </div>
@@ -51,11 +51,11 @@ window.onload = function() {
         <tbody>
           <tr>
             <td>score:</td>
-            <td><span id="total_strokes"></span></td>
+            <td><span id="total-strokes"></span></td>
           </tr>
           <tr>
             <td>putts:</td>
-            <td><span id="total_putts"></span></td>
+            <td><span id="total-putts"></span></td>
           </tr>
         </tbody>
       </table>
@@ -94,7 +94,7 @@ window.onload = function() {
                 <input class="form-control number-input" type="number" name="{{ 'hole%i_strokes' % i }}" id="{{ 'hole%i_strokes' % i }}" value="{{ holes[i - 1].strokes if holes else '' }}" oninput="updateNineHoleTotal('front', 'strokes')" />
               </td>
             {% endfor %}
-            <td class="align-right"><div id="total_front_strokes"></div></td>
+            <td class="align-right"><div id="total-front-strokes"></div></td>
           </tr>
           <tr class="tr-pad">
             <td>putts:</td>
@@ -103,7 +103,7 @@ window.onload = function() {
                 <input class="form-control number-input" type="number" name="{{ 'hole%i_putts' % i }}" id="{{ 'hole%i_putts' % i }}" value="{{ holes[i - 1].putts if holes else '' }}" oninput="updateNineHoleTotal('front', 'putts')" />
               </td>
             {% endfor %}
-            <td class="align-right"><div id="total_front_putts"></div></td>
+            <td class="align-right"><div id="total-front-putts"></div></td>
           </tr>
           <tr class="tr-pad">
             <td>g.i.r.:</td>
@@ -112,7 +112,7 @@ window.onload = function() {
                 <input class="checkbox" type="checkbox" name="{{ 'hole%i_gir' % i }}" {{ 'checked' if round and holes[i - 1].gir else '' }} />
               </td>
             {% endfor %}
-            <td class="align-right"><div id="total_front_gir"></div></td>
+            <td class="align-right"><div id="total-front-gir"></div></td>
           </tr>
         </tbody>
       </table>
@@ -145,7 +145,7 @@ window.onload = function() {
                 <input class="form-control number-input" type="number" name="{{ 'hole%i_strokes' % i }}" id="{{ 'hole%i_strokes' % i }}" value="{{ holes[i - 1].strokes if holes else '' }}" oninput="updateNineHoleTotal('back', 'strokes')" />
               </td>
             {% endfor %}
-            <td class="align-right"><div id="total_back_strokes"></div></td>
+            <td class="align-right"><div id="total-back-strokes"></div></td>
           </tr>
           <tr class="tr-pad">
             <td>putts:</td>
@@ -154,7 +154,7 @@ window.onload = function() {
                 <input class="form-control number-input" type="number" name="{{ 'hole%i_putts' % i }}" id="{{ 'hole%i_putts' % i }}" value="{{ holes[i - 1].putts if holes else '' }}" oninput="updateNineHoleTotal('back', 'putts')" />
               </td>
             {% endfor %}
-            <td class="align-right"><div id="total_back_putts"></div></td>
+            <td class="align-right"><div id="total-back-putts"></div></td>
           </tr>
           <tr class="tr-pad">
             <td>g.i.r.:</td>
@@ -163,7 +163,7 @@ window.onload = function() {
                 <input class="checkbox" type="checkbox" name="{{ 'hole%i_gir' % i }}" {{ 'checked' if round and holes[i - 1].gir else '' }} />
               </td>
             {% endfor %}
-            <td class="align-right"><div id="total_back_gir"></div></td>
+            <td class="align-right"><div id="total-back-gir"></div></td>
           </tr>
         </tbody>
       </table>
@@ -185,7 +185,7 @@ window.onload = function() {
 </form>
 
 <div id="tees-data" style="display:none;">
-  <span id="tees_json">{{ tees_json }}</span>
+  <span id="tees-json">{{ tees_json }}</span>
 </div>
 
 {% endblock %}

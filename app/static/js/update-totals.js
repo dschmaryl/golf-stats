@@ -9,13 +9,13 @@ var getNineHoleTotal = function(start, stop, stat) {
 var updateNineHoleTotal = function(nine, stat) {
   if (nine === 'front') {
     var nineHoleTotal = getNineHoleTotal(1, 10, stat),
-        otherNineTotal = getInner('total_back_' + stat);
+        otherNineTotal = getInner('total-back-' + stat);
   } else {
     var nineHoleTotal = getNineHoleTotal(10, 19, stat),
-        otherNineTotal = getInner('total_front_' + stat);
+        otherNineTotal = getInner('total-front-' + stat);
   }
-  updateInner('total_' + nine + '_' + stat, nineHoleTotal);
-  updateInner('total_' + stat, nineHoleTotal + otherNineTotal);
+  updateInner('total-' + nine + '-' + stat, nineHoleTotal);
+  updateInner('total-' + stat, nineHoleTotal + otherNineTotal);
 };
 
 var updateTotals = function(stat) {
