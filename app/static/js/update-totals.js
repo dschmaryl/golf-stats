@@ -7,8 +7,8 @@ var getNineHoleTotal = function(start, stop, stat) {
 };
 
 var createTotal = function(stat) {
-  var frontNineTotal = 0,
-      backNineTotal = 0;
+  var frontNineTotal = 0;
+  var backNineTotal = 0;
 
   var updateTotals = function(nine, nineHoleTotal) {
     updateInner('total-' + nine + '-' + stat, nineHoleTotal);
