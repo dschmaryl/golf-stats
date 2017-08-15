@@ -17,7 +17,7 @@
         </thead>
         <tbody>
           {% for round in rounds %}
-            <tr onclick="location.href='{{ url_for('round_edit', username=g.user.username, round_id=round.id) }}'">
+            <tr onclick="location.href='{{ url_for('round_view', username=g.user.username, round_id=round.id) }}'">
                 <td>{{ round.date.strftime('%Y-%m-%d') }}</td>
                 <td>{{ round.tee.course.name }}</td>
                 <td class="align-right">{{ round.total_strokes }}</td>
@@ -37,7 +37,7 @@
 
 <div class="row">
   <div class="col-xs-12">
-    <a href="{{ url_for('round_new', username=g.user.username) }}"><button class="btn btn-default">new round</button></a>
+    <a href="{{ url_for('round_view', username=g.user.username) }}"><button class="btn btn-default">new round</button></a>
     <a href="{{ url_for('stats', username=g.user.username) }}"><button class="btn btn-default">back to stats</button></a>
   </div>
 </div>
