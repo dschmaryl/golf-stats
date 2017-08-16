@@ -1,28 +1,28 @@
-var getNineHoleTotal = function(start, stop, stat) {
-  var nineHoleTotal = 0;
-  for (var hole = start; hole < stop; hole++) {
-    nineHoleTotal += getValue('hole' + hole + '_' + stat);
-  }
-  return nineHoleTotal;
-};
-
-var createTotal = function(stat) {
+var createTotal = (stat) => {
   var frontNineTotal = 0;
   var backNineTotal = 0;
 
-  var updateTotals = function(nine, nineHoleTotal) {
-    updateInner('total-' + nine + '-' + stat, nineHoleTotal);
+  var nineHoleTotal = (startHole, stat) => {
+    return Array(9).fill().reduce((total, v, index) => {
+      var holeNumber = index + startHole;
+      return total + getValue('hole' + holeNumber + '_' + stat);
+    }, 0);
+  };
+
+  var updateTotals = () => {
+    updateInner('total-front-' + stat, frontNineTotal);
+    updateInner('total-back-' + stat, backNineTotal);
     updateInner('total-' + stat, frontNineTotal + backNineTotal);
   }
 
   return {
     updateFront: function() {
-      frontNineTotal = getNineHoleTotal(1, 10, stat);
-      updateTotals('front', frontNineTotal);
+      frontNineTotal = nineHoleTotal(1, stat);
+      updateTotals();
     },
     updateBack: function() {
-      backNineTotal = getNineHoleTotal(10, 19, stat);
-      updateTotals('back', backNineTotal);
+      backNineTotal = nineHoleTotal(10, stat);
+      updateTotals();
     },
     update: function() {
       this.updateFront();

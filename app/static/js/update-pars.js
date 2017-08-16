@@ -1,4 +1,4 @@
-var loadPars = function() {
+var loadPars = () => {
   var tees = getJson("tees-json");
 
   return {
@@ -6,7 +6,7 @@ var loadPars = function() {
       var selectedCourse = getSelected("course");
       var selectedTeeColor = getSelected("tee-color");
 
-      tees[selectedCourse][selectedTeeColor].forEach( function(par, i) {
+      tees[selectedCourse][selectedTeeColor].forEach((par, i) => {
         updateInner("hole" + (i + 1) + "_par", par);
       })
     }
