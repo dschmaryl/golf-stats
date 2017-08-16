@@ -1,4 +1,4 @@
-var loadPars = () => {
+var loadPars = function() {
   var tees = getJson("tees-json");
 
   return {
