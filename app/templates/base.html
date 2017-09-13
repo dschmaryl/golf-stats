@@ -5,8 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" />
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
-    <script src='https://www.google.com/recaptcha/api.js'></script>
     {% if title %}
+      {% if title == 'new user' %}
+        <script src='https://www.google.com/recaptcha/api.js'></script>
+      {% endif %}
       <title>{{ title }} - golf-stats</title>
     {% else %}
       <title>golf-stats</title>
