@@ -33,5 +33,21 @@ class Hole(db.Model):
     def _calc_gir(self):
         return self.strokes - self.putts <= self.par - 2
 
+    def as_dict(self):
+        return {
+            'id': self.id,
+            'round_id': self.round_id,
+            'hole_number': self.hole_number,
+            'strokes': self.strokes,
+            'putts': self.putts,
+            'gir': self.gir,
+            'fairway_hit': self.fairway_hit,
+            'sand_save': self.sand_save,
+            'par': self.par,
+            'yardage': self.yardage,
+            'handicap': self.handicap,
+            'adjusted_strokes': self.adjusted_strokes
+        }
+
     def __repr__(self):
         return '<Hole %r>' % (self.id)

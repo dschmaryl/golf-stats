@@ -141,5 +141,28 @@ class Round(db.Model):
 
         return adjusted_score
 
+    def as_dict(self):
+        return {
+            'id': self.id,
+            'user_id': self.user_id,
+            'tee_id': self.tee_id,
+            'date': self.date,
+            'notes': self.notes,
+            'front_9_strokes': self.front_9_strokes,
+            'front_9_putts': self.front_9_putts,
+            'front_9_gir': self.front_9_gir,
+            'back_9_strokes': self.back_9_strokes,
+            'back_9_putts': self.back_9_putts,
+            'back_9_gir': self.back_9_gir,
+            'total_strokes': self.total_strokes,
+            'total_putts': self.total_putts,
+            'total_gir': self.total_gir,
+            'par_3_avg': self.par_3_avg,
+            'par_4_avg': self.par_4_avg,
+            'par_5_avg': self.par_5_avg,
+            'handicap_index': self.handicap_index,
+            'holes': {h.id: h.hole_number for h in self.holes}
+        }
+
     def __repr__(self):
         return '<Round %r>' % (self.date)

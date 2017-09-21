@@ -116,5 +116,13 @@ class User(db.Model):
         except NameError:
             return str(self.id)
 
+    def as_dict(self):
+        return {
+            'id': self.id,
+            'username': self.username,
+            'default_tees': self.default_tees,
+            'rounds': {r.id: r.date for r in self.rounds}
+        }
+
     def __repr__(self):
         return '<User %r>' % (self.username)
