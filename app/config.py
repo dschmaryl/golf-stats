@@ -1,8 +1,5 @@
 import os
-import pathlib
 
-
-BASE_DIR = pathlib.Path(__file__).resolve().parent
 
 SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URL']
 SQLALCHEMY_TRACK_MODIFICATIONS = False
