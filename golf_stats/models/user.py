@@ -1,7 +1,7 @@
 from datetime import date
 from pandas import Series
 
-from app import bcrypt, db
+from golf_stats import bcrypt, db
 from .round import Round
 
 

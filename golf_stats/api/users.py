@@ -1,8 +1,8 @@
 from flask import g, jsonify
 from flask_login import current_user
 
-from app import app, db
-from app.models import Hole, Round, User
+from golf_stats import app, db
+from golf_stats.models import Hole, Round, User
 
 
 @app.route('/api/users')

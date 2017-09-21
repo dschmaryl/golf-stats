@@ -2,8 +2,8 @@ import json
 
 from flask import jsonify
 
-from app import app
-from app.models import Course
+from golf_stats import app
+from golf_stats.models import Course
 
 
 TEES = ['white', 'red']

@@ -1,5 +1,5 @@
 from flask import render_template
-from app import app
+from golf_stats import app
 
 
 @app.route('/index')

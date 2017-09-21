@@ -2,9 +2,9 @@ import pathlib
 
 from flask import send_from_directory
 from flask_login import current_user, login_required
-from app import app
+from golf_stats import app
 
-from app.utils import run_export
+from golf_stats.utils import run_export
 
 
 @app.route('/export', methods=['GET', 'POST'])

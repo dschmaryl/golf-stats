@@ -1,5 +1,5 @@
 from flask import request, send_from_directory
-from app import app
+from golf_stats import app
 
 
 @app.route('/robots.txt')

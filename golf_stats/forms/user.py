@@ -2,7 +2,7 @@ from wtforms import Form, SelectField, StringField, SubmitField, validators
 from wtforms.widgets import PasswordInput
 from flask_wtf import RecaptchaField
 
-from app.models import User
+from golf_stats.models import User
 
 
 class UserForm(Form):

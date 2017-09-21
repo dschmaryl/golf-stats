@@ -12,7 +12,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 
-app.config.from_object('app.config')
+app.config.from_object('golf_stats.config')
 
 base_dir = pathlib.Path(__file__).resolve().parent.parent
 app.static_folder = str(base_dir / 'static')
@@ -27,4 +27,4 @@ login_manager.init_app(app)
 login_manager.login_view = 'login'
 
 
-from app import api, models, views
+from . import api, models, views

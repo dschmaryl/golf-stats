@@ -1,9 +1,9 @@
 from flask import flash, g, render_template, redirect, request, url_for
 from flask_login import current_user, login_required
 
-from app import app, db, login_manager
-from app.models import User
-from app.forms import ChangePasswordForm, UserForm
+from golf_stats import app, db, login_manager
+from golf_stats.models import User
+from golf_stats.forms import ChangePasswordForm, UserForm
 from .flash_errors import flash_errors
 from .tees import TEES
 

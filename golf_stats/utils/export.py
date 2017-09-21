@@ -4,7 +4,7 @@
 import pathlib
 import pickle
 
-from app.models import *
+from golf_stats.models import *
 
 
 def dump(data, name):

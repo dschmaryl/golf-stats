@@ -1,6 +1,6 @@
 from flask import request
 
-from app import app
+from golf_stats import app
 
 
 @app.before_request

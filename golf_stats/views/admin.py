@@ -1,8 +1,8 @@
 from flask_admin.contrib.sqla import ModelView
 from flask_login import current_user
 
-from app import admin, db
-from app.models import Course, Hole, Round, User
+from golf_stats import admin, db
+from golf_stats.models import Course, Hole, Round, User
 
 
 class AdminView(ModelView):

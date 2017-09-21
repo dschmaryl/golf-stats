@@ -4,7 +4,7 @@ from flask import request
 from wtforms import (DateField, Form, SelectField, SubmitField, TextAreaField,
                      validators)
 
-from app.models import Course
+from golf_stats.models import Course
 
 
 class RoundForm(Form):

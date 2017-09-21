@@ -1,6 +1,6 @@
 from datetime import date
 
-from app import db
+from golf_stats import db
 
 
 class Course(db.Model):

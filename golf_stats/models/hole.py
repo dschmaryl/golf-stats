@@ -1,4 +1,4 @@
-from app import db
+from golf_stats import db
 
 
 class Hole(db.Model):
