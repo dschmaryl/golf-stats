@@ -23,6 +23,14 @@ class Course(db.Model):
         self.tees.append(new_tee)
         return new_tee
 
+    def as_dict(self):
+        return {
+            'id': self.id,
+            'nickname': self.nickname,
+            'name': self.name,
+            'tees': {t.id: t.color for t in self.tees}
+        }
+
     def __repr__(self):
         return '<Course %r>' % (self.name)
 
