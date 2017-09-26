@@ -1,42 +1,39 @@
 from flask import g, jsonify
-from flask_login import current_user
 
 from golf_stats import app
 from golf_stats.models import Hole, Round
 
+from .authorize import check_authorization
+
 
 @app.route('/api/rounds')
+@check_authorization
 def get_rounds():
-    if current_user.is_authenticated:
-        rounds = Round.query.all()
-        return jsonify({r.id: r.date for r in rounds})
-    else:
-        return jsonify(error='not authorized')
+    rounds = Round.query.all()
+    return jsonify({r.id: r.date for r in rounds})
 
 
 @app.route('/api/round/<round_id>')
+@check_authorization
 def get_round(round_id):
-    if current_user.is_authenticated:
-        golf_round = Round.query.get(round_id)
-        if golf_round:
-            if g.user.username == golf_round.user.username:
-                return jsonify(golf_round.as_dict())
-            else:
-                return jsonify(error='round belongs to another user')
+    golf_round = Round.query.get(round_id)
+    if golf_round:
+        if g.user.username == golf_round.user.username:
+            return jsonify(golf_round.as_dict())
         else:
-            return jsonify(error='not found')
-    return jsonify(error='not authorized')
+            return jsonify(error='round belongs to another user')
+    else:
+        return jsonify(error='not found')
 
 
 @app.route('/api/hole/<hole_id>')
+@check_authorization
 def get_hole(hole_id):
-    if current_user.is_authenticated:
-        hole = Hole.query.get(hole_id)
-        if hole_id:
-            if g.user.username == hole.round.user.username:
-                return jsonify(hole.as_dict())
-            else:
-                return jsonify(error='hole belongs to another user')
+    hole = Hole.query.get(hole_id)
+    if hole_id:
+        if g.user.username == hole.round.user.username:
+            return jsonify(hole.as_dict())
         else:
-            return jsonify(error='not found')
-    return jsonify(error='not authorized')
+            return jsonify(error='hole belongs to another user')
+    else:
+        return jsonify(error='not found')

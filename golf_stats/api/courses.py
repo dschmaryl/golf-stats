@@ -1,25 +1,23 @@
-from flask import g, jsonify
-from flask_login import current_user
+from flask import jsonify
 
-from golf_stats import app, db
+from golf_stats import app
 from golf_stats.models import Course
+
+from .authorize import check_authorization
 
 
 @app.route('/api/courses')
+@check_authorization
 def get_courses():
-    if current_user.is_authenticated:
-        courses = Course.query.all()
-        return jsonify({c.id: c.nickname for c in courses})
-    return jsonify(error='not authorized')
+    courses = Course.query.all()
+    return jsonify({c.id: c.nickname for c in courses})
 
 
 @app.route('/api/course/<course_id>')
+@check_authorization
 def get_course(course_id):
-    if current_user.is_authenticated:
-        course = Course.query.get(course_id)
-        if course:
-            return jsonify(course.as_dict())
-        else:
-            return jsonify(error='not found')
+    course = Course.query.get(course_id)
+    if course:
+        return jsonify(course.as_dict())
     else:
-        return jsonify(error='not authorized')
+        return jsonify(error='not found')
