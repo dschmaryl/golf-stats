@@ -1,8 +1,8 @@
-from flask import g, jsonify
+from flask import g, jsonify, request
 
 from golf_stats import app
 from golf_stats.models import User
-
+from golf_stats.utils import create_user
 from .authorize import check_authorization
 
 
@@ -23,3 +23,13 @@ def get_user(user_id):
             return jsonify(error='not permitted')
     else:
         return jsonify(error='not found')
+
+
+@app.route('/api/add_user', methods=['POST'])
+@check_authorization
+def add_user():
+    if g.user.username != 'daryl':
+        return jsonify(error='must be daryl')
+    if request.method == 'POST':
+        return jsonify(create_user(request.get_json()))
+    return jsonify(error='failed')
