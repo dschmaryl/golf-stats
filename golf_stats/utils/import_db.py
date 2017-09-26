@@ -79,7 +79,11 @@ def add_users(users):
     db.session.commit()
 
 
-if __name__ == '__main__':
+def import_all():
     export_data = get('export_data.pk')
     add_courses(export_data['courses'])
     add_users(export_data['users'])
+
+
+if __name__ == '__main__':
+    import_all()

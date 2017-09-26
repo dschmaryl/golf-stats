@@ -67,10 +67,13 @@ def dictify_users():
     return data
 
 
-def run_export():
-    export_data = {'courses': dictify_courses(), 'users': dictify_users()}
+def export_all():
+    export_data = {
+        'courses': dictify_courses(),
+        'users': dictify_users()
+    }
     dump(export_data, 'export_data.pk')
 
 
 if __name__ == '__main__':
-    run_export()
+    export_all()

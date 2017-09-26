@@ -27,4 +27,4 @@ login_manager.init_app(app)
 login_manager.login_view = 'login'
 
 
-from . import api, models, views
+from . import models, views, api
