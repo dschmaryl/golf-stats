@@ -112,7 +112,7 @@ class Round(db.Model):
             0: 0, 1: 1, 2: 1, 3: 2, 4: 2, 5: 3, 6: 3, 7: 4, 8: 4, 9: 5,
             10: 5, 11: 6, 12: 6, 13: 7, 14: 7, 15: 8, 16: 8, 17: 9, 18: 9,
             19: 10, 20: 10
-            }[len(rounds)]
+        }[len(rounds)]
 
         return num_of_diffs_used
 
@@ -123,7 +123,7 @@ class Round(db.Model):
 
     def get_adjusted_score(self):
         # previous handicap is needed to calculate the course handicap
-        # going into the current round which is used to adjust score
+        # for the current round which is used to adjust score
         previous_round = self.user.get_previous_round(self)
         if not previous_round:
             return self.total_strokes

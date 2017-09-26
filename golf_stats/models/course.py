@@ -70,6 +70,25 @@ class CourseTee(db.Model):
     def get_total_par(self):
         return sum([course_hole.par for course_hole in self.course_holes])
 
+    def as_dict(self):
+        return {
+            'id': self.id,
+            'course_id': self.id,
+            'name': self.name,
+            'date': self.date,
+            'color': self.color,
+            'gender': self.gender,
+            'rating': self.rating,
+            'slope': self.slope,
+            'front_9_rating': self.front_9_rating,
+            'front_9_slope': self.front_9_slope,
+            'back_9_rating': self.back_9_rating,
+            'back_9_slope': self.back_9_slope,
+            'bogey_rating': self.bogey_rating,
+            'course_holes': {h.id: h.hole_number for h in self.course_holes},
+            'rounds': {r.id: r.date for r in self.rounds}
+        }
+
     def __repr__(self):
         return '<Tee %r>' % (self.color)
 
@@ -82,6 +101,16 @@ class CourseHole(db.Model):
     par = db.Column(db.Integer)
     yardage = db.Column(db.Integer)
     handicap = db.Column(db.Integer)
+
+    def as_dict(self):
+        return {
+            'id': self.id,
+            'tee_id': self.tee_id,
+            'hole_number': self.hole_number,
+            'par': self.par,
+            'yardage': self.yardage,
+            'handicap': self.handicap
+        }
 
     def __repr__(self):
         return '<CourseHole %r>' % (self.hole)

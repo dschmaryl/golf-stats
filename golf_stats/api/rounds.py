@@ -26,7 +26,7 @@ def get_round(round_id):
         return jsonify(error='not found')
 
 
-@app.route('/api/hole/<hole_id>')
+@app.route('/api/round/hole/<hole_id>')
 @check_authorization
 def get_hole(hole_id):
     hole = Hole.query.get(hole_id)
