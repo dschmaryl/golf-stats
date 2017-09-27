@@ -4,15 +4,17 @@ from flask_login import current_user, login_required
 from golf_stats import app, db, login_manager
 from golf_stats.models import User
 from golf_stats.forms import ChangePasswordForm, UserForm
+from golf_stats.actions import create_user, update_user
 from .flash_errors import flash_errors
 from .tees import TEES
 
 
-def check_user(username):
-    if g.user.username != username:
+def check_user(username, return_url='/stats'):
+    if g.user.username == username:
+        return True
+    else:
         flash('wrong user!')
         return False
-    return True
 
 
 @login_manager.user_loader
@@ -83,13 +85,17 @@ def user(username):
             return redirect(url_for('index'))
 
         if form.validate():
-            user.username = form.username.data
-            user.set_password(form.password.data)
-            user.default_tees = TEES[int(request.form.get('default_tees'))]
-            db.session.commit()
-
-            flash('settings saved')
-            return redirect(url_for('index'))
+            result = update_user({
+                'username': form.username.data,
+                'password': form.password.data,
+                'default_tees': TEES[int(request.form.get('default_tees'))]
+            })
+            if result.get('error'):
+                flash(result['error'])
+                return redirect(url_for('user'))
+            else:
+                flash('settings saved')
+                return redirect(url_for('index'))
         else:
             flash_errors(form)
 
@@ -107,19 +113,17 @@ def user_new():
             return redirect(url_for('index'))
 
         if form.validate():
-            if User.query.filter_by(username=form.username.data).first():
-                flash('username already taken')
+            result = create_user({
+                'username': form.username.data,
+                'password': form.password.data,
+                'default_tees': TEES[int(request.form.get('default_tees'))]
+            })
+            if result.get('error'):
+                flash(result['error'])
                 return redirect(url_for('user_new'))
-
-            user = User(username=form.username.data)
-            db.session.add(user)
-
-            user.set_password(form.password.data)
-            user.default_tees = TEES[int(request.form.get('default_tees'))]
-            db.session.commit()
-
-            flash('added user %s' % user.username)
-            return redirect(url_for('login'))
+            else:
+                flash('added user %s' % form.username.data)
+                return redirect(url_for('login'))
         else:
             flash_errors(form)
 

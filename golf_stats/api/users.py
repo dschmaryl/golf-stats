@@ -2,7 +2,7 @@ from flask import g, jsonify, request
 
 from golf_stats import app
 from golf_stats.models import User
-from golf_stats.utils import create_user
+from golf_stats.actions import create_user
 from .authorize import check_authorization
 
 
@@ -32,4 +32,5 @@ def add_user():
         return jsonify(error='must be daryl')
     if request.method == 'POST':
         return jsonify(create_user(request.get_json()))
+
     return jsonify(error='failed')
