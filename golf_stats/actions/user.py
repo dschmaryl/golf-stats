@@ -6,24 +6,24 @@ from golf_stats.views.tees import TEES
 
 
 def create_user(data):
-    print(data.get('default_tees') in TEES)
-    username = data.get('username')
-    password = data.get('password')
-    if username and password:
-        new_user = User(username=username)
-        db.session.add(new_user)
-        new_user.set_password(password)
-        default_tees = data.get('default_tees')
-        if default_tees in TEES:
-            new_user.default_tees = default_tees
-        try:
-            db.session.commit()
-            return {'success': True}
-        except IntegrityError:
-            db.session.rollback()
-            return {'error': 'username already exists'}
-    else:
+    try:
+        new_user = User(username=data['username'])
+        new_user.set_password(data['password'])
+    except KeyError:
         return {'error': 'need username and password'}
+
+    default_tees = data.get('default_tees')
+    if default_tees in TEES:
+        new_user.default_tees = default_tees
+
+    try:
+        db.session.add(new_user)
+        db.session.commit()
+        return {'success': True}
+    except IntegrityError:
+        db.session.rollback()
+        return {'error': 'username already exists'}
+
 
 
 def update_user(data):
@@ -37,6 +37,7 @@ def update_user(data):
         user.set_password(data['password'])
     if data.get('default_tees'):
         user.default_tees = data['default_tees']
+
     try:
         db.session.commit()
         return {'success': True}

@@ -1,55 +1,47 @@
 from sqlalchemy.exc import IntegrityError
 
 from golf_stats import db
-from golf_stats.models import Round
-from golf_stats.views.tees import TEES
+from golf_stats.models import CourseTee, Round, User
 
 
-def create_round(data):
-    golf_round = Round(date=data.get('date'), notes=data.get('notes'))
+def update_round(data):
+    try:
+        if not data['round_id']:
+            user = User.query.get(data['user_id'])
+            round_ = Round(date=data['date'], notes=data['notes'])
+        else:
+            round_ = Round.query.get(data['round_id'])
+            if not round_:
+                return {'error': 'round not found'}
+            user = round_.user
+            if user.id != data['user_id']:
+                return {'error': 'user does not match round.user'}
+        try:
+            round_.tee = CourseTee.query.get(int(data['tee_id']))
 
+            for hole_num, hole_data in data['holes'].items():
+                hole = round_.get_hole(int(hole_num))
+                hole.set_course_hole_data()
 
+                hole.strokes = int(hole_data['strokes'])
+                hole.putts = int(hole_data['putts'])
+                hole.set_gir(hole_data['gir'] in [True, 'True', 'true', 1])
 
+        except (ValueError, TypeError):
+            return {'error': 'bad data'}
+    except KeyError:
+        return {'error': 'bad data'}
 
+    if not round_.user:
+        user.rounds.append(round_)
 
+    round_.calc_totals()
+    round_.calc_handicap()
+    user.recalc_handicaps(round_)
 
-
-
-# def create_user(data):
-#     print(data.get('default_tees') in TEES)
-#     username = data.get('username')
-#     password = data.get('password')
-#     if username and password:
-#         new_user = User(username=username)
-#         db.session.add(new_user)
-#         new_user.set_password(password)
-#         default_tees = data.get('default_tees')
-#         if default_tees in TEES:
-#             new_user.default_tees = default_tees
-#         try:
-#             db.session.commit()
-#             return {'success': True}
-#         except IntegrityError:
-#             db.session.rollback()
-#             return {'error': 'username already exists'}
-#     else:
-#         return {'error': 'need username and password'}
-#
-#
-# def update_user(data):
-#     user = User.query.get(data.get('id'))
-#     if not user:
-#         return {'error': 'user not found'}
-#
-#     if data.get('username'):
-#         user.username = data['username']
-#     if data.get('password'):
-#         user.set_password(data['password'])
-#     if data.get('default_tees'):
-#         user.default_tees = data['default_tees']
-#     try:
-#         db.session.commit()
-#         return {'success': True}
-#     except IntegrityError:
-#         db.session.rollback()
-#         return {'error': 'integrityerror'}
+    try:
+        db.session.commit()
+        return {'success': True}
+    except IntegrityError:
+        db.session.rollback()
+        return {'error': 'integrityerror'}

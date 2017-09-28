@@ -30,7 +30,5 @@ def get_user(user_id):
 def add_user():
     if g.user.username != 'daryl':
         return jsonify(error='must be daryl')
-    if request.method == 'POST':
+    else:
         return jsonify(create_user(request.get_json()))
-
-    return jsonify(error='failed')

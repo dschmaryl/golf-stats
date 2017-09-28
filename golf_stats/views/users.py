@@ -118,12 +118,11 @@ def user_new():
                 'password': form.password.data,
                 'default_tees': TEES[int(request.form.get('default_tees'))]
             })
-            if result.get('error'):
-                flash(result['error'])
-                return redirect(url_for('user_new'))
-            else:
+            if result.get('success'):
                 flash('added user %s' % form.username.data)
                 return redirect(url_for('login'))
+            else:
+                flash(result['error'])
         else:
             flash_errors(form)
 
