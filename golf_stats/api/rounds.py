@@ -1,7 +1,8 @@
-from flask import g, jsonify
+from flask import g, jsonify, request
 
 from golf_stats import app
 from golf_stats.models import Hole, Round
+from golf_stats.actions import update_round
 
 from .authorize import check_authorization
 
@@ -37,3 +38,9 @@ def get_hole(hole_id):
             return jsonify(error='hole belongs to another user')
     else:
         return jsonify(error='not found')
+
+
+@app.route('/api/add_round', methods=['POST'])
+@check_authorization
+def add_round():
+    return jsonify(update_round(request.get_json()))

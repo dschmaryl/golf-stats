@@ -25,7 +25,6 @@ def create_user(data):
         return {'error': 'username already exists'}
 
 
-
 def update_user(data):
     user = User.query.get(data.get('id'))
     if not user:

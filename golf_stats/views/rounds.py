@@ -5,6 +5,7 @@ from golf_stats import app, db
 from golf_stats.models import Round, Course, User
 from golf_stats.forms import RoundForm
 from golf_stats.actions import update_round
+from golf_stats.dates import date_to_str
 from .flash_errors import flash_errors
 from .tees import get_json_tees, TEES
 from .users import check_user
@@ -74,7 +75,7 @@ def round_view(username, round_id=None):
             data = {
                 'round_id': round_id,
                 'user_id': user.id,
-                'date': form.date.data,
+                'date': date_to_str(form.date.data),
                 'notes': form.notes.data,
                 'tee_id': tee_id,
                 'holes': {i: {} for i in range(1, 19)}

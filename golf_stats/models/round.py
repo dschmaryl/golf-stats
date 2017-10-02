@@ -1,4 +1,5 @@
 from golf_stats import db
+from golf_stats.dates import date_to_str
 from .hole import Hole
 
 
@@ -146,7 +147,7 @@ class Round(db.Model):
             'id': self.id,
             'user_id': self.user_id,
             'tee_id': self.tee_id,
-            'date': self.date,
+            'date': date_to_str(self.date),
             'notes': self.notes,
             'front_9_strokes': self.front_9_strokes,
             'front_9_putts': self.front_9_putts,
