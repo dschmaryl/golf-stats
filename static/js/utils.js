@@ -34,7 +34,7 @@ var createTotal = function(stat) {
     updateInner('total-front-' + stat, frontNineTotal);
     updateInner('total-back-' + stat, backNineTotal);
     updateInner('total-' + stat, frontNineTotal + backNineTotal);
-  }
+  };
 
   return {
     updateFront: function() {
@@ -49,7 +49,7 @@ var createTotal = function(stat) {
       this.updateFront();
       this.updateBack();
     }
-  }
+  };
 };
 
 var loadPars = function() {
