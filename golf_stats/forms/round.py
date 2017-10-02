@@ -1,5 +1,4 @@
 from datetime import date
-
 from flask import request
 from wtforms import (DateField, Form, SelectField, SubmitField, TextAreaField,
                      validators)

@@ -1,5 +1,4 @@
 from datetime import date
-
 from wtforms import (DateField, FloatField, Form, IntegerField, SelectField,
                      StringField, SubmitField, validators)
 

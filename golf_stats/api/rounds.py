@@ -3,7 +3,6 @@ from flask import g, jsonify, request
 from golf_stats import app
 from golf_stats.models import Hole, Round
 from golf_stats.actions import update_round
-
 from .authorize import check_authorization
 
 

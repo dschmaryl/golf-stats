@@ -1,5 +1,5 @@
 import json
-from flask import jsonify
+
 from golf_stats.models import Course
 
 

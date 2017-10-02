@@ -2,7 +2,6 @@ from flask import jsonify
 
 from golf_stats import app
 from golf_stats.models import Course, CourseTee, CourseHole
-
 from .authorize import check_authorization
 
 
