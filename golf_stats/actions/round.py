@@ -65,4 +65,4 @@ def update_round(data):
         return {'success': True}
     except IntegrityError:
         db.session.rollback()
-        return {'error': 'integrityerror'}
+        return {'error': 'IntegrityError'}

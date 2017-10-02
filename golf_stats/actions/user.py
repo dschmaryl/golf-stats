@@ -9,8 +9,8 @@ def create_user(data):
     try:
         new_user = User(username=data['username'])
         new_user.set_password(data['password'])
-    except KeyError:
-        return {'error': 'need username and password'}
+    except KeyError as error:
+        return {'error': 'KeyError: %s' % error}
 
     default_tees = data.get('default_tees')
     if default_tees in TEES:
@@ -22,7 +22,7 @@ def create_user(data):
         return {'success': True}
     except IntegrityError:
         db.session.rollback()
-        return {'error': 'username already exists'}
+        return {'error': 'IntegrityError'}
 
 
 def update_user(data):
@@ -42,4 +42,4 @@ def update_user(data):
         return {'success': True}
     except IntegrityError:
         db.session.rollback()
-        return {'error': 'integrityerror'}
+        return {'error': 'IntegrityError'}
