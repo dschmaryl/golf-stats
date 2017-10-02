@@ -36,21 +36,22 @@ def update_round(data):
         if notes and notes not in [None, '']:
             round_.notes = notes
 
-        try:
-            round_.tee = CourseTee.query.get(int(data['tee_id']))
+        round_.tee = CourseTee.query.get(int(data['tee_id']))
 
-            for hole_num, hole_data in data['holes'].items():
-                hole = round_.get_hole(int(hole_num))
-                hole.set_course_hole_data()
+        for hole_num, hole_data in data['holes'].items():
+            hole = round_.get_hole(int(hole_num))
+            hole.set_course_hole_data()
 
-                hole.strokes = int(hole_data['strokes'])
-                hole.putts = int(hole_data['putts'])
-                hole.set_gir(hole_data.get('gir') in [True, 'True', 'true', 1])
+            hole.strokes = int(hole_data['strokes'])
+            hole.putts = int(hole_data['putts'])
+            hole.set_gir(hole_data.get('gir') in [True, 'True', 'true', 1])
 
-        except (ValueError, TypeError):
-            return {'error': 'bad data - ValueError or TypeError'}
-    except KeyError:
-        return {'error': 'bad data - KeyError'}
+    except ValueError as error:
+        return {'error': 'ValueError: %s' % error}
+    except TypeError as error:
+        return {'error': 'TypeError: %s' % error}
+    except KeyError as error:
+        return {'error': 'KeyError: %s' % error}
 
     if not round_.user:
         user.rounds.append(round_)
