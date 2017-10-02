@@ -1,7 +1,7 @@
 from flask import g, jsonify, request
 
 from golf_stats import app
-from golf_stats.models import Hole, Round
+from golf_stats.models import Hole, Round, User
 from golf_stats.actions import update_round
 from .authorize import check_authorization
 
@@ -42,4 +42,16 @@ def get_hole(hole_id):
 @app.route('/api/add_round', methods=['POST'])
 @check_authorization
 def add_round():
-    return jsonify(update_round(request.get_json()))
+    try:
+        user_id = request.form.get('user_id')
+        if user_id:
+            if g.user.username == User.query.get(int(user_id)):
+                return jsonify(update_round(request.get_json()))
+            else:
+                return jsonify(error='not permitted')
+        else:
+            return jsonify(error='user_id is required')
+    except ValueError as error:
+        return jsonify(error="ValueError: invalid 'user_id'")
+    except TypeError as error:
+        return jsonify(error='TypeError: %s' % error)
