@@ -43,15 +43,13 @@ def get_hole(hole_id):
 @check_authorization
 def add_round():
     try:
-        user_id = request.form.get('user_id')
-        if user_id:
-            if g.user.username == User.query.get(int(user_id)):
-                return jsonify(update_round(request.get_json()))
-            else:
-                return jsonify(error='not permitted')
+        if g.user.username == User.query.get(int(request.form['user_id'])):
+            return jsonify(update_round(request.get_json()))
         else:
-            return jsonify(error='user_id is required')
+            return jsonify(error='not permitted')
     except ValueError as error:
         return jsonify(error="ValueError: invalid 'user_id'")
     except TypeError as error:
         return jsonify(error='TypeError: %s' % error)
+    except KeyError as error:
+        return jsonify(error='KeyError: %s' % error)
