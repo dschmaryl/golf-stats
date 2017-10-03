@@ -2,7 +2,7 @@ from flask import g, jsonify, request
 
 from golf_stats import app
 from golf_stats.models import Course, CourseTee, CourseHole
-from golf_stats.actions import save_course_data
+from golf_stats.actions import save_course_data, save_tee_data
 from .authorize import check_authorization
 
 
@@ -26,8 +26,8 @@ def get_course(course_id):
 def update_course():
     if g.user.username != 'daryl':
         return jsonify(error='must be daryl')
-    else:
-        return jsonify(save_course_data(request.get_json()))
+
+    return jsonify(save_course_data(request.get_json()))
 
 
 @app.route('/api/tees')
@@ -45,6 +45,16 @@ def get_tee(tee_id):
         return jsonify(tee.as_dict())
     else:
         return jsonify(error='not found')
+
+
+@app.route('/api/add_tee', methods=['POST'])
+@app.route('/api/update_tee', methods=['POST'])
+@check_authorization
+def update_tee():
+    if g.user.username != 'daryl':
+        return jsonify(error='must be daryl')
+
+    return jsonify(save_tee_data(request.get_json()))
 
 
 @app.route('/api/tee/holes')

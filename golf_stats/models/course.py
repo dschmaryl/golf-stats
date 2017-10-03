@@ -54,7 +54,7 @@ class CourseTee(db.Model):
 
     bogey_rating = db.Column(db.Float)
 
-    course_holes = db.relationship('CourseHole', backref='tee', lazy='dynamic',
+    holes = db.relationship('CourseHole', backref='tee', lazy='dynamic',
                                    cascade='save-update, delete')
 
     rounds = db.relationship('Round', backref='tee', lazy='dynamic')
@@ -62,13 +62,13 @@ class CourseTee(db.Model):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         for i in range(1, 19):
-            self.course_holes.append(CourseHole(hole_number=i))
+            self.holes.append(CourseHole(hole_number=i))
 
     def get_hole(self, hole_number):
-        return self.course_holes.filter_by(hole_number=hole_number).first()
+        return self.holes.filter_by(hole_number=hole_number).first()
 
     def get_total_par(self):
-        return sum([course_hole.par for course_hole in self.course_holes])
+        return sum([hole.par for hole in self.holes])
 
     def as_dict(self):
         return {
@@ -85,7 +85,7 @@ class CourseTee(db.Model):
             'back_9_rating': self.back_9_rating,
             'back_9_slope': self.back_9_slope,
             'bogey_rating': self.bogey_rating,
-            'course_holes': {h.id: h.hole_number for h in self.course_holes},
+            'holes': {h.id: h.hole_number for h in self.holes},
             'rounds': {r.id: r.date for r in self.rounds}
         }
 
