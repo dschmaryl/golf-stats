@@ -4,6 +4,7 @@ from flask_login import login_required
 from golf_stats import app, db
 from golf_stats.models import Course
 from golf_stats.forms import CourseForm, CourseTeeForm
+from golf_stats.actions import save_course_data
 from .flash_errors import flash_errors
 from .tees import TEES
 
@@ -27,15 +28,18 @@ def course_new():
             return redirect(url_for('course_list'))
 
         if form.validate():
-            nickname = form.nickname.data
-            if Course.query.filter_by(nickname=nickname).first():
-                flash('%s already exists' % nickname)
-                return render_template('course.html', title='new course',
-                                       form=form)
-            new_course = Course(name=form.name.data, nickname=nickname)
-            db.session.add(new_course)
-            db.session.commit()
-            return redirect(url_for('course_list'))
+            result = save_course_data({
+                'name': form.name.data,
+                'nickname': form.nickname.data
+            })
+            if result.get('success'):
+                flash('saved course')
+                return redirect(url_for('course_list'))
+            else:
+                if result['error'] == 'IntegrityError':
+                    flash('course with that nickname already exists')
+                else:
+                    flash(result['error'])
         else:
             flash_errors(form)
 
@@ -64,11 +68,19 @@ def course_edit(course_nickname):
             return redirect(url_for('course_list'))
 
         if form.validate():
-            course.name = form.name.data
-            course.nickname = form.nickname.data
-            db.session.commit()
-            flash('saved %s' % course.nickname)
-            return redirect(url_for('course_list'))
+            result = save_course_data({
+                'course_id': course.id,
+                'name': form.name.data,
+                'nickname': form.nickname.data
+            })
+            if result.get('success'):
+                flash('saved course')
+                return redirect(url_for('course_list'))
+            else:
+                if result['error'] == 'IntegrityError':
+                    flash('course with that nickname already exists')
+                else:
+                    flash(result['error'])
         else:
             flash_errors(form)
 

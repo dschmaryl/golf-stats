@@ -2,8 +2,6 @@ from datetime import date
 from wtforms import (DateField, FloatField, Form, IntegerField, SelectField,
                      StringField, SubmitField, validators)
 
-from golf_stats.models import Course
-
 
 class CourseForm(Form):
     cancel = SubmitField('cancel')
@@ -13,24 +11,14 @@ class CourseForm(Form):
         validators.InputRequired(message='enter course name'),
         validators.Length(min=4, message='name too short'),
         validators.Length(max=48, message='name too long')
-        ])
+    ])
     nickname = StringField('nickname', [
         validators.InputRequired(message='enter course nickname'),
         validators.Length(min=4, message='nickname too short'),
         validators.Length(max=24, message='nickname too long'),
         validators.Regexp(r'^[a-z]+$',
                           message='only lowercase letters in nickname')
-        ])
-
-    def validate(self):
-        if not super().validate():
-            return False
-
-        if Course.query.filter_by(nickname=self.nickname.data).first():
-            self.nickname.errors.append('course nickname already exists')
-            return False
-
-        return True
+    ])
 
 
 class CourseTeeForm(Form):

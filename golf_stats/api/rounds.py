@@ -30,7 +30,7 @@ def get_round(round_id):
 @check_authorization
 def get_hole(hole_id):
     hole = Hole.query.get(hole_id)
-    if hole_id:
+    if hole:
         if g.user.username == hole.round.user.username:
             return jsonify(hole.as_dict())
         else:
@@ -48,7 +48,7 @@ def add_round():
         else:
             return jsonify(error='not permitted')
     except ValueError as error:
-        return jsonify(error="ValueError: invalid 'user_id'")
+        return jsonify(error='ValueError: %s' % error)
     except TypeError as error:
         return jsonify(error='TypeError: %s' % error)
     except KeyError as error:

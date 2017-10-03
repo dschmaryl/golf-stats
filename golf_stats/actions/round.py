@@ -6,20 +6,20 @@ from golf_stats.models import CourseTee, Round, User
 from golf_stats.dates import str_to_date
 
 
-def update_round(data):
+def update_round(round_data):
     try:
-        round_id = data.get('round_id')
+        round_id = round_data.get('round_id')
         if round_id:
             round_ = Round.query.get(int(round_id))
             if not round_:
                 return {'error': 'round not found'}
             user = round_.user
-            if user.id != int(data['user_id']):
+            if user.id != int(round_data['user_id']):
                 return {'error': 'user does not match round.user'}
         else:
-            user_id = data.get('user_id')
+            user_id = round_data.get('user_id')
             if user_id:
-                user = User.query.get(int(data['user_id']))
+                user = User.query.get(int(round_data['user_id']))
                 if user:
                     round_ = Round()
                 else:
@@ -27,18 +27,18 @@ def update_round(data):
             else:
                 return {'error': 'need either round_id or user_id'}
 
-        if data.get('date'):
-            round_.date = str_to_date(data['date'])
+        if round_data.get('date'):
+            round_.date = str_to_date(round_data['date'])
         else:
             round_.date = datetime.now()
 
-        notes = data.get('notes')
+        notes = round_data.get('notes')
         if notes and notes not in [None, '']:
             round_.notes = notes
 
-        round_.tee = CourseTee.query.get(int(data['tee_id']))
+        round_.tee = CourseTee.query.get(int(round_data['tee_id']))
 
-        for hole_num, hole_data in data['holes'].items():
+        for hole_num, hole_data in round_data['holes'].items():
             hole = round_.get_hole(int(hole_num))
             hole.set_course_hole_data()
 
