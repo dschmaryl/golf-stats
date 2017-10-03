@@ -18,49 +18,26 @@ def course_list():
 
 
 @app.route('/course_new', methods=['GET', 'POST'])
+@app.route('/course/<course_nickname>', methods=['GET', 'POST'])
 @login_required
-def course_new():
-    form = CourseForm(request.form)
-
-    if request.method == 'POST':
-        if form.cancel.data:
-            flash('canceled new course')
+def course_view(course_nickname=None):
+    if course_nickname:
+        course = Course.query.filter_by(nickname=course_nickname).first()
+        if not course:
+            flash('course %s not found' % course_nickname)
             return redirect(url_for('course_list'))
-
-        if form.validate():
-            result = save_course_data({
-                'name': form.name.data,
-                'nickname': form.nickname.data
-            })
-            if result.get('success'):
-                flash('saved course')
-                return redirect(url_for('course_list'))
-            else:
-                if result['error'] == 'IntegrityError':
-                    flash('course with that nickname already exists')
-                else:
-                    flash(result['error'])
         else:
-            flash_errors(form)
-
-    return render_template('course.html', title='new course', form=form)
-
-
-@app.route('/course_edit/<course_nickname>', methods=['GET', 'POST'])
-@login_required
-def course_edit(course_nickname):
-    course = Course.query.filter_by(nickname=course_nickname).first()
-    if not course:
-        flash('course %s not found' % course_nickname)
-        return redirect(url_for('course_list'))
+            course_id = course.id
+    else:
+        course = None
+        course_id = None
 
     form = CourseForm(request.form, obj=course)
 
     if request.method == 'POST':
         if form.cancel.data:
-            flash('canceled %s edit' % course.nickname)
+            flash('canceled edit')
             return redirect(url_for('course_list'))
-
         if form.delete.data:
             db.session.delete(course)
             db.session.commit()
@@ -69,7 +46,7 @@ def course_edit(course_nickname):
 
         if form.validate():
             result = save_course_data({
-                'course_id': course.id,
+                'course_id': course_id,
                 'name': form.name.data,
                 'nickname': form.nickname.data
             })
@@ -88,8 +65,8 @@ def course_edit(course_nickname):
                            form=form,)
 
 
-@app.route('/course_edit/<course_nickname>/tee_new', methods=['GET', 'POST'])
-@app.route('/course_edit/<course_nickname>/course_tee/<tee_id>',
+@app.route('/course/<course_nickname>/tee_new', methods=['GET', 'POST'])
+@app.route('/course/<course_nickname>/tee/<tee_id>',
            methods=['GET', 'POST'])
 @login_required
 def course_tee(course_nickname, tee_id=None):
@@ -110,14 +87,13 @@ def course_tee(course_nickname, tee_id=None):
                 flash('canceled %s tees edit' % course_tee.color)
             else:
                 flash('canceled new tee')
-            return redirect(url_for('course_edit', title='edit course',
+            return redirect(url_for('course_view', title='edit course',
                                     course_nickname=course.nickname))
-
         if form.delete.data:
             db.session.delete(course_tee)
             db.session.commit()
             flash('deleted %s tee' % course_tee.color)
-            return redirect(url_for('course_edit', title='edit course',
+            return redirect(url_for('course_view', title='edit course',
                                     course_nickname=course.nickname))
 
         if form.validate():
@@ -137,7 +113,7 @@ def course_tee(course_nickname, tee_id=None):
 
             db.session.commit()
             flash('saved %s tees' % course_tee.color)
-            return redirect(url_for('course_edit', title='edit course',
+            return redirect(url_for('course_view', title='edit course',
                                     course_nickname=course.nickname))
         else:
             flash_errors(form)
