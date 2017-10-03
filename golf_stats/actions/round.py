@@ -46,12 +46,8 @@ def update_round(round_data):
             hole.putts = int(hole_data['putts'])
             hole.set_gir(hole_data.get('gir') in [True, 'True', 'true', 1])
 
-    except ValueError as error:
-        return {'error': 'ValueError: %s' % error}
-    except TypeError as error:
-        return {'error': 'TypeError: %s' % error}
-    except KeyError as error:
-        return {'error': 'KeyError: %s' % error}
+    except (ValueError, TypeError, KeyError) as error:
+        return {'error': '%s: %s' % (type(error).__name__, error)}
 
     if not round_.user:
         user.rounds.append(round_)

@@ -14,10 +14,8 @@ def save_course_data(course_data):
         else:
             course = Course(name=course_data['name'],
                                 nickname=course_data['nickname'])
-    except ValueError as error:
-        return {'error': 'ValueError: %s' % error}
-    except KeyError as error:
-        return {'error': 'KeyError: %s' % error}
+    except (ValueError, KeyError) as error:
+        return {'error': '%s: %s' % (type(error).__name__, error)}
 
     if course_data.get('name'):
         course.name = course_data['name']

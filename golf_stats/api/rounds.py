@@ -47,9 +47,5 @@ def add_round():
             return jsonify(update_round(request.get_json()))
         else:
             return jsonify(error='not permitted')
-    except ValueError as error:
-        return jsonify(error='ValueError: %s' % error)
-    except TypeError as error:
-        return jsonify(error='TypeError: %s' % error)
-    except KeyError as error:
-        return jsonify(error='KeyError: %s' % error)
+    except (KeyError, TypeError, KeyError) as error:
+        return jsonify(error='%s: %s' % (type(error).__name__, error))
