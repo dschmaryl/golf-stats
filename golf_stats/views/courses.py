@@ -4,7 +4,8 @@ from flask_login import login_required
 from golf_stats import app, db
 from golf_stats.models import Course
 from golf_stats.forms import CourseForm, CourseTeeForm
-from golf_stats.actions import save_course_data
+from golf_stats.actions import save_course_data, save_tee_data
+from golf_stats.dates import date_to_str
 from .flash_errors import flash_errors
 from .tees import TEES
 
@@ -73,48 +74,58 @@ def course_tee(course_nickname, tee_id=None):
     course = Course.query.filter_by(nickname=course_nickname).first()
     if not course:
         flash('course not found')
+        return redirect(url_for('course_list'))
 
     course_tee = course.tees.filter_by(id=tee_id).first()
 
     form = CourseTeeForm(request.form, obj=course_tee)
     form.color.choices = [(i, TEES[i]) for i in range(len(TEES))]
+    form.color.data = TEES.index(course_tee.color) if course_tee else 0
 
     title = '%s tees edit' % course_tee.color if course_tee else 'new tee'
 
     if request.method == 'POST':
         if form.cancel.data:
             if course_tee:
-                flash('canceled %s tees edit' % course_tee.color)
+                flash('canceled %s' % title)
             else:
                 flash('canceled new tee')
-            return redirect(url_for('course_view', title='edit course',
+            return redirect(url_for('course_view',
                                     course_nickname=course.nickname))
         if form.delete.data:
             db.session.delete(course_tee)
             db.session.commit()
             flash('deleted %s tee' % course_tee.color)
-            return redirect(url_for('course_view', title='edit course',
+            return redirect(url_for('course_view',
                                     course_nickname=course.nickname))
 
         if form.validate():
             if course_tee:
-                course_tee.color = TEES[form.color.data]
+                data = course_tee.as_dict()
             else:
-                course_tee = course.get_new_tee(TEES[form.color.data])
-            course_tee.date = form.date.data
-            course_tee.rating = float(form.rating.data)
-            course_tee.slope = int(form.slope.data)
+                data = {'course_id': course.id}
+            data.update({
+                'name': TEES[int(request.form['color'])],
+                'color': TEES[int(request.form['color'])],
+                'date': date_to_str(form.date.data),
+                'rating': form.rating.data,
+                'slope': form.slope.data,
+                'holes': {i: {} for i in range(1, 19)}
+            })
+            for hole_num in data['holes'].keys():
+                data['holes'][hole_num] = {
+                    'par': request.form['hole%i_par' % hole_num],
+                    'yardage': request.form['hole%i_yardage' % hole_num],
+                    'handicap': request.form['hole%i_handicap' % hole_num]
+                }
 
-            for i in range(1, 19):
-                course_hole = course_tee.get_hole(i)
-                course_hole.par = int(request.form['hole%i_par' % i])
-                course_hole.yardage = int(request.form['hole%i_yardage' % i])
-                course_hole.handicap = int(request.form['hole%i_handicap' % i])
-
-            db.session.commit()
-            flash('saved %s tees' % course_tee.color)
-            return redirect(url_for('course_view', title='edit course',
-                                    course_nickname=course.nickname))
+            result = save_tee_data(data)
+            if result.get('success'):
+                flash('saved tee')
+                return redirect(url_for('course_view',
+                                        course_nickname=course.nickname))
+            else:
+                flash(result['error'])
         else:
             flash_errors(form)
 

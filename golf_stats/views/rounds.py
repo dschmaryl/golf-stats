@@ -60,7 +60,7 @@ def round_view(username, round_id=None):
 
     if request.method == 'POST':
         if form.cancel.data:
-            flash('canceled ' + title)
+            flash('canceled %s' % title)
             return redirect(url_for('round_list', username=username))
         if form.delete.data:
             db.session.delete(golf_round)
@@ -86,6 +86,7 @@ def round_view(username, round_id=None):
                     'putts': request.form['hole%i_putts' % hole_num],
                     'gir': request.form.get('hole%i_gir' % hole_num)
                 }
+
             result = update_round(data)
             if result.get('success'):
                 flash('saved round')
@@ -94,5 +95,6 @@ def round_view(username, round_id=None):
                 flash(result['error'])
         else:
             flash_errors(form)
+
     return render_template('round.html', title=title, form=form, holes=holes,
                            round=golf_round, tees_json=tees_json)
