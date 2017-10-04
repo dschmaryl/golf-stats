@@ -6,7 +6,7 @@ from flask_login import current_user, login_required
 from golf_stats import app
 
 
-@app.route('/export', methods=['GET', 'POST'])
+@app.route('/export.pk')
 @login_required
 def export_data():
     if current_user.username == 'daryl':

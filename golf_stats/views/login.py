@@ -34,7 +34,7 @@ def login():
                            form=form)
 
 
-@app.route('/logout', methods=['GET'])
+@app.route('/logout')
 def logout():
     logout_user()
     return redirect(url_for('index'))
