@@ -10,6 +10,4 @@ from golf_stats import app
 @login_required
 def export_data():
     if current_user.username == 'daryl':
-        path = pathlib.Path(__file__).resolve().parent.parent.parent / 'data'
-        return send_from_directory(directory=str(path),
-                                   filename='export_data.pk')
+        return send_from_directory(app.static_folder, filename='export.pk')

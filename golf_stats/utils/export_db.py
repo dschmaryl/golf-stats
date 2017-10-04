@@ -4,13 +4,13 @@
 import pathlib
 import pickle
 
+from golf_stats import app
 from golf_stats.models import *
 
 
-def dump(data, name):
-    path = pathlib.Path(__file__).resolve().parent.parent.parent / 'data'
-    filename = str(path / name)
-    with open(filename, 'wb') as f:
+def dump(data, filename):
+    dump_file = app.static_folder + '/' + filename
+    with open(dump_file, 'wb') as f:
         pickle.dump(data, f)
 
 
@@ -19,24 +19,21 @@ def dictify_courses():
     courses = GolfCourse.query.all()
     for course in courses:
         nickname = course.nickname
-        data[nickname] = {
-            'name': course.name,
-            'tees': {}
-            }
+        data[nickname] = {'name': course.name, 'tees': {}}
         for tee in course.tees:
             data[nickname]['tees'][tee.color] = {
                 'date': tee.date,
                 'rating': tee.rating,
                 'slope': tee.slope,
                 'holes': {}
-                }
+            }
             for i in range(1, 19):
                 hole = tee.get_hole(i)
                 data[nickname]['tees'][tee.color]['holes'][hole.hole] = {
                     'par': hole.par,
                     'yardage': hole.yardage,
                     'handicap': hole.handicap
-                    }
+                }
     return data
 
 
@@ -48,7 +45,7 @@ def dictify_users():
             'password': user.password,
             'default_tees': user.default_tees,
             'rounds': {}
-            }
+        }
         for r in user.rounds:
             data[user.username]['rounds'][r.id] = {
                 'date': r.date,
@@ -56,14 +53,14 @@ def dictify_users():
                 'course': r.tee.course.nickname,
                 'tee_color': r.tee.color,
                 'scores': {}
-                }
+            }
             for i in range(1, 19):
                 hole = r.get_hole(i)
                 data[user.username]['rounds'][r.id]['scores'][hole.hole] = {
                     'strokes': hole.score,
                     'putts': hole.putts,
                     'gir': hole.gir
-                    }
+                }
     return data
 
 
@@ -72,7 +69,7 @@ def export_all():
         'courses': dictify_courses(),
         'users': dictify_users()
     }
-    dump(export_data, 'export_data.pk')
+    dump(export_data, 'export.pk')
 
 
 if __name__ == '__main__':
