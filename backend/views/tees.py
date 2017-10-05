@@ -6,7 +6,7 @@ from backend.models import Course
 TEES = ['white', 'red']
 
 
-def get_json_tees(course=None, tee_color=None):
+def get_tees_json():
     courses = Course.query.all()
     data = {}
     for course in courses:

@@ -17,7 +17,7 @@ class RoundForm(Form):
     notes = TextAreaField('notes', [
         validators.Optional(),
         validators.length(max=128, message='notes too long'),
-        ])
+    ])
 
     def validate(self):
         self.course.data = int(request.form.get('course'))

@@ -7,11 +7,11 @@ class HoleForm(Form):
     strokes = IntegerField('strokes', [
         validators.InputRequired(message='enter strokes'),
         validators.NumberRange(min=1, max=30, message='invalid strokes')
-        ])
+    ])
     putts = IntegerField('putts', [
         validators.InputRequired(message='enter putts'),
         validators.NumberRange(min=0, max=20, message='invalid # of putts')
-        ])
+    ])
     gir = BooleanField('gir')
 
     def validate(self):

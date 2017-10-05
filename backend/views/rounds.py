@@ -7,7 +7,7 @@ from backend.forms import RoundForm
 from backend.actions import update_round
 from backend.dates import date_to_str
 from .flash_errors import flash_errors
-from .tees import get_json_tees, TEES
+from .tees import get_tees_json, TEES
 from .users import check_user
 
 
@@ -56,7 +56,7 @@ def round_view(username, round_id=None):
         else:
             form.course.data = 1
 
-    tees_json = get_json_tees()
+    tees_json = get_tees_json()
 
     if request.method == 'POST':
         if form.cancel.data:
