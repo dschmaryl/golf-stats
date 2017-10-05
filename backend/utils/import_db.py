@@ -1,18 +1,21 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import pathlib
+import os
 import pickle
 
-from backend import db
+from backend import app, db
 from backend.models import Course, Round, User
 
 
-def get(name):
-    fn = pathlib.Path(__file__).resolve().parent / 'data' / name
-    with open(fn, 'rb') as f:
-        data = pickle.load(f)
-    return data
+def load(filename):
+    pickle_file = app.static_folder + '/' + filename
+    if os.path.isfile(pickle_file):
+        with open(pickle_file, 'rb') as f:
+            data = pickle.load(f)
+        return data
+    else:
+        exit("Error: '%s' not found" % filename)
 
 
 def add_courses(courses):
@@ -80,7 +83,7 @@ def add_users(users):
 
 
 def import_all():
-    export_data = get('export_data.pk')
+    export_data = load('export.pk')
     add_courses(export_data['courses'])
     add_users(export_data['users'])
 
