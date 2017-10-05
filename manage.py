@@ -1,8 +1,8 @@
 from flask_script import Manager
 from flask_migrate import Migrate, MigrateCommand
 
-from golf_stats import app, db
-from golf_stats.utils import export_all, import_all
+from backend import app, db
+from backend.utils import export_all, import_all
 
 
 migrate = Migrate(app, db)
