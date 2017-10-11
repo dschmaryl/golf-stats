@@ -8,7 +8,7 @@ class Stats extends Component {
   }
 
   componentDidMount() {
-    axios.get('http://localhost:5000/api/user/3')
+    axios.get('http://https://golf-stats.herokuapp.com/api/user/3')
       .then((response) => this.setState({userData: response.data}))
       .catch(() => this.setState({requestFailed: true}))
   }
