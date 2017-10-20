@@ -9,9 +9,6 @@ from .flash_errors import flash_errors
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    if g.user is not None and g.user.is_authenticated:
-        return redirect(url_for('index'))
-
     form = LoginForm(request.form)
 
     if request.method == 'POST':

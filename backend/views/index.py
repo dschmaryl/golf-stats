@@ -1,4 +1,4 @@
-from flask import render_template
+from flask import g, redirect, url_for
 
 from backend import app
 
@@ -7,4 +7,7 @@ from backend import app
 @app.route('/user/')
 @app.route('/')
 def index():
-    return render_template('index.html')
+    if g.user is not None and g.user.is_authenticated:
+        return redirect(url_for('stats', username=g.user.username))
+    else:
+        return redirect(url_for('login'))
