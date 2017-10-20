@@ -1,7 +1,9 @@
-from wtforms import Form, PasswordField, StringField, validators
+from wtforms import Form, PasswordField, StringField, SubmitField, validators
 
 
 class LoginForm(Form):
+    register = SubmitField('register')
+
     username = StringField(
         'username',
         [validators.DataRequired(message='enter username'),

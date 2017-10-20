@@ -78,8 +78,7 @@
   <div class="col-xs-12">
     <a href="{{ url_for('round_view', username=g.user.username) }}"><button class="btn btn-default">new round</button></a>
     <a href="{{ url_for('round_list', username=g.user.username) }}"><button class="btn btn-default">old rounds</button></a>
-    ~
-    <a href="{{ url_for('user', username=g.user.username) }}"><button class="btn btn-default">settings</button></a>
+    <a href="{{ url_for('user', username=g.user.username) }}"><button class="btn btn-default extra-margin-left">settings</button></a>
     <a href="{{ url_for('logout') }}"><button class="btn btn-default">logout</button></a>
   </div>
 </div>

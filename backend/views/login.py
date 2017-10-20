@@ -13,6 +13,9 @@ def login():
 
     if request.method == 'POST':
         if form.validate():
+            if form.register.data:
+                return redirect(url_for('user_new'))
+
             user = User.query.filter_by(username=form.username.data).first()
             if user:
                 if user.check_password(form.password.data):

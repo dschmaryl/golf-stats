@@ -90,6 +90,10 @@ td input[type="checkbox"] {
   height: 20px;
 }
 
+.extra-margin-left {
+  margin-left: 10px;
+}
+
 nav, a {
   min-width: 48px;
   min-height: 48px;
