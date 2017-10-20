@@ -11,4 +11,5 @@ from . import login
 from . import react
 from . import rounds
 from . import static
+from . import stats
 from . import users
