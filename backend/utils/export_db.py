@@ -16,24 +16,17 @@ def dump(data, filename):
 
 def dictify_courses():
     data = {}
-    courses = GolfCourse.query.all()
+    courses = Course.query.all()
     for course in courses:
-        nickname = course.nickname
-        data[nickname] = {'name': course.name, 'tees': {}}
+        data[course.id] = course.as_dict()
+
         for tee in course.tees:
-            data[nickname]['tees'][tee.color] = {
-                'date': tee.date,
-                'rating': tee.rating,
-                'slope': tee.slope,
-                'holes': {}
-            }
-            for i in range(1, 19):
-                hole = tee.get_hole(i)
-                data[nickname]['tees'][tee.color]['holes'][hole.hole] = {
-                    'par': hole.par,
-                    'yardage': hole.yardage,
-                    'handicap': hole.handicap
-                }
+            data[course.id]['tees'][tee.id] = tee.as_dict()
+
+            for hole in tee.holes:
+                data[course.id]['tees'][tee.id]['holes'][hole.id] = (
+                    hole.as_dict()
+                )
     return data
 
 
@@ -41,26 +34,15 @@ def dictify_users():
     data = {}
     users = User.query.all()
     for user in users:
-        data[user.username] = {
-            'password': user.password,
-            'default_tees': user.default_tees,
-            'rounds': {}
-        }
+        data[user.id] = user.as_dict()
+
         for r in user.rounds:
-            data[user.username]['rounds'][r.id] = {
-                'date': r.date,
-                'notes': r.notes,
-                'course': r.tee.course.nickname,
-                'tee_color': r.tee.color,
-                'scores': {}
-            }
-            for i in range(1, 19):
-                hole = r.get_hole(i)
-                data[user.username]['rounds'][r.id]['scores'][hole.hole] = {
-                    'strokes': hole.score,
-                    'putts': hole.putts,
-                    'gir': hole.gir
-                }
+            data[user.id]['rounds'][r.id] = r.as_dict()
+
+            for hole in r.holes:
+                data[user.id]['rounds'][r.id]['holes'][hole.id] = (
+                    hole.as_dict()
+                )
     return data
 
 
