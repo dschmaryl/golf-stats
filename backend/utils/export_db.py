@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import pathlib
 import pickle
 
 from backend import app
-from backend.models import *
+from backend.models import Course, User
 
 
 def dump(data, filename):

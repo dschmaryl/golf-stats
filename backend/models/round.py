@@ -148,6 +148,8 @@ class Round(db.Model):
             'user_id': self.user_id,
             'tee_id': self.tee_id,
             'date': date_to_str(self.date),
+            'course': self.tee.course.nickname,
+            'tee_color': self.tee.color,
             'notes': self.notes,
             'front_9_strokes': self.front_9_strokes,
             'front_9_putts': self.front_9_putts,

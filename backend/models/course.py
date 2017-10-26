@@ -1,6 +1,7 @@
 from datetime import date
 
 from backend import db
+from backend.dates import date_to_str
 
 
 class Course(db.Model):
@@ -55,7 +56,7 @@ class CourseTee(db.Model):
     bogey_rating = db.Column(db.Float)
 
     holes = db.relationship('CourseHole', backref='tee', lazy='dynamic',
-                                   cascade='save-update, delete')
+                            cascade='save-update, delete')
 
     rounds = db.relationship('Round', backref='tee', lazy='dynamic')
 
@@ -75,7 +76,7 @@ class CourseTee(db.Model):
             'id': self.id,
             'course_id': self.id,
             'name': self.name,
-            'date': self.date,
+            'date': date_to_str(self.date),
             'color': self.color,
             'gender': self.gender,
             'rating': self.rating,

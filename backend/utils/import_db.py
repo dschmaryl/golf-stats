@@ -5,7 +5,8 @@ import os
 import pickle
 
 from backend import app, db
-from backend.models import Course, Round, User
+from backend.models import Course, User
+from backend.actions import save_tee_data, update_round
 
 
 def load(filename):
@@ -19,73 +20,58 @@ def load(filename):
 
 
 def add_courses(courses):
-    for course_name, course_data in courses.items():
+    for course_data in courses.values():
         course = Course(
-            nickname=course_name,
-            name=course_data['name']
-            )
+            name=course_data['name'],
+            nickname=course_data['nickname']
+        )
         db.session.add(course)
+        db.session.commit()
 
-        for tee_color, tee_data in course_data['tees'].items():
-            tee = course.get_new_tee()
-            tee.date = tee_data['date']
-            tee.color = tee_color
-            tee.gender = 'f' if tee_color == 'red' else 'm'
-            tee.rating = tee_data['rating']
-            tee.slope = tee_data['slope']
-
-            for i in range(1, 19):
-                course_hole = tee.get_hole(i)
-                course_hole.par = tee_data['holes'][i]['par']
-                course_hole.yardage = tee_data['holes'][i]['yardage']
-                course_hole.handicap = tee_data['holes'][i]['handicap']
-
-    db.session.commit()
+        for tee_data in course_data['tees'].values():
+            tee_data.update({
+                'id': None,
+                'course_id': course.id,
+                'date': tee_data['date'],
+                'name': tee_data['color'],
+                'holes': {hole_data['hole_number']: hole_data
+                          for hole_data in tee_data['holes'].values()}
+            })
+            save_tee_data(tee_data)
 
 
 def add_users(users):
-    for username, user_data in users.items():
+    for user_data in users.values():
         user = User(
-            username=username,
-            password=user_data['password'],
+            username=user_data['username'],
             default_tees=user_data['default_tees']
             )
+        user.set_password('asdf')
         db.session.add(user)
+        db.session.commit()
 
         for round_id, round_data in user_data['rounds'].items():
             course = Course.query.filter_by(
                 nickname=round_data['course']
                 ).first()
             course_tee = course.get_tee_by_color(round_data['tee_color'])
-            golf_round = Round(
-                date=round_data['date'],
-                tee=course_tee,
-                notes=round_data['notes']
-                )
-            user.rounds.append(golf_round)
 
-            for i in range(1, 19):
-                hole = golf_round.get_hole(i)
-                hole.strokes = round_data['scores'][i]['strokes']
-                hole.putts = round_data['scores'][i]['putts']
-                if round_data['scores'][i]['gir'] == 1:
-                    hole.gir = True
-                else:
-                    hole.gir = False
-                hole.set_course_hole_data()
+            round_data['user_id'] = user.id
+            round_data['tee_id'] = course_tee.id
 
-            golf_round.calc_totals()
-
-        for golf_round in user.get_rounds():
-            golf_round.calc_handicap()
-
-    db.session.commit()
+            round_data.update({
+                'user_id': user.id,
+                'tee_id': course_tee.id,
+                'holes': {h['hole_number']: h
+                          for h in round_data['holes'].values()}
+            })
+            update_round(round_data)
 
 
 def import_all():
-    export_data = load('export.pk')
-    add_courses(export_data['courses'])
-    add_users(export_data['users'])
+    data = load('export.pk')
+    add_courses(data['courses'])
+    add_users(data['users'])
 
 
 if __name__ == '__main__':

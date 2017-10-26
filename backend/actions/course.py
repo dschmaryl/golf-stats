@@ -1,4 +1,3 @@
-from datetime import datetime
 from sqlalchemy.exc import IntegrityError
 
 from backend import db
@@ -12,12 +11,11 @@ def save_course_data(course_data):
             course = Course.query.get(int(course_data['course_id']))
             if not course:
                 return {'error': 'course not found'}
+            course.name = course_data['name']
+            course.nickname = course_data['nickname']
         else:
             course = Course(name=course_data['name'],
                             nickname=course_data['nickname'])
-
-        course.name = course_data['name']
-        course.nickname = course_data['nickname']
 
     except (ValueError, KeyError) as error:
         return {'error': '%s: %s' % (type(error).__name__, error)}
@@ -46,8 +44,9 @@ def save_tee_data(tee_data):
             else:
                 tee = course.get_new_tee()
 
-        tee.name = tee_data['name']
+        tee.name = tee_data.get('name')
         tee.color = tee_data['color']
+        tee.gender = tee_data.get('gender')
         tee.date = str_to_date(tee_data['date'])
         tee.rating = float(tee_data['rating'])
         tee.slope = int(tee_data['slope'])
@@ -56,7 +55,8 @@ def save_tee_data(tee_data):
             hole = tee.get_hole(int(hole_num))
             hole.par = int(hole_data['par'])
             hole.yardage = int(hole_data['yardage'])
-            hole.handicap = int(hole_data['handicap'])
+            if hole_data.get('handicap'):
+                hole.handicap = int(hole_data['handicap'])
 
     except (ValueError, TypeError, KeyError) as error:
         return {'error': '%s: %s' % (type(error).__name__, error)}
