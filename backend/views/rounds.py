@@ -18,7 +18,7 @@ def round_list(username):
         return redirect(url_for('round_list', username=g.user.username))
 
     user = User.query.filter_by(username=username).first()
-    return render_template('round_list.html', title='rounds',
+    return render_template('round_list.html', title='old rounds',
                            rounds=reversed(user.get_rounds()))
 
 

@@ -14,6 +14,6 @@ def stats(username):
 
     user = User.query.filter_by(username=username).first()
     seasons = [s for s in [2017, 2016, 2015] if user.get_season_rounds(s)]
-    title = 'stats for ' + username
+    title = 'stats summary'
     return render_template('stats.html', user=user, seasons=seasons,
                            title=title)
