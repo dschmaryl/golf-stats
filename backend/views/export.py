@@ -1,5 +1,3 @@
-import pathlib
-
 from flask import send_from_directory
 from flask_login import current_user, login_required
 

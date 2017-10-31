@@ -27,7 +27,7 @@ def get_user(user_id):
 
 @app.route('/api/add_user', methods=['POST'])
 @check_authorization
-def add_user():
+def post_user():
     if g.user.username != 'daryl':
         return jsonify(error='must be daryl')
     else:

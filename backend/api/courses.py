@@ -23,7 +23,7 @@ def get_course(course_id):
 @app.route('/api/update_course', methods=['POST'])
 @app.route('/api/create_course', methods=['POST'])
 @check_authorization
-def update_course():
+def post_course():
     if g.user.username != 'daryl':
         return jsonify(error='must be daryl')
 
@@ -50,7 +50,7 @@ def get_tee(tee_id):
 @app.route('/api/add_tee', methods=['POST'])
 @app.route('/api/update_tee', methods=['POST'])
 @check_authorization
-def update_tee():
+def post_tee():
     if g.user.username != 'daryl':
         return jsonify(error='must be daryl')
 

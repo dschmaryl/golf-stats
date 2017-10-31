@@ -42,7 +42,7 @@ def get_hole(hole_id):
 @app.route('/api/add_round', methods=['POST'])
 @app.route('/api/update_round', methods=['POST'])
 @check_authorization
-def update_round():
+def post_round():
     try:
         if g.user.username == User.query.get(int(request.form['user_id'])):
             return jsonify(update_round(request.get_json()))
