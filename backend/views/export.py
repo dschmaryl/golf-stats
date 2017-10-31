@@ -10,4 +10,4 @@ from backend import app
 @login_required
 def export_data():
     if current_user.username == 'daryl':
-        return send_from_directory(app.static_folder, filename='export.pk')
+        return send_from_directory(app.static_folder, request.path[1:])
