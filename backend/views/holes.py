@@ -39,8 +39,8 @@ def hole_new(username, round_id, hole_number):
                 'hole_new',
                 username=golf_round.user.username,
                 round_id=golf_round.id,
-                hole_number=(int(hole_number) + 1))
-            )
+                hole_number=(int(hole_number) + 1)
+            ))
         else:
             flash_errors(form)
 
@@ -78,8 +78,8 @@ def hole_edit(username, round_id, hole_number):
                 'hole_edit',
                 username=golf_round.user.username,
                 round_id=golf_round.id,
-                hole_number=(int(hole_number) + 1))
-            )
+                hole_number=(int(hole_number) + 1)
+            ))
         else:
             flash_errors(form)
 
