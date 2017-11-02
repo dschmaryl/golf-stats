@@ -9,13 +9,23 @@
       {{ form.username(class="form-control text-input") }}
     </div>
   </div>
-  <div class="row">
-    <div class="col-xs-12">
-      <h4>password:</h4>
-      {{ form.password(class="form-control text-input") }}
+
+  {% if title=="new user" %}
+    <div class="row">
+      <div class="col-xs-12">
+        <h4>password:</h4>
+        {{ form.password(class="form-control text-input") }}
+      </div>
     </div>
-  </div>
-  <div class="row">
+  {% else %}
+    <div class="row">
+      <div class="col-xs-12">
+        <input class="btn btn-default" type="submit" name="change_password" value="change password" />
+      </div>
+    </div>
+  {% endif %}
+
+  <div class="row extra-padding-bottom">
     <div class="col-xs-12">
       <h4>default tees:</h4>
       {{ form.default_tees(class="form-control text-input") }}
@@ -31,10 +41,10 @@
     </div>
   {% endif %}
 
-  <div class="row">
+  <div class="row extra-padding-top">
     <div class="col-xs-12">
       <input class="btn btn-default" type="submit" value="save" />
-      <input class="btn btn-default" type="submit" name="cancel" value="cancel" onclick="return confirm('Cancel new user?');return false;" />
+      <input class="btn btn-default" type="submit" name="cancel" value="cancel" onclick="return confirm('Really cancel?');return false;" />
     </div>
   </div>
 
