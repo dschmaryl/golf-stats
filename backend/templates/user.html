@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 {% block content %}
 
+<script src='https://www.google.com/recaptcha/api.js'></script>
+
 <form action="" method="post" name="login">
   {{ form.csrf_token }}
   <div class="row">
