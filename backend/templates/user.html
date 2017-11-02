@@ -1,8 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
 
-<script src='https://www.google.com/recaptcha/api.js'></script>
-
 <form action="" method="post" name="login">
   {{ form.csrf_token }}
   <div class="row">
@@ -24,11 +22,14 @@
     </div>
   </div>
 
-  <div class="row">
-    <div class="col-xs-12">
-      {{ form.recaptcha }}
+  {% if title=="new user" %}
+    <script src='https://www.google.com/recaptcha/api.js'></script>
+    <div class="row">
+      <div class="col-xs-12">
+        {{ form.recaptcha }}
+      </div>
     </div>
-  </div>
+  {% endif %}
 
   <div class="row">
     <div class="col-xs-12">
