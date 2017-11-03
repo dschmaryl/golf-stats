@@ -4,7 +4,7 @@ This app can be used to keep track of rounds of golf played and to calculate var
 
 Deployed on Heroku at: https://golf-stats.herokuapp.com
 
-For any interested party, the code for calculating handicap can be found in /backend/models/round.py. The algorithm is exactly as defined by the USGA except for the number of rounds used for the handicap calculation when fewer than 20 rounds have been entered. I feel that using more rounds gives a better representation of what a golfer can expect his/her handicap to be once more rounds have been entered.
+For any interested party, the code for calculating handicap can be found in /backend/models/round.py. The algorithm is exactly as defined by the USGA except for the number of rounds used for the handicap calculation when fewer than 20 rounds have been entered. I feel that using more rounds gives a better representation of what a golfer can expect his/her handicap to be once additional rounds have been entered.
 
 Screenshots:
 
