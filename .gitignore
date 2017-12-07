@@ -5,6 +5,7 @@ backups
 .data
 
 # react stuff
+build
 node_modules
 
 .DS_Store

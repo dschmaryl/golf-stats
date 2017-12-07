@@ -12,6 +12,16 @@ def get_users():
     return jsonify({u.id: u.username for u in User.query.all()})
 
 
+@app.route('/api/my_user_id')
+@check_authorization
+def get_my_user_id():
+    user = User.query.filter_by(username=g.user.username).first()
+    if user:
+        return jsonify(id=user.id)
+    else:
+        return jsonify(error='not found')
+
+
 @app.route('/api/user/<user_id>')
 @check_authorization
 def get_user(user_id):
