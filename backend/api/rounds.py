@@ -6,11 +6,14 @@ from backend.actions import update_round
 from .authorize import check_authorization
 
 
-@app.route('/api/rounds')
+@app.route('/api/user/<user_id>/get_rounds')
 @check_authorization
-def get_rounds():
-    rounds = Round.query.all()
-    return jsonify({r.id: r.date for r in rounds})
+def get_rounds(user_id):
+    user = User.query.get(user_id)
+    if user:
+        return jsonify({r.id: r.as_dict() for r in user.get_rounds()})
+    else:
+        return jsonify(error='user not found')
 
 
 @app.route('/api/round/<round_id>')

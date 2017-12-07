@@ -2,23 +2,8 @@ import React from 'react';
 import axios from 'axios';
 import './index.css';
 
-class Stats extends React.Component {
-  render() {
-    const rounds = Object.keys(this.props.userData.rounds).map(key => {
-      let round = this.props.userData.rounds[key];
-      return (
-        <li key={'round_' + key}>{round}</li>
-      );
-    });
+import { RoundList } from './components/RoundList';
 
-    return (
-      <div>
-        <h3>{this.props.userData.username}</h3>
-        <ul>{rounds}</ul>
-      </div>
-    );
-  }
-}
 
 export class App extends React.Component {
   constructor() {
@@ -27,26 +12,38 @@ export class App extends React.Component {
   }
 
   componentDidMount() {
-    axios.get('https://golf-stats.herokuapp.com/api/user/3')
-      .then((response) => this.setState({userData: response.data}))
+    axios.get('https://golf-stats.herokuapp.com/api/my_user_id')
+      .then(userId => {
+        if (userId.data['error']) {
+          this.setState({requestFailed: true})
+        } else {
+          axios.get('https://golf-stats.herokuapp.com/api/user/' + userId.data.id)
+            .then(userData => this.setState({userData: userData.data}))
+            .catch(() => this.setState({requestFailed: true}))
+        }
+      })
       .catch(() => this.setState({requestFailed: true}))
   }
 
   render() {
     if (this.state.requestFailed) {
-      return <p>Failed to retrieve data</p>
+      return <p>Failed to retrieve data. Maybe check login</p>
     }
     if (!this.state.userData) {
-      return <p>Loading data...</p>
+      return <p>Loading user data...</p>
     }
 
     return (
-      <div className="main">
-        <div className="header">
-          <h2>golf-stats</h2>
+      <div className="container">
+        <div className="row">
+          <div className="col-xs-12">
+            <h2>rounds list for {this.state.userData.username}</h2>
+          </div>
         </div>
-        <div className="body">
-          <Stats userData={this.state.userData} />
+        <div className="row">
+          <div className="col-xs-12 col-sm-10">
+            <RoundList userId={this.state.userData.id} />
+          </div>
         </div>
       </div>
     );

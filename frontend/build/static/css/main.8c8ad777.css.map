@@ -1,0 +1,1 @@
+{"version":3,"sources":["index.css"],"names":[],"mappings":"AAAA,GACE,0BAA4B","file":"static/css/main.8c8ad777.css","sourcesContent":["ul {\n  list-style-position: inside;\n}\n\n\n\n// WEBPACK FOOTER //\n// ./src/index.css"],"sourceRoot":""}
