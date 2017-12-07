@@ -6,12 +6,12 @@ import pathlib
 from flask import Flask
 from flask_admin import Admin
 from flask_bcrypt import Bcrypt
+from flask_cors import CORS
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 
 
 app = Flask(__name__)
-
 app.config.from_object('backend.config')
 
 base_dir = pathlib.Path(__file__).resolve().parent.parent
@@ -25,6 +25,8 @@ db = SQLAlchemy(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
+
+CORS(app)
 
 
 from . import models, views, api
