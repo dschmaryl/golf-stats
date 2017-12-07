@@ -8,8 +8,8 @@ For any interested party, the code for calculating handicap can be found in /bac
 
 Screenshots:
 
-![Main page](/static/images/main.png?raw=true)
+![Main page](/frontend/build/static/images/main.png?raw=true)
 
-![Old rounds](/static/images/rounds.png?raw=true)
+![Old rounds](/frontend/build/static/images/rounds.png?raw=true)
 
-![Round edit](/static/images/round_edit.png?raw=true)
+![Round edit](/frontend/build/static/images/round_edit.png?raw=true)

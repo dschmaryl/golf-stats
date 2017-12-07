@@ -15,7 +15,7 @@ app = Flask(__name__)
 app.config.from_object('backend.config')
 
 base_dir = pathlib.Path(__file__).resolve().parent.parent
-app.static_folder = str(base_dir / 'static')
+app.static_folder = str(base_dir / 'frontend' / 'build' / 'static')
 app.static_url_path = ''
 
 admin = Admin(app, name='golf-stats', template_mode='bootstrap3')

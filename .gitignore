@@ -5,8 +5,6 @@ backups
 .data
 
 # react stuff
-frontend
-
 node_modules
 
 .DS_Store
