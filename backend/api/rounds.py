@@ -11,7 +11,8 @@ from .authorize import check_authorization
 def get_rounds(user_id):
     user = User.query.get(user_id)
     if user:
-        return jsonify({r.id: r.as_dict() for r in user.get_rounds()})
+        rounds = user.get_rounds()
+        return jsonify({i: rounds[i].as_dict() for i in range(len(rounds))})
     else:
         return jsonify(error='user not found')
 

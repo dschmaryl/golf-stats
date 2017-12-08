@@ -1,9 +1,10 @@
 import React from 'react';
 import axios from 'axios';
 import './index.css';
+import { Rounds } from './components/Rounds';
 
-import { RoundList } from './components/RoundList';
-
+const apiURL = 'https://golf-stats.herokuapp.com/api';
+// const apiURL = 'http://localhost:5000/api';
 
 export class App extends React.Component {
   constructor() {
@@ -12,39 +13,46 @@ export class App extends React.Component {
   }
 
   componentDidMount() {
-    axios.get('https://golf-stats.herokuapp.com/api/my_user_id')
+    axios.get(apiURL + '/my_user_id')
       .then(userId => {
         if (userId.data['error']) {
-          this.setState({requestFailed: true})
+          this.setState({requestFailed: true});
         } else {
-          axios.get('https://golf-stats.herokuapp.com/api/user/' + userId.data.id)
-            .then(userData => this.setState({userData: userData.data}))
-            .catch(() => this.setState({requestFailed: true}))
+          axios.get(apiURL + '/user/' + userId.data.id)
+            .then(userData => {
+              if (userData['error']) {
+                this.setState({requestFailed: true});
+              } else {
+                this.setState({userData: userData.data});
+              }
+            })
+            .catch(() => this.setState({requestFailed: true}));
+          axios.get(apiURL + '/user/' + userId.data.id + '/get_rounds')
+            .then(roundsData => {
+              if (roundsData['error']) {
+                this.setState({requestFailed: true});
+              } else {
+                this.setState({roundsData: roundsData.data});
+              }
+            })
+            .catch(() => this.setState({requestFailed: true}));
         }
       })
-      .catch(() => this.setState({requestFailed: true}))
+      .catch(() => this.setState({requestFailed: true}));
   }
 
   render() {
     if (this.state.requestFailed) {
-      return <p>Failed to retrieve data. Maybe check login</p>
+      return <p>Failed to retrieve data. Maybe check login</p>;
     }
-    if (!this.state.userData) {
-      return <p>Loading user data...</p>
+    if (!this.state.userData || !this.state.roundsData) {
+      return <p>Loading user data...</p>;
     }
 
     return (
       <div className="container">
-        <div className="row">
-          <div className="col-xs-12">
-            <h2>rounds list for {this.state.userData.username}</h2>
-          </div>
-        </div>
-        <div className="row">
-          <div className="col-xs-12 col-sm-10">
-            <RoundList userId={this.state.userData.id} />
-          </div>
-        </div>
+        <h2>rounds list for {this.state.userData.username}</h2>
+        <Rounds roundsData={this.state.roundsData} />
       </div>
     );
   }
