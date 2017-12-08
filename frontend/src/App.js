@@ -3,7 +3,7 @@ import axios from 'axios';
 import './index.css';
 import { Rounds } from './components/Rounds';
 
-const apiURL = 'https://golf-stats.herokuapp.com/api';
+const apiURL = '/api';
 // const apiURL = 'http://localhost:5000/api';
 
 export class App extends React.Component {
@@ -43,14 +43,14 @@ export class App extends React.Component {
 
   render() {
     if (this.state.requestFailed) {
-      return <p>Failed to retrieve data. Maybe check login</p>;
+      return <p>Failed to retrieve data</p>;
     }
     if (!this.state.userData || !this.state.roundsData) {
       return <p>Loading user data...</p>;
     }
 
     return (
-      <div className="container">
+      <div>
         <h2>rounds list for {this.state.userData.username}</h2>
         <Rounds roundsData={this.state.roundsData} />
       </div>

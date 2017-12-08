@@ -1,5 +1,4 @@
 import React from 'react';
-import axios from 'axios';
 
 export class Rounds extends React.Component {
   render() {
