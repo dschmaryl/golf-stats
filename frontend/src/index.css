@@ -14,6 +14,10 @@ table {
   width: 80%;
 }
 
+.tr-hover {
+    cursor: pointer;
+}
+
 .align-right {
   text-align: right;
 }

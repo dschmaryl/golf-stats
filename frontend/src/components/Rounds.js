@@ -1,12 +1,17 @@
 import React from 'react';
+import Moment from 'react-moment';
 
 export class Rounds extends React.Component {
-  render() {
-    const rounds = Object.keys(this.props.roundsData).reverse().map(key => {
-      let round = this.props.roundsData[key];
+  renderRows(roundsData) {
+    return Object.keys(this.props.roundsData).reverse().map(key => {
+      const round = this.props.roundsData[key];
       return (
-        <tr key={'round_' + key}>
-          <td>{round['date']}</td>
+        <tr
+          onClick={() => {this.props.onClick(round.id)}}
+          className="tr-hover"
+          key={round.id}
+        >
+          <td><Moment format="YYYY-MM-DD">{round['date']}</Moment></td>
           <td>{round['course']}</td>
           <td className="align-right">{round['total_strokes']}</td>
           <td className="align-right">{round['total_putts']}</td>
@@ -15,7 +20,9 @@ export class Rounds extends React.Component {
         </tr>
       );
     });
+  }
 
+  render() {
     return (
       <table>
         <thead>
@@ -29,7 +36,7 @@ export class Rounds extends React.Component {
           </tr>
         </thead>
         <tbody>
-          {rounds}
+          {this.renderRows(this.props.roundsData)}
         </tbody>
       </table>
     );

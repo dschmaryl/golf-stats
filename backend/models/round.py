@@ -139,7 +139,6 @@ class Round(db.Model):
 
         adjusted_score = sum([min(max_score, hole.strokes)
                               for hole in self.holes])
-
         return adjusted_score
 
     def as_dict(self):
@@ -164,7 +163,7 @@ class Round(db.Model):
             'par_4_avg': self.par_4_avg,
             'par_5_avg': self.par_5_avg,
             'handicap_index': self.handicap_index,
-            'holes': {h.id: h.hole_number for h in self.holes}
+            'holes': {h.hole_number: h.as_dict() for h in self.holes}
         }
 
     def __repr__(self):

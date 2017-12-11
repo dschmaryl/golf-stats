@@ -41,6 +41,15 @@ export class App extends React.Component {
       .catch(() => this.setState({requestFailed: true}));
   }
 
+  fetchRound(roundId) {
+    axios.get(apiURL + '/round/' + roundId)
+      .then(roundData => this.setState({
+        roundData: roundData.data,
+        msg: 'received data for round ' + roundId
+      }))
+      .catch(() => this.setState({requestFailed: true}));
+  }
+
   render() {
     if (this.state.requestFailed) {
       return <p>Failed to retrieve data</p>;
@@ -51,8 +60,12 @@ export class App extends React.Component {
 
     return (
       <div>
-        <h2>rounds list for {this.state.userData.username}</h2>
-        <Rounds roundsData={this.state.roundsData} />
+        <p>{this.state.msg}</p>
+        <h2>all rounds:</h2>
+        <Rounds
+          roundsData={this.state.roundsData}
+          onClick={roundId => this.fetchRound(roundId)}
+        />
       </div>
     );
   }

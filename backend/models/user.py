@@ -17,7 +17,10 @@ class User(db.Model):
                              cascade="save-update, delete")
 
     def get_handicap(self, round_id):
-        return self.rounds.filter_by(id=round_id).first().handicap_index
+        return self.get_round(round_id).handicap_index
+
+    def get_round(self, round_id):
+        return self.rounds.filter_by(id=round_id).first()
 
     def get_rounds(self):
         return self.rounds.order_by(Round.date).all()
@@ -41,6 +44,7 @@ class User(db.Model):
         rounds = self.rounds.filter(Round.date >= date(season, 1, 1))
         rounds = rounds.filter(Round.date <= date(season, 12, 31))
         return rounds.order_by(Round.date).all()
+
 
     def get_average(self, stat, season=None, mavg=False, period=20):
         if season:
