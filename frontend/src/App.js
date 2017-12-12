@@ -3,8 +3,8 @@ import axios from 'axios';
 import './index.css';
 import { RoundList } from './components/RoundList';
 
-// const apiURL = '/api';
-const apiURL = 'http://localhost:5000/api';
+const apiURL = '/api';
+// const apiURL = 'http://localhost:5000/api';
 
 export class App extends React.Component {
   constructor() {
