@@ -1,10 +1,10 @@
 import React from 'react';
 import axios from 'axios';
 import './index.css';
-import { Rounds } from './components/Rounds';
+import { RoundList } from './components/RoundList';
 
-const apiURL = '/api';
-// const apiURL = 'http://localhost:5000/api';
+// const apiURL = '/api';
+const apiURL = 'http://localhost:5000/api';
 
 export class App extends React.Component {
   constructor() {
@@ -42,12 +42,14 @@ export class App extends React.Component {
   }
 
   fetchRound(roundId) {
-    axios.get(apiURL + '/round/' + roundId)
-      .then(roundData => this.setState({
-        roundData: roundData.data,
-        msg: 'received data for round ' + roundId
-      }))
-      .catch(() => this.setState({requestFailed: true}));
+    if (!this.state.roundData || this.state.roundData['id'] !== roundId) {
+      axios.get(apiURL + '/round/' + roundId)
+        .then(roundData => this.setState({
+          roundData: roundData.data,
+          msg: 'received data for round ' + roundId
+        }))
+        .catch(() => this.setState({requestFailed: true}));
+    }
   }
 
   render() {
@@ -62,7 +64,7 @@ export class App extends React.Component {
       <div>
         <p>{this.state.msg}</p>
         <h2>all rounds:</h2>
-        <Rounds
+        <RoundList
           roundsData={this.state.roundsData}
           onClick={roundId => this.fetchRound(roundId)}
         />
