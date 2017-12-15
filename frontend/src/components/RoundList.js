@@ -1,17 +1,15 @@
 import React from 'react';
 import Moment from 'react-moment';
 
+// styles
 const alignLeft = {textAlign: 'left'};
 const alignRight = {textAlign: 'right'};
-const cursorPointer = {cursor: 'pointer'}
+const cursorPointer = {cursor: 'pointer'};
 
 function RoundListHeader(props) {
-  function renderCell(printName, valueName, reversed, style) {
+  function renderCell(value, key, reverse, style) {
     return (
-      <th
-        onClick={() => props.onClick(valueName, reversed)}
-        style={style}
-      >
+      <th onClick={() => props.onClick(value, key)} style={style} >
         {printName}
       </th>
     );
@@ -88,7 +86,7 @@ export class RoundList extends React.Component {
       <div>
         <table style={{width: '80%'}}>
           <RoundListHeader
-            onClick={(key, reversed) => this.sortRows(key, reversed)}
+            onClick={(key, reverse) => this.sortRows(key, reverse)}
           />
           <tbody>
             {this.renderRows(this.state.roundsData)}

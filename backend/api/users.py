@@ -42,3 +42,14 @@ def post_user():
         return jsonify(error='must be daryl')
     else:
         return jsonify(create_user(request.get_json()))
+
+
+@app.route('/api/user/<user_id>/stats')
+@check_authorization
+def get_user_stats(user_id):
+    user = User.query.get(user_id)
+    if user:
+        if g.user.username == user.username:
+            return jsonify(user.get_all_averages_by_season())
+        else:
+            return jsonify(error='not permitted')

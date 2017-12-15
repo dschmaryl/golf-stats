@@ -27,7 +27,7 @@ export class App extends React.Component {
               }
             })
             .catch(() => this.setState({requestFailed: true}));
-          axios.get(apiURL + '/user/' + userId.data.id + '/get_rounds')
+          axios.get(apiURL + '/user/' + userId.data.id + '/rounds')
             .then(roundsData => {
               if (roundsData['error']) {
                 this.setState({requestFailed: true});

@@ -6,7 +6,7 @@ from backend.actions import update_round
 from .authorize import check_authorization
 
 
-@app.route('/api/user/<user_id>/get_rounds')
+@app.route('/api/user/<user_id>/rounds')
 @check_authorization
 def get_rounds(user_id):
     user = User.query.get(user_id)

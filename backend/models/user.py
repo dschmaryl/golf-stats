@@ -45,13 +45,11 @@ class User(db.Model):
         rounds = rounds.filter(Round.date <= date(season, 12, 31))
         return rounds.order_by(Round.date).all()
 
-
     def get_average(self, stat, season=None, mavg=False, period=20):
         if season:
             rounds = self.get_season_rounds(season)
         else:
             rounds = self.get_rounds()
-
         if stat == 'score':
             stats = [r.total_strokes for r in rounds]
         elif stat == 'putts':
@@ -60,9 +58,41 @@ class User(db.Model):
             stats = [r.total_gir for r in rounds]
         elif stat == 'score_to_par':
             stats = [r.total_strokes - r.tee.get_total_par() for r in rounds]
-
+        elif stat == 'handicap':
+            stats = [r.handicap_index for r in rounds]
         avgs = self._mavg(stats, period) if mavg else self._avg(stats)
         return avgs
+
+    def get_all_averages_by_season(self, mavg=False, period=20):
+        average = self._mavg if mavg else self._avg
+        seasons = [2017, 2016, 2015]
+        stats = {
+            'strokes': 'total_strokes',
+            'putts': 'total_putts',
+            'gir': 'total_gir',
+            'handicap': 'handicap_index',
+            'par3': 'par_3_avg',
+            'par4': 'par_4_avg',
+            'par5': 'par_5_avg'
+        }
+        averages = {}
+        for season in seasons:
+            rounds = self.get_season_rounds(season)
+            if rounds:
+                averages[season] = {}
+                season_stats = {stat: [] for stat in stats.keys()}
+                for r in rounds:
+                    season_stats['strokes'].append(r.total_strokes)
+                    season_stats['putts'].append(r.total_putts)
+                    season_stats['gir'].append(r.total_gir)
+                    season_stats['handicap'].append(r.handicap_index)
+                    season_stats['par3'].append(r.par_3_avg)
+                    season_stats['par4'].append(r.par_4_avg)
+                    season_stats['par5'].append(r.par_5_avg)
+
+                for stat, stats_array in season_stats.items():
+                    averages[season][stat] = average(stats_array, period)
+        return averages
 
     def get_par_avgs(self, season=None, mavg=False, period=20):
         if season:
@@ -85,7 +115,7 @@ class User(db.Model):
 
         return avgs
 
-    def _avg(self, stats):
+    def _avg(self, stats, period=None):
         return sum(stats) / len(stats)
 
     def _mavg(self, stats, period):
