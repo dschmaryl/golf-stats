@@ -91,7 +91,10 @@ class User(db.Model):
                     season_stats['par5'].append(r.par_5_avg)
 
                 for stat, stats_array in season_stats.items():
-                    averages[season][stat] = average(stats_array, period)
+                    averages[season][stat] = round(
+                        average(stats_array, period),
+                        2
+                    )
         return averages
 
     def get_par_avgs(self, season=None, mavg=False, period=20):
@@ -154,8 +157,8 @@ class User(db.Model):
         return {
             'id': self.id,
             'username': self.username,
-            'default_tees': self.default_tees,
-            'rounds': {r.id: r.date for r in self.rounds}
+            'default_tees': self.default_tees
+            # 'rounds': {r.id: r.date for r in self.rounds}
         }
 
     def __repr__(self):

@@ -6,11 +6,11 @@ const alignLeft = {textAlign: 'left'};
 const alignRight = {textAlign: 'right'};
 const cursorPointer = {cursor: 'pointer'};
 
-function RoundListHeader(props) {
+function RoundsHeader(props) {
   function renderCell(value, key, reverse, style) {
     return (
-      <th onClick={() => props.onClick(value, key)} style={style} >
-        {printName}
+      <th onClick={() => props.onClick(key, reverse)} style={style} key={key}>
+        {value}
       </th>
     );
   }
@@ -28,22 +28,36 @@ function RoundListHeader(props) {
   )
 }
 
-function RoundListRow(props) {
+function RoundsList(props) {
+  const selectedRound = props.selectedRound;
+
   return (
-    <tr onClick={props.onClick} style={cursorPointer}>
-      <td style={alignLeft}>
-        <Moment format="YYYY-MM-DD">{props.round['date']}</Moment>
-      </td>
-      <td style={alignLeft}>{props.round['course']}</td>
-      <td style={alignRight}>{props.round['total_strokes']}</td>
-      <td style={alignRight}>{props.round['total_putts']}</td>
-      <td style={alignRight}>{props.round['total_gir']}</td>
-      <td style={alignRight}>{props.round['handicap_index']}</td>
-    </tr>
+    <tbody>
+      {Object.keys(props.roundsData).reverse().map(key => {
+        const round = props.roundsData[key];
+
+        return (
+          <tr
+            onClick={() => props.onClick(round.id)}
+            style={cursorPointer}
+            key={key}
+          >
+            <td style={alignLeft}>
+              <Moment format="YYYY-MM-DD">{round['date']}</Moment>
+            </td>
+            <td style={alignLeft}>{round['course']}</td>
+            <td style={alignRight}>{round['total_strokes']}</td>
+            <td style={alignRight}>{round['total_putts']}</td>
+            <td style={alignRight}>{round['total_gir']}</td>
+            <td style={alignRight}>{round['handicap_index']}</td>
+          </tr>
+        );
+      })}
+    </tbody>
   );
 }
 
-export class RoundList extends React.Component {
+export class Rounds extends React.Component {
   constructor(props) {
     super(props);
     this.state = {roundsData: props.roundsData};
@@ -68,31 +82,18 @@ export class RoundList extends React.Component {
     }
   }
 
-  renderRows(roundsData) {
-    return Object.keys(roundsData).reverse().map(key => {
-      const round = roundsData[key];
-      return (
-        <RoundListRow
-          round={round}
-          onClick={() => this.props.onClick(round.id)}
-          key={round.id}
-        />
-      );
-    });
-  }
-
   render() {
     return (
-      <div>
-        <table style={{width: '80%'}}>
-          <RoundListHeader
-            onClick={(key, reverse) => this.sortRows(key, reverse)}
-          />
-          <tbody>
-            {this.renderRows(this.state.roundsData)}
-          </tbody>
-        </table>
-      </div>
+      <table style={{width: '80%'}}>
+        <RoundsHeader
+          onClick={(value, reverse) => this.sortRows(value, reverse)}
+        />
+        <RoundsList
+          roundsData={this.state.roundsData}
+          selectedRound={this.state.selectedRound}
+          onClick={roundId => this.props.onClick(roundId)}
+        />
+      </table>
     );
   }
 }

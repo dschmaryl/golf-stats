@@ -35,6 +35,17 @@ def get_user(user_id):
         return jsonify(error='not found')
 
 
+@app.route('/api/user/<user_id>/rounds')
+@check_authorization
+def get_rounds(user_id):
+    user = User.query.get(user_id)
+    if user:
+        rounds = user.get_rounds()
+        return jsonify({i: rounds[i].as_dict() for i in range(len(rounds))})
+    else:
+        return jsonify(error='user not found')
+
+
 @app.route('/api/add_user', methods=['POST'])
 @check_authorization
 def post_user():
@@ -53,3 +64,5 @@ def get_user_stats(user_id):
             return jsonify(user.get_all_averages_by_season())
         else:
             return jsonify(error='not permitted')
+    else:
+        return jsonify(error='not found')
