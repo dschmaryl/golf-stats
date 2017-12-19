@@ -1,60 +1,93 @@
 import React from 'react';
 import Moment from 'react-moment';
+import { SelectedRound } from './SelectedRound';
 
 // styles
 const alignLeft = {textAlign: 'left'};
 const alignRight = {textAlign: 'right'};
 const cursorPointer = {cursor: 'pointer'};
 
+const headerLeft = {textAlign: 'left', 'font-weight': 'bold'};
+const headerRight = {textAlign: 'right', 'font-weight': 'bold'};
+
+
 function RoundsHeader(props) {
-  function renderCell(value, key, reverse, style) {
+  function renderCell(value, key, className, reverse, style) {
     return (
-      <th onClick={() => props.onClick(key, reverse)} style={style} key={key}>
+      <div
+        className={className}
+        onClick={() => props.onClick(key, reverse)}
+        style={style}
+        key={key}
+      >
         {value}
-      </th>
+      </div>
     );
   }
+
   return (
-    <thead>
-      <tr style={cursorPointer}>
-        {renderCell('date', 'date', false, alignLeft)}
-        {renderCell('course', 'course', false, alignLeft)}
-        {renderCell('score', 'total_strokes', true, alignRight)}
-        {renderCell('putts', 'total_putts', true, alignRight)}
-        {renderCell('girs', 'total_gir', false, alignRight)}
-        {renderCell('hdcp', 'handicap_index', true, alignRight)}
-      </tr>
-    </thead>
+    <div>
+      <div className="row" style={cursorPointer}>
+        {renderCell('date', 'date', 'col-xs-2', false, headerLeft)}
+        {renderCell('course', 'course', 'col-xs-2', false, headerLeft)}
+        {renderCell('score', 'total_strokes', 'col-xs-1', true, headerRight)}
+        {renderCell('front', 'front_9_strokes', 'col-xs-1', true, headerRight)}
+        {renderCell('back', 'back_9_strokes', 'col-xs-1', true, headerRight)}
+        {renderCell('putts', 'total_putts', 'col-xs-1', true, headerRight)}
+        {renderCell('girs', 'total_gir', 'col-xs-1', false, headerRight)}
+        {renderCell('hdcp', 'handicap_index', 'col-xs-1', true, headerRight)}
+      </div>
+    </div>
   )
 }
 
 function RoundsList(props) {
-  const selectedRound = props.selectedRound;
+  return Object.keys(props.roundsData).reverse().map(key => {
+    const round = props.roundsData[key];
 
-  return (
-    <tbody>
-      {Object.keys(props.roundsData).reverse().map(key => {
-        const round = props.roundsData[key];
+    if (round.id === props.selectedRound) {
+      return (
+        <SelectedRound
+          roundData={props.roundData}
+          onClick={() => props.clickedSelected()}
+        />
+      );
+    }
 
-        return (
-          <tr
-            onClick={() => props.onClick(round.id)}
-            style={cursorPointer}
-            key={key}
-          >
-            <td style={alignLeft}>
-              <Moment format="YYYY-MM-DD">{round['date']}</Moment>
-            </td>
-            <td style={alignLeft}>{round['course']}</td>
-            <td style={alignRight}>{round['total_strokes']}</td>
-            <td style={alignRight}>{round['total_putts']}</td>
-            <td style={alignRight}>{round['total_gir']}</td>
-            <td style={alignRight}>{round['handicap_index']}</td>
-          </tr>
-        );
-      })}
-    </tbody>
-  );
+    return (
+      <div
+        className="row"
+        onClick={() => props.onClick(round.id)}
+        style={cursorPointer}
+        key={key}
+      >
+        <div className="col-xs-2" style={alignLeft}>
+          <Moment format="YYYY-MM-DD">{round['date']}</Moment>
+        </div>
+        <div className="col-xs-2" style={alignLeft}>
+          {round['course']}
+        </div>
+        <div className="col-xs-1" style={alignRight}>
+          {round['total_strokes']}
+        </div>
+        <div className="col-xs-1" style={alignRight}>
+          {round['front_9_strokes']}
+        </div>
+        <div className="col-xs-1" style={alignRight}>
+          {round['back_9_strokes']}
+        </div>
+        <div className="col-xs-1" style={alignRight}>
+          {round['total_putts']}
+        </div>
+        <div className="col-xs-1" style={alignRight}>
+          {round['total_gir']}
+        </div>
+        <div className="col-xs-1" style={alignRight}>
+          {round['handicap_index']}
+        </div>
+      </div>
+    );
+  });
 }
 
 export class Rounds extends React.Component {
@@ -64,6 +97,7 @@ export class Rounds extends React.Component {
   }
 
   sortRows(sortBy, reversed) {
+    this.props.clickedSelected();
     if (sortBy === 'date') {
       this.setState({roundsData: this.props.roundsData})
     } else {
@@ -84,16 +118,18 @@ export class Rounds extends React.Component {
 
   render() {
     return (
-      <table style={{width: '80%'}}>
+      <div>
         <RoundsHeader
           onClick={(value, reverse) => this.sortRows(value, reverse)}
         />
         <RoundsList
           roundsData={this.state.roundsData}
-          selectedRound={this.state.selectedRound}
+          selectedRound={this.props.selectedRound}
+          roundData={this.props.roundData}
           onClick={roundId => this.props.onClick(roundId)}
+          clickedSelected={() => this.props.clickedSelected()}
         />
-      </table>
+      </div>
     );
   }
 }

@@ -10,7 +10,7 @@ const apiURL = '/api';
 export class App extends React.Component {
   constructor() {
     super();
-    this.state = {requestFailed: false, selectedRound: null};
+    this.state = {requestFailed: false};
   }
 
   componentDidMount() {
@@ -19,15 +19,15 @@ export class App extends React.Component {
         if (userId.data['error']) {
           this.setState({requestFailed: true});
         } else {
-          axios.get(apiURL + '/user/' + userId.data.id)
-            .then(userData => {
-              if (userData['error']) {
-                this.setState({requestFailed: true});
-              } else {
-                this.setState({userData: userData.data});
-              }
-            })
-            .catch(() => this.setState({requestFailed: true}));
+          // axios.get(apiURL + '/user/' + userId.data.id)
+          //   .then(userData => {
+          //     if (userData['error']) {
+          //       this.setState({requestFailed: true});
+          //     } else {
+          //       this.setState({userData: userData.data});
+          //     }
+          //   })
+          //   .catch(() => this.setState({requestFailed: true}));
           axios.get(apiURL + '/user/' + userId.data.id + '/stats')
             .then(statsData => {
               if (statsData['error']) {
@@ -60,6 +60,8 @@ export class App extends React.Component {
           msg: 'received data for round ' + roundData.data['id']
         }))
         .catch(() => this.setState({requestFailed: true}));
+    } else {
+      this.setState({selectedRound: roundId})
     }
   }
 
@@ -67,11 +69,15 @@ export class App extends React.Component {
     this.setState({msg: value});
   }
 
+  clickedSelected() {
+    this.setState({selectedRound: null});
+  }
+
   render() {
     if (this.state.requestFailed) {
       return <p>Failed to retrieve data</p>;
-    } else if (!this.state.userData) {
-      return <p>Loading user data...</p>;
+    // } else if (!this.state.userData) {
+    //   return <p>Loading user data...</p>;
     } else if (!this.state.statsData) {
       return <p>Loading stats data...</p>
     } else if (!this.state.roundsData) {
@@ -80,8 +86,8 @@ export class App extends React.Component {
 
     return (
       <div>
-        <p>{this.state.msg}</p>
-        <h2>all rounds</h2>
+        {/* <p>{this.state.msg}</p> */}
+        <h2>all statistics:</h2>
         <Stats
           statsData={this.state.statsData}
           onClick={stat => this.logIt(stat)}
@@ -90,7 +96,9 @@ export class App extends React.Component {
         <Rounds
           roundsData={this.state.roundsData}
           selectedRound={this.state.selectedRound}
+          roundData={this.state.roundData}
           onClick={roundId => this.fetchRound(roundId)}
+          clickedSelected={() => this.clickedSelected()}
         />
       </div>
     );
