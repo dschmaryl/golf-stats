@@ -46,15 +46,6 @@ def get_rounds(user_id):
         return jsonify(error='user not found')
 
 
-@app.route('/api/add_user', methods=['POST'])
-@check_authorization
-def post_user():
-    if g.user.username != 'daryl':
-        return jsonify(error='must be daryl')
-    else:
-        return jsonify(create_user(request.get_json()))
-
-
 @app.route('/api/user/<user_id>/stats')
 @check_authorization
 def get_user_stats(user_id):
@@ -66,3 +57,12 @@ def get_user_stats(user_id):
             return jsonify(error='not permitted')
     else:
         return jsonify(error='not found')
+
+
+@app.route('/api/add_user', methods=['POST'])
+@check_authorization
+def post_user():
+    if g.user.username != 'daryl':
+        return jsonify(error='must be daryl')
+    else:
+        return jsonify(create_user(request.get_json()))
