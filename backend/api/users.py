@@ -12,12 +12,12 @@ def get_users():
     return jsonify({u.id: u.username for u in User.query.all()})
 
 
-@app.route('/api/my_user_id')
+@app.route('/api/my_info')
 @check_authorization
 def get_my_user_id():
     user = User.query.filter_by(username=g.user.username).first()
     if user:
-        return jsonify(id=user.id)
+        return jsonify(user.as_dict())
     else:
         return jsonify(error='not found')
 
@@ -27,7 +27,7 @@ def get_my_user_id():
 def get_user(user_id):
     user = User.query.get(user_id)
     if user:
-        if g.user.username == user.username:
+        if user.username == g.user.username:
             return jsonify(user.as_dict())
         else:
             return jsonify(error='not permitted')
@@ -40,8 +40,12 @@ def get_user(user_id):
 def get_rounds(user_id):
     user = User.query.get(user_id)
     if user:
-        rounds = user.get_rounds()
-        return jsonify({i: rounds[i].as_dict() for i in range(len(rounds))})
+        if user.username == g.user.username:
+            rounds = user.get_rounds()
+            return jsonify({i: rounds[i].as_dict()
+                            for i in range(len(rounds))})
+        else:
+            return jsonify(error='not permitted')
     else:
         return jsonify(error='user not found')
 

@@ -7,12 +7,12 @@ const alignLeft = {textAlign: 'left'};
 const alignRight = {textAlign: 'right'};
 const cursorPointer = {cursor: 'pointer'};
 
-const headerLeft = {textAlign: 'left', 'font-weight': 'bold'};
-const headerRight = {textAlign: 'right', 'font-weight': 'bold'};
+const headerLeft = {textAlign: 'left', fontWeight: 'bold'};
+const headerRight = {textAlign: 'right', fontWeight: 'bold'};
 
 
 function RoundsHeader(props) {
-  function renderCell(value, key, className, reverse, style) {
+  function renderItem(value, key, className, reverse, style) {
     return (
       <div
         className={className}
@@ -26,17 +26,15 @@ function RoundsHeader(props) {
   }
 
   return (
-    <div>
-      <div className="row" style={cursorPointer}>
-        {renderCell('date', 'date', 'col-xs-2', false, headerLeft)}
-        {renderCell('course', 'course', 'col-xs-2', false, headerLeft)}
-        {renderCell('score', 'total_strokes', 'col-xs-1', true, headerRight)}
-        {renderCell('front', 'front_9_strokes', 'col-xs-1', true, headerRight)}
-        {renderCell('back', 'back_9_strokes', 'col-xs-1', true, headerRight)}
-        {renderCell('putts', 'total_putts', 'col-xs-1', true, headerRight)}
-        {renderCell('girs', 'total_gir', 'col-xs-1', false, headerRight)}
-        {renderCell('hdcp', 'handicap_index', 'col-xs-1', true, headerRight)}
-      </div>
+    <div className="row" style={cursorPointer}>
+      {renderItem('date', 'date', 'col-xs-2', false, headerLeft)}
+      {renderItem('course', 'course', 'col-xs-2', false, headerLeft)}
+      {renderItem('score', 'total_strokes', 'col-xs-1', true, headerRight)}
+      {renderItem('front', 'front_9_strokes', 'col-xs-1', true, headerRight)}
+      {renderItem('back', 'back_9_strokes', 'col-xs-1', true, headerRight)}
+      {renderItem('putts', 'total_putts', 'col-xs-1', true, headerRight)}
+      {renderItem('girs', 'total_gir', 'col-xs-1', false, headerRight)}
+      {renderItem('hdcp', 'handicap_index', 'col-xs-1', true, headerRight)}
     </div>
   )
 }
@@ -50,6 +48,7 @@ function RoundsList(props) {
         <SelectedRound
           roundData={props.roundData}
           onClick={() => props.clickedSelected()}
+          key={key}
         />
       );
     }
