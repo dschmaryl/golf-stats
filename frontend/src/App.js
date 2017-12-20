@@ -4,9 +4,6 @@ import './index.css';
 import { Rounds } from './components/Rounds';
 import { Stats } from './components/Stats';
 
-// const apiURL = '/api';
-// const apiURL = 'http://localhost:5000/api';
-
 export class App extends React.Component {
   constructor() {
     super();
@@ -48,17 +45,12 @@ export class App extends React.Component {
       axios.get('/api/round/' + roundId)
         .then(roundData => this.setState({
           roundData: roundData.data,
-          selectedRound: roundData.data['id'],
-          msg: 'received data for round ' + roundData.data['id']
+          selectedRound: roundData.data['id']
         }))
         .catch(() => this.setState({requestFailed: true}));
     } else {
       this.setState({selectedRound: roundId})
     }
-  }
-
-  logIt(value) {
-    this.setState({msg: value});
   }
 
   clickedSelected() {
@@ -79,7 +71,6 @@ export class App extends React.Component {
     return (
       <div className="row">
         <div className="col-xs-12">
-          {/* <p>{this.state.msg}</p> */}
           <h3>all statistics:</h3>
           <Stats
             statsData={this.state.statsData}
