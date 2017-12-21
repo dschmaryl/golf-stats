@@ -5,6 +5,7 @@ const alignLeft = {textAlign: 'left'};
 const alignRight = {textAlign: 'right'};
 const headerLeft = {textAlign: 'left', background: "#EEE"};
 const headerRight = {textAlign: 'right', background: "#EEE"};
+const tableRight = {textAlign: 'Right', maxWidth: '28px'}
 const cursorPointer = {cursor: 'pointer'};
 
 export function SelectedRound(props) {
@@ -26,7 +27,7 @@ export function SelectedRound(props) {
         <td style={alignLeft}>{label}:</td>
         {Array(9).fill().map((v, i) => {
           return (
-            <td style={alignRight} key={stat + '_' + (i + 1)}>
+            <td style={tableRight} key={stat + '_' + (i + 1)}>
               {round['holes'][i + 1][stat]}
             </td>
           );
@@ -34,7 +35,7 @@ export function SelectedRound(props) {
         <td style={alignRight}>{round['front_9_' + stat]}</td>
         {Array(9).fill().map((v, i) => {
           return (
-            <td style={alignRight} key={stat + '_' + (i + 10)}>
+            <td style={tableRight} key={stat + '_' + (i + 10)}>
               {round['holes'][i + 10][stat]}
             </td>
           );
@@ -78,7 +79,7 @@ export function SelectedRound(props) {
                 <th style={alignLeft}>hole:</th>
                 {Array(9).fill().map((v, i) => {
                   return (
-                    <th style={alignRight} key={'hole_' + (i + 1)}>
+                    <th style={tableRight} key={'hole_' + (i + 1)}>
                       {i + 1}
                     </th>
                   );
@@ -86,7 +87,7 @@ export function SelectedRound(props) {
                 <th style={alignRight}>front</th>
                 {Array(9).fill().map((v, i) => {
                   return (
-                    <th style={alignRight} key={'hole_' + (i + 10)}>
+                    <th style={tableRight} key={'hole_' + (i + 10)}>
                       {i + 10}
                     </th>
                   );

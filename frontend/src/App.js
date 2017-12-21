@@ -7,7 +7,7 @@ import { Stats } from './components/Stats';
 export class App extends React.Component {
   constructor() {
     super();
-    this.state = {requestFailed: false};
+    this.state = {requestFailed: false, rounds: {}};
   }
 
   componentDidMount() {
@@ -41,15 +41,23 @@ export class App extends React.Component {
   }
 
   fetchRound(roundId) {
-    if (!this.state.roundData || this.state.roundData.id !== roundId) {
-      axios.get('/api/round/' + roundId)
-        .then(roundData => this.setState({
-          roundData: roundData.data,
-          selectedRound: roundData.data['id']
-        }))
-        .catch(() => this.setState({requestFailed: true}));
+    if (Object.keys(this.state.rounds).indexOf('' + roundId) !== -1) {
+      this.setState({
+        roundData: this.state.rounds[roundId],
+        selectedRound: roundId
+      });
     } else {
-      this.setState({selectedRound: roundId})
+      axios.get('/api/round/' + roundId)
+        .then(roundData => {
+          let rounds = this.state.rounds;
+          rounds[roundId] = roundData.data;
+          this.setState({
+            roundData: roundData.data,
+            rounds: rounds,
+            selectedRound: roundId
+          });
+        })
+        .catch(() => this.setState({requestFailed: true}));
     }
   }
 
