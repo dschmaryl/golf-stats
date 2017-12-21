@@ -22,24 +22,28 @@ export function SelectedRound(props) {
   round['total_par'] = round['front_9_par'] + round['back_9_par'];
 
   function renderTableRow(label, stat) {
+    function renderHoles(startHole, stat) {
+      function holeStat(holeNumber) {
+        if (stat === 'gir') {
+          return round['holes'][holeNumber]['gir'] ? '*' : '';
+        } else {
+          return round['holes'][holeNumber][stat];
+        }
+      }
+      return Array(9).fill().map((v, i) => {
+        return (
+          <td style={tableRight} key={stat + '_' + (i + startHole)}>
+            {holeStat(i + startHole)}
+          </td>
+        );
+      });
+    }
     return (
       <tr>
         <td style={alignLeft}>{label}:</td>
-        {Array(9).fill().map((v, i) => {
-          return (
-            <td style={tableRight} key={stat + '_' + (i + 1)}>
-              {round['holes'][i + 1][stat]}
-            </td>
-          );
-        })}
+        {renderHoles(1, stat)}
         <td style={alignRight}>{round['front_9_' + stat]}</td>
-        {Array(9).fill().map((v, i) => {
-          return (
-            <td style={tableRight} key={stat + '_' + (i + 10)}>
-              {round['holes'][i + 10][stat]}
-            </td>
-          );
-        })}
+        {renderHoles(10, stat)}
         <td style={alignRight}>{round['back_9_' + stat]}</td>
         <td style={alignRight}>{round['total_' + stat]}</td>
       </tr>
@@ -100,6 +104,7 @@ export function SelectedRound(props) {
               {renderTableRow('par', 'par')}
               {renderTableRow('score', 'strokes')}
               {renderTableRow('putts', 'putts')}
+              {renderTableRow('gir', 'gir')}
             </tbody>
           </table>
         </div>
