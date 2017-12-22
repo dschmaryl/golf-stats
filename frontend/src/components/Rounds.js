@@ -52,6 +52,14 @@ function RoundsList(props) {
       );
     }
 
+    function renderRow(value, className, style) {
+      return (
+        <div className={className} style={style}>
+          {value}
+        </div>
+      );
+    }
+
     return (
       <div
         className="row"
@@ -59,30 +67,18 @@ function RoundsList(props) {
         style={cursorPointer}
         key={key}
       >
-        <div className="col-xs-2" style={alignLeft}>
-          <Moment format="YYYY-MM-DD">{round['date']}</Moment>
-        </div>
-        <div className="col-xs-2" style={alignLeft}>
-          {round['course']}
-        </div>
-        <div className="col-xs-1" style={alignRight}>
-          {round['total_strokes']}
-        </div>
-        <div className="col-xs-1" style={alignRight}>
-          {round['front_9_strokes']}
-        </div>
-        <div className="col-xs-1" style={alignRight}>
-          {round['back_9_strokes']}
-        </div>
-        <div className="col-xs-1" style={alignRight}>
-          {round['total_putts']}
-        </div>
-        <div className="col-xs-1" style={alignRight}>
-          {round['total_gir']}
-        </div>
-        <div className="col-xs-1" style={alignRight}>
-          {round['handicap_index']}
-        </div>
+        {renderRow(
+          <Moment format="YYYY-MM-DD">{round['date']}</Moment>,
+          'col-xs-2',
+          alignLeft
+        )}
+        {renderRow(round['course'], 'col-xs-2', alignLeft)}
+        {renderRow(round['total_strokes'], 'col-xs-1', alignRight)}
+        {renderRow(round['front_9_strokes'], 'col-xs-1', alignRight)}
+        {renderRow(round['back_9_strokes'], 'col-xs-1', alignRight)}
+        {renderRow(round['total_putts'], 'col-xs-1', alignRight)}
+        {renderRow(round['total_gir'], 'col-xs-1', alignRight)}
+        {renderRow(round['handicap_index'], 'col-xs-1', alignRight)}
       </div>
     );
   });
@@ -99,7 +95,11 @@ export class Rounds extends React.Component {
   }
 
   sortRounds(sortBy, reversed) {
-    function sortRoundsData(roundsData, sortBy, reversed) {
+    this.props.clickedSelected();
+    const roundsData = this.props.roundsData;
+    let lastSortReversed = this.state.lastSortReversed;
+
+    function sortRoundsData(sortBy, reversed) {
       if (sortBy === 'date') {
         if (reversed) {
           return Object.values(roundsData).reverse();
@@ -124,22 +124,14 @@ export class Rounds extends React.Component {
       }
     }
 
-    const roundsData = this.props.roundsData;
-    let lastSortReversed = this.state.lastSortReversed;
-
     if (sortBy === this.state.lastSortedBy) {
-      this.setState({
-        roundsData: sortRoundsData(roundsData, sortBy, !lastSortReversed)
-      });
+      this.setState({roundsData: sortRoundsData(sortBy, !lastSortReversed)});
     } else {
-      this.setState({
-        roundsData: sortRoundsData(roundsData, sortBy, reversed)
-      });
+      this.setState({roundsData: sortRoundsData(sortBy, reversed)});
       lastSortReversed = !reversed;
     }
 
     this.setState({lastSortedBy: sortBy, lastSortReversed: !lastSortReversed});
-    this.props.clickedSelected();
   }
 
   render() {
