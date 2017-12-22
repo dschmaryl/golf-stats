@@ -76,6 +76,8 @@ class User(db.Model):
             'par5': 'par_5_avg'
         }
         averages = {}
+        all_stats = {}
+
         for season in seasons:
             rounds = self.get_season_rounds(season)
             if rounds:
@@ -91,10 +93,20 @@ class User(db.Model):
                     season_stats['par5'].append(r.par_5_avg)
 
                 for stat, stats_array in season_stats.items():
+                    if all_stats.get(stat):
+                        all_stats[stat].extend(season_stats[stat])
+                    else:
+                        all_stats[stat] = season_stats[stat]
                     averages[season][stat] = round(
                         average(stats_array, period),
                         2
                     )
+
+        if all_stats:
+            averages[2046] = {}
+            for stat, stats_array in all_stats.items():
+                averages[2046][stat] = round(average(stats_array, period), 2)
+
         return averages
 
     def get_par_avgs(self, season=None, mavg=False, period=20):

@@ -11,7 +11,11 @@ function StatsHeader(props) {
       <tr>
         <th style={alignLeft}>season:</th>
         {props.seasons.map(season => {
-          return <th style={alignRight} key={season}>{season}</th>;
+          return (
+            <th style={alignRight} key={season}>
+              {season === '2046' ? 'overall' : season}
+            </th>
+          );
         })}
       </tr>
     </thead>
