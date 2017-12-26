@@ -1,88 +1,6 @@
 import React from 'react';
-import Moment from 'react-moment';
-import { SelectedRound } from './SelectedRound';
-
-// styles
-const alignLeft = {textAlign: 'left'};
-const alignRight = {textAlign: 'right'};
-const cursorPointer = {cursor: 'pointer'};
-
-const headerLeft = {textAlign: 'left', fontWeight: 'bold'};
-const headerRight = {textAlign: 'right', fontWeight: 'bold'};
-
-function RoundsHeader(props) {
-  function renderItem(value, key, className, reverse, style) {
-    return (
-      <div
-        className={className}
-        onClick={() => props.onClick(key, reverse)}
-        style={style}
-        key={key}
-      >
-        {value}
-      </div>
-    );
-  }
-
-  return (
-    <div className="row" style={cursorPointer}>
-      {renderItem('date', 'date', 'col-xs-2', false, headerLeft)}
-      {renderItem('course', 'course', 'col-xs-2', false, headerLeft)}
-      {renderItem('score', 'total_strokes', 'col-xs-1', true, headerRight)}
-      {renderItem('front', 'front_9_strokes', 'col-xs-1', true, headerRight)}
-      {renderItem('back', 'back_9_strokes', 'col-xs-1', true, headerRight)}
-      {renderItem('putts', 'total_putts', 'col-xs-1', true, headerRight)}
-      {renderItem('girs', 'total_gir', 'col-xs-1', false, headerRight)}
-      {renderItem('hdcp', 'handicap_index', 'col-xs-1', true, headerRight)}
-    </div>
-  )
-}
-
-function RoundsList(props) {
-  return Object.keys(props.roundsData).reverse().map(key => {
-    const round = props.roundsData[key];
-
-    if (round.id === props.selectedRound) {
-      return (
-        <SelectedRound
-          roundData={props.roundData}
-          onClick={() => props.clickedSelected()}
-          key={key}
-        />
-      );
-    }
-
-    function renderRow(value, className, style) {
-      return (
-        <div className={className} style={style}>
-          {value}
-        </div>
-      );
-    }
-
-    return (
-      <div
-        className="row"
-        onClick={() => props.onClick(round.id)}
-        style={cursorPointer}
-        key={key}
-      >
-        {renderRow(
-          <Moment format="YYYY-MM-DD">{round['date']}</Moment>,
-          'col-xs-2',
-          alignLeft
-        )}
-        {renderRow(round['course'], 'col-xs-2', alignLeft)}
-        {renderRow(round['total_strokes'], 'col-xs-1', alignRight)}
-        {renderRow(round['front_9_strokes'], 'col-xs-1', alignRight)}
-        {renderRow(round['back_9_strokes'], 'col-xs-1', alignRight)}
-        {renderRow(round['total_putts'], 'col-xs-1', alignRight)}
-        {renderRow(round['total_gir'], 'col-xs-1', alignRight)}
-        {renderRow(round['handicap_index'], 'col-xs-1', alignRight)}
-      </div>
-    );
-  });
-}
+import { RoundsHeader } from './RoundsHeader';
+import { RoundsList } from './RoundsList';
 
 export class Rounds extends React.Component {
   constructor(props) {
@@ -123,15 +41,28 @@ export class Rounds extends React.Component {
         });
       }
     }
-
     if (sortBy === this.state.lastSortedBy) {
       this.setState({roundsData: sortRoundsData(sortBy, !lastSortReversed)});
     } else {
       this.setState({roundsData: sortRoundsData(sortBy, reversed)});
       lastSortReversed = !reversed;
     }
-
     this.setState({lastSortedBy: sortBy, lastSortReversed: !lastSortReversed});
+  }
+
+  seasonRoundsData() {
+    if (!this.props.selectedSeason || this.props.selectedSeason === '2046') {
+      return this.state.roundsData;
+    } else {
+      let seasonRounds = {};
+      Object.keys(this.state.roundsData).forEach(k => {
+        let year = new Date(this.state.roundsData[k]['date']).getFullYear();
+        if (year.toString() === this.props.selectedSeason) {
+          seasonRounds[k] = this.state.roundsData[k];
+        }
+      });
+      return seasonRounds;
+    }
   }
 
   render() {
@@ -141,11 +72,11 @@ export class Rounds extends React.Component {
           onClick={(value, reverse) => this.sortRounds(value, reverse)}
         />
         <RoundsList
-          roundsData={this.state.roundsData}
+          roundsData={this.seasonRoundsData()}
           selectedRound={this.props.selectedRound}
           roundData={this.props.roundData}
-          onClick={roundId => this.props.onClick(roundId)}
-          clickedSelected={() => this.props.clickedSelected()}
+          onClick={this.props.onClick}
+          clickedSelected={this.props.clickedSelected}
         />
       </div>
     );

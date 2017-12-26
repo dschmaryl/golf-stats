@@ -3,7 +3,7 @@ import React from 'react';
 // styles
 const alignLeft = {textAlign: 'left'};
 const alignRight = {textAlign: 'right'};
-// const cursorPointer = {cursor: 'pointer'};
+const pointerRight = {cursor: 'pointer', textAlign: 'right'};
 
 function StatsHeader(props) {
   return (
@@ -12,7 +12,11 @@ function StatsHeader(props) {
         <th style={alignLeft}>season:</th>
         {props.seasons.map(season => {
           return (
-            <th style={alignRight} key={season}>
+            <th
+              onClick={() => props.onClick(season)}
+              style={pointerRight}
+              key={season}
+            >
               {season === '2046' ? 'overall' : season}
             </th>
           );
@@ -50,6 +54,7 @@ export class Stats extends React.Component {
       <table style={{width: '80%'}}>
         <StatsHeader
           seasons={Object.keys(this.props.statsData).sort().reverse()}
+          onClick={season => this.props.clickedSeason(season)}
         />
         <StatsRows
           seasons={Object.keys(this.props.statsData).sort().reverse()}

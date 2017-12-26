@@ -65,6 +65,10 @@ export class App extends React.Component {
     this.setState({selectedRound: null});
   }
 
+  clickedSeason(season) {
+    this.setState({selectedSeason: season});
+  }
+
   render() {
     if (this.state.requestFailed) {
       return <p>Failed to retrieve data</p>;
@@ -83,11 +87,13 @@ export class App extends React.Component {
           <Stats
             statsData={this.state.statsData}
             onClick={stat => this.logIt(stat)}
+            clickedSeason={season => this.clickedSeason(season)}
           />
           <br />
           <Rounds
             roundsData={this.state.roundsData}
             selectedRound={this.state.selectedRound}
+            selectedSeason={this.state.selectedSeason}
             roundData={this.state.roundData}
             onClick={roundId => this.fetchRound(roundId)}
             clickedSelected={() => this.clickedSelected()}
