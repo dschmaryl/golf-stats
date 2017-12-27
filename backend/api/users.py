@@ -6,12 +6,6 @@ from backend.actions import create_user
 from .authorize import check_authorization
 
 
-@app.route('/api/users')
-@check_authorization
-def get_users():
-    return jsonify({u.id: u.username for u in User.query.all()})
-
-
 @app.route('/api/my_info')
 @check_authorization
 def get_my_user_id():
@@ -55,7 +49,7 @@ def get_rounds(user_id):
 def get_user_stats(user_id):
     user = User.query.get(user_id)
     if user:
-        if g.user.username == user.username:
+        if user.username == g.user.username:
             return jsonify(user.get_all_averages_by_season())
         else:
             return jsonify(error='not permitted')

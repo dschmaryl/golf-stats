@@ -11,7 +11,7 @@ from .authorize import check_authorization
 def get_round(round_id):
     golf_round = Round.query.get(round_id)
     if golf_round:
-        if g.user.username == golf_round.user.username:
+        if golf_round.user.username == g.user.username:
             return jsonify(golf_round.as_dict())
         else:
             return jsonify(error='round belongs to another user')
@@ -24,7 +24,7 @@ def get_round(round_id):
 def get_hole(hole_id):
     hole = Hole.query.get(hole_id)
     if hole:
-        if g.user.username == hole.round.user.username:
+        if hole.round.user.username == g.user.username:
             return jsonify(hole.as_dict())
         else:
             return jsonify(error='hole belongs to another user')
@@ -37,7 +37,7 @@ def get_hole(hole_id):
 @check_authorization
 def post_round():
     try:
-        if g.user.username == User.query.get(int(request.form['user_id'])):
+        if User.query.get(int(request.form['user_id'])) == g.user.username:
             return jsonify(update_round(request.get_json()))
         else:
             return jsonify(error='not permitted')
