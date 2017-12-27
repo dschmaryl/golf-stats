@@ -2,7 +2,6 @@ import React from 'react';
 
 // styles
 const alignLeft = {textAlign: 'left'};
-const alignRight = {textAlign: 'right'};
 const pointerRight = {cursor: 'pointer', textAlign: 'right'};
 
 function StatsHeader(props) {
@@ -27,16 +26,29 @@ function StatsHeader(props) {
 }
 
 function StatsRows(props) {
-  const stats = ['strokes', 'putts', 'gir', 'handicap', 'par3', 'par4', 'par5'];
+  const stats = {
+    'strokes': 'scoring average',
+    'putts': 'putts per round',
+    'gir': 'greens per round',
+    'handicap': 'handicap',
+    'par3': 'par 3 average',
+    'par4': 'par 4 average',
+    'par5': 'par 5 average'
+  };
+
   return (
     <tbody>
-      {stats.map(stat => {
+      {Object.keys(stats).map(stat => {
         return (
           <tr key={stat}>
-            <td style={alignLeft}>{stat}:</td>
+            <td style={alignLeft}>{stats[stat]}:</td>
             {props.seasons.map(season => {
               return (
-                <td style={alignRight} key={season + '-' + stat}>
+                <td
+                  onClick={() => props.onClick(season)}
+                  style={pointerRight}
+                  key={season + '-' + stat}
+                >
                   {props.statsData[season][stat]}
                 </td>
               );
@@ -59,6 +71,7 @@ export class Stats extends React.Component {
         <StatsRows
           seasons={Object.keys(this.props.statsData).sort().reverse()}
           statsData={this.props.statsData}
+          onClick={season => this.props.clickedSeason(season)}
         />
       </table>
     );
