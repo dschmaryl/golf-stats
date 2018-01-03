@@ -10,13 +10,10 @@ const cursorPointer = {cursor: 'pointer'};
 export class RoundsList extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      selectedRound: null,
-      rounds: {}
-    };
+    this.state = {selectedRound: null, rounds: {}};
   }
 
-  clickedRound(roundId) {
+  onRoundClick(roundId) {
     if (Object.keys(this.state.rounds).indexOf(''+ roundId) !== -1) {
       this.setState({
         roundData: this.state.rounds[roundId],
@@ -43,7 +40,6 @@ export class RoundsList extends React.Component {
   render() {
     return Object.keys(this.props.roundsData).reverse().map(key => {
       const round = this.props.roundsData[key];
-
       if (round.id === this.state.selectedRound) {
         return (
           <SelectedRound
@@ -53,7 +49,6 @@ export class RoundsList extends React.Component {
           />
         );
       }
-
       function renderRow(value, className, style) {
         return (
           <div className={className} style={style}>
@@ -61,11 +56,10 @@ export class RoundsList extends React.Component {
           </div>
         );
       }
-
       return (
         <div
           className="row"
-          onClick={() => this.clickedRound(round.id)}
+          onClick={() => this.onRoundClick(round.id)}
           style={cursorPointer}
           key={key}
         >

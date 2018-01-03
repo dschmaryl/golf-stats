@@ -5,28 +5,34 @@ const headerLeft = {textAlign: 'left', fontWeight: 'bold'};
 const headerRight = {textAlign: 'right', fontWeight: 'bold'};
 
 export function RoundsHeader(props) {
-  function renderItem(value, key, className, reverse, style) {
+  function renderItem(value, key, reverse) {
+    let className = 'col-xs-1';
+    let style  = headerRight;
+    if (value === 'date' || value === 'course') {
+      className = 'col-xs-2';
+      style = headerLeft;
+    }
     return (
       <div
         className={className}
         onClick={() => props.onClick(key, reverse)}
         style={style}
-        key={key}
       >
         {value}
       </div>
     );
   }
+
   return (
     <div className="row" style={cursorPointer}>
-      {renderItem('date', 'date', 'col-xs-2', false, headerLeft)}
-      {renderItem('course', 'course', 'col-xs-2', false, headerLeft)}
-      {renderItem('score', 'total_strokes', 'col-xs-1', true, headerRight)}
-      {renderItem('front', 'front_9_strokes', 'col-xs-1', true, headerRight)}
-      {renderItem('back', 'back_9_strokes', 'col-xs-1', true, headerRight)}
-      {renderItem('putts', 'total_putts', 'col-xs-1', true, headerRight)}
-      {renderItem('girs', 'total_gir', 'col-xs-1', false, headerRight)}
-      {renderItem('hdcp', 'handicap_index', 'col-xs-1', true, headerRight)}
+      {renderItem('date', 'date', false)}
+      {renderItem('course', 'course', false)}
+      {renderItem('score', 'total_strokes', true)}
+      {renderItem('front', 'front_9_strokes', true)}
+      {renderItem('back', 'back_9_strokes', true)}
+      {renderItem('putts', 'total_putts', true)}
+      {renderItem('girs', 'total_gir', false)}
+      {renderItem('hdcp', 'handicap_index', true)}
     </div>
   )
 }

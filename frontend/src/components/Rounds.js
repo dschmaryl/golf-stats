@@ -29,28 +29,27 @@ export class Rounds extends React.Component {
     let lastSortReversed = this.state.lastSortReversed;
 
     function sortRoundsData(sortBy, reversed) {
-      if (sortBy === 'date') {
-        if (reversed) {
-          return Object.values(roundsData).reverse();
-        } else {
-          return Object.values(roundsData);
-        }
-      } else {
-        return Object.values(roundsData).sort((a, b) => {
-          if (sortBy === 'course') {
-            if (reversed) {
-              return b['course'] < a['course'];
-            } else {
-              return a['course'] < b['course'];
-            }
+      return Object.values(roundsData).sort((a, b) => {
+        if (sortBy === 'date') {
+          if (reversed) {
+            return new Date(b['date']) - new Date(a['date']);
+          } else {
+            return new Date(a['date']) - new Date(b['date']);
           }
+        } else if (sortBy === 'course') {
+          if (reversed) {
+            return b['course'] < a['course'];
+          } else {
+            return a['course'] < b['course'];
+          }
+        } else {
           if (reversed) {
             return b[sortBy] - a[sortBy];
           } else {
             return a[sortBy] - b[sortBy];
           }
-        });
-      }
+        }
+      });
     }
     if (sortBy === this.state.lastSortedBy) {
       this.setState({roundsData: sortRoundsData(sortBy, !lastSortReversed)});

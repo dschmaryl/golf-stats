@@ -26,7 +26,6 @@ export class App extends React.Component {
   }
 
   render() {
-
     if (!this.state.userData) {
       if (this.state.requestFailed) {
         return <p>Failed to retrieve data</p>;
