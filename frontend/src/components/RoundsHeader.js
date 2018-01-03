@@ -1,6 +1,5 @@
 import React from 'react';
 
-// styles
 const cursorPointer = {cursor: 'pointer'};
 const headerLeft = {textAlign: 'left', fontWeight: 'bold'};
 const headerRight = {textAlign: 'right', fontWeight: 'bold'};
