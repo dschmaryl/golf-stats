@@ -1,6 +1,6 @@
 {
   "short_name": "golf-stats",
-  "name": "React frontend for golf-stats",
+  "name": "golf-stats",
   "icons": [
     {
       "src": "favicon.ico",
@@ -13,7 +13,7 @@
       "type": "image/png"
     }
   ],
-  "start_url": "./index.html",
+  "start_url": "/",
   "display": "standalone",
   "theme_color": "#000000",
   "background_color": "#ffffff"
