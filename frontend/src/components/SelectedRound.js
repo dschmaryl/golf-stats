@@ -3,8 +3,8 @@ import Moment from 'react-moment';
 
 const alignLeft = {textAlign: 'left'};
 const alignRight = {textAlign: 'right'};
-const headerLeft = {textAlign: 'left', background: "#EEE"};
-const headerRight = {textAlign: 'right', background: "#EEE"};
+const headerLeft = {textAlign: 'left', background: "#f1f5f1"};
+const headerRight = {textAlign: 'right', background: "#f1f5f1"};
 const tableRight = {textAlign: 'Right', maxWidth: '28px'}
 const cursorPointer = {cursor: 'pointer'};
 
