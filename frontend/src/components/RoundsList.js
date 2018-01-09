@@ -49,13 +49,15 @@ export class RoundsList extends React.Component {
           />
         );
       }
-      function renderRow(value, className, style) {
+
+      function renderRowCell(value, className, style) {
         return (
           <div className={className} style={style}>
             {value}
           </div>
         );
       }
+
       return (
         <div
           className="row"
@@ -63,18 +65,18 @@ export class RoundsList extends React.Component {
           style={cursorPointer}
           key={key}
         >
-          {renderRow(
+          {renderRowCell(
             <Moment format="YYYY-MM-DD">{round['date']}</Moment>,
             'col-xs-2',
             alignLeft
           )}
-          {renderRow(round['course'], 'col-xs-2', alignLeft)}
-          {renderRow(round['total_strokes'], 'col-xs-1', alignRight)}
-          {renderRow(round['front_9_strokes'], 'col-xs-1', alignRight)}
-          {renderRow(round['back_9_strokes'], 'col-xs-1', alignRight)}
-          {renderRow(round['total_putts'], 'col-xs-1', alignRight)}
-          {renderRow(round['total_gir'], 'col-xs-1', alignRight)}
-          {renderRow(round['handicap_index'], 'col-xs-1', alignRight)}
+          {renderRowCell(round['course'], 'col-xs-2', alignLeft)}
+          {renderRowCell(round['total_strokes'], 'col-xs-1', alignRight)}
+          {renderRowCell(round['front_9_strokes'], 'col-xs-1', alignRight)}
+          {renderRowCell(round['back_9_strokes'], 'col-xs-1', alignRight)}
+          {renderRowCell(round['total_putts'], 'col-xs-1', alignRight)}
+          {renderRowCell(round['total_gir'], 'col-xs-1', alignRight)}
+          {renderRowCell(round['handicap_index'], 'col-xs-1', alignRight)}
         </div>
       );
     });
