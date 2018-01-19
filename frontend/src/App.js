@@ -21,7 +21,7 @@ export class App extends React.Component {
       .catch(() => this.setState({requestFailed: true}));
   }
 
-  clickedSeason(season) {
+  onSeasonClick(season) {
     this.setState({selectedSeason: season});
   }
 
@@ -40,7 +40,7 @@ export class App extends React.Component {
           <h3>all statistics:</h3>
           <Stats
             userData={this.state.userData}
-            clickedSeason={season => this.clickedSeason(season)}
+            onSeasonClick={season => this.onSeasonClick(season)}
           />
           <br />
           <Rounds

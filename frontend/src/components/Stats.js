@@ -34,12 +34,12 @@ export class Stats extends React.Component {
       <table style={{width: '80%'}}>
         <StatsHeader
           seasons={Object.keys(this.state.statsData).sort().reverse()}
-          onClick={season => this.props.clickedSeason(season)}
+          onClick={season => this.props.onSeasonClick(season)}
         />
         <StatsList
           seasons={Object.keys(this.state.statsData).sort().reverse()}
           statsData={this.state.statsData}
-          onClick={season => this.props.clickedSeason(season)}
+          onClick={season => this.props.onSeasonClick(season)}
         />
       </table>
     );
