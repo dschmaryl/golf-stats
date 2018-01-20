@@ -1,11 +1,9 @@
 import React from 'react';
 import Moment from 'react-moment';
 import axios from 'axios';
-import { SelectedRound } from './SelectedRound';
+import { SelectedRound } from '../SelectedRound/SelectedRound';
 
-const alignLeft = {textAlign: 'left'};
-const alignRight = {textAlign: 'right'};
-const cursorPointer = {cursor: 'pointer'};
+import './RoundsList.css';
 
 export class RoundsList extends React.Component {
   constructor(props) {
@@ -43,6 +41,7 @@ export class RoundsList extends React.Component {
       if (round.id === this.state.selectedRound) {
         return (
           <SelectedRound
+            round={round}
             roundData={this.state.roundData}
             onClick={() => this.clickedSelected()}
             key={key}
@@ -50,9 +49,9 @@ export class RoundsList extends React.Component {
         );
       }
 
-      function renderRowCell(value, className, style) {
+      function renderRowCell(value, className) {
         return (
-          <div className={className} style={style}>
+          <div className={className}>
             {value}
           </div>
         );
@@ -62,21 +61,20 @@ export class RoundsList extends React.Component {
         <div
           className="row"
           onClick={() => this.onRoundClick(round.id)}
-          style={cursorPointer}
+          style={{cursor: 'pointer'}}
           key={key}
         >
           {renderRowCell(
             <Moment format="YYYY-MM-DD">{round['date']}</Moment>,
-            'col-xs-2',
-            alignLeft
+            'col-xs-2 round-date'
           )}
-          {renderRowCell(round['course'], 'col-xs-2', alignLeft)}
-          {renderRowCell(round['total_strokes'], 'col-xs-1', alignRight)}
-          {renderRowCell(round['front_9_strokes'], 'col-xs-1', alignRight)}
-          {renderRowCell(round['back_9_strokes'], 'col-xs-1', alignRight)}
-          {renderRowCell(round['total_putts'], 'col-xs-1', alignRight)}
-          {renderRowCell(round['total_gir'], 'col-xs-1', alignRight)}
-          {renderRowCell(round['handicap_index'], 'col-xs-1', alignRight)}
+          {renderRowCell(round['course'], 'col-xs-2 round-course')}
+          {renderRowCell(round['total_strokes'], 'col-xs-1 round-stat')}
+          {renderRowCell(round['front_9_strokes'], 'col-xs-1 round-stat')}
+          {renderRowCell(round['back_9_strokes'], 'col-xs-1 round-stat')}
+          {renderRowCell(round['total_putts'], 'col-xs-1 round-stat')}
+          {renderRowCell(round['total_gir'], 'col-xs-1 round-stat')}
+          {renderRowCell(round['handicap_index'], 'col-xs-1 round-stat')}
         </div>
       );
     });

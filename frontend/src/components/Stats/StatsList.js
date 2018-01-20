@@ -1,8 +1,5 @@
 import React from 'react';
 
-const alignLeft = {textAlign: 'left'};
-const pointerRight = {cursor: 'pointer', textAlign: 'right'};
-
 export function StatsList(props) {
   const stats = {
     'strokes': 'scoring average',
@@ -19,12 +16,12 @@ export function StatsList(props) {
       {Object.keys(stats).map(stat => {
         return (
           <tr key={stat}>
-            <td style={alignLeft}>{stats[stat]}:</td>
+            <td>{stats[stat]}:</td>
             {props.seasons.map(season => {
               return (
                 <td
                   onClick={() => props.onClick(season)}
-                  style={pointerRight}
+                  className='stats-season'
                   key={season + '-' + stat}
                 >
                   {props.statsData[season][stat]}

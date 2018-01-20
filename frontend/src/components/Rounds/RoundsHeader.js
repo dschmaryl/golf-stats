@@ -1,22 +1,18 @@
 import React from 'react';
 
-const cursorPointer = {cursor: 'pointer'};
-const headerLeft = {textAlign: 'left', fontWeight: 'bold'};
-const headerRight = {textAlign: 'right', fontWeight: 'bold'};
+import './RoundsHeader.css';
 
 export function RoundsHeader(props) {
   function renderItem(value, key, reverse) {
-    let className = 'col-xs-1';
-    let style  = headerRight;
+    let className = 'col-xs-1 round-header-stat';
     if (value === 'date' || value === 'course') {
-      className = 'col-xs-2';
-      style = headerLeft;
+      className = `col-xs-2 round-header-${value}`;
     }
+
     return (
       <div
         className={className}
         onClick={() => props.onClick(key, reverse)}
-        style={style}
       >
         {value}
       </div>
@@ -24,7 +20,7 @@ export function RoundsHeader(props) {
   }
 
   return (
-    <div className="row" style={cursorPointer}>
+    <div className="row" style={{cursor: 'pointer'}}>
       {renderItem('date', 'date', false)}
       {renderItem('course', 'course', false)}
       {renderItem('score', 'total_strokes', true)}

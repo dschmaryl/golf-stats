@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
-import { Rounds } from './components/Rounds';
-import { Stats } from './components/Stats';
+import { Rounds } from './components/Rounds/Rounds';
+import { Stats } from './components/Stats/Stats';
 
 export class App extends React.Component {
   constructor() {
@@ -28,7 +28,7 @@ export class App extends React.Component {
   render() {
     if (!this.state.userData) {
       if (this.state.requestFailed) {
-        return <p>Failed to retrieve data</p>;
+        return <p>Failed to retrieve user data</p>;
       } else {
         return <p>Loading user data...</p>;
       }
