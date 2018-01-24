@@ -87,7 +87,7 @@ class Round(db.Model):
 
         diffs = sorted([r.calc_diff() for r in rounds])[:num_of_diffs_used]
 
-        # calculate handicap and strip to one decimal place
+        # calculate handicap and truncate to one decimal place
         handicap_str = str(sum(diffs) / len(diffs) * .96)
         handicap = float(handicap_str[:handicap_str.find('.') + 2])
 
@@ -137,6 +137,7 @@ class Round(db.Model):
         else:
             max_score = int(course_handicap / 10 + 6)
 
+        # TODO: this needs to be refactored to fix single-digit handicap max
         adjusted_score = sum([min(max_score, hole.strokes)
                               for hole in self.holes])
         return adjusted_score
