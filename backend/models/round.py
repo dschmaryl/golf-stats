@@ -1,3 +1,5 @@
+from math import ceil
+
 from backend import db
 from backend.dates import date_to_str
 from .hole import Hole
@@ -101,21 +103,20 @@ class Round(db.Model):
         return rounds[max(0, round_idx - 19):round_idx + 1]
 
     def get_num_of_diffs(self, rounds):
+        # return number of diffs to be used to calculate handicap based on
+        # the number of rounds that have been recorded so far.
+        #
         # if len(rounds) < 5:
         #     return 0
-        # num_of_diffs_used = {
-        #     5: 1, 6: 1, 7: 2, 8: 2, 9: 3, 10: 3, 11: 4, 12: 4,
-        #     13: 5, 14: 5, 15: 6, 16: 6, 17: 7, 18: 8, 19: 9, 20: 10
+        # else:
+        #     return {
+        #         5: 1, 6: 1, 7: 2, 8: 2, 9: 3, 10: 3, 11: 4, 12: 4,
+        #         13: 5, 14: 5, 15: 6, 16: 6, 17: 7, 18: 8, 19: 9, 20: 10
         #     }[len(rounds)]
 
-        # my own version of num_of_diffs_used
-        num_of_diffs_used = {
-            0: 0, 1: 1, 2: 1, 3: 2, 4: 2, 5: 3, 6: 3, 7: 4, 8: 4, 9: 5,
-            10: 5, 11: 6, 12: 6, 13: 7, 14: 7, 15: 8, 16: 8, 17: 9, 18: 9,
-            19: 10, 20: 10
-        }[len(rounds)]
-
-        return num_of_diffs_used
+        # my own version; i think its more fair to golfers with only a few
+        # rounds entered
+        return ceil(len(rounds)/2)
 
     def calc_diff(self):
         adjusted_score = self.get_adjusted_score()
