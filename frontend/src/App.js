@@ -3,6 +3,8 @@ import axios from 'axios';
 import { Rounds } from './components/Rounds/Rounds';
 import { Stats } from './components/Stats/Stats';
 
+import './App.css';
+
 export class App extends React.Component {
   constructor() {
     super();
@@ -35,18 +37,27 @@ export class App extends React.Component {
     }
 
     return (
-      <div className="row">
-        <div className="col-xs-12">
-          <h3>all statistics:</h3>
-          <Stats
-            userData={this.state.userData}
-            onSeasonClick={season => this.onSeasonClick(season)}
-          />
-          <br />
-          <Rounds
-            userData={this.state.userData}
-            selectedSeason={this.state.selectedSeason}
-          />
+      <div className="container">
+        <header className="row">
+          <div className="col-xs-12">
+            <h3>all statistics:</h3>
+          </div>
+        </header>
+        <div className="row extra-padding-top">
+          <div className="col-xs-12">
+            <Stats
+              userData={this.state.userData}
+              onSeasonClick={season => this.onSeasonClick(season)}
+            />
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-xs-12 extra-padding-top">
+            <Rounds
+              userData={this.state.userData}
+              selectedSeason={this.state.selectedSeason}
+            />
+          </div>
         </div>
       </div>
     );
