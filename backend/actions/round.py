@@ -13,19 +13,24 @@ def update_round(round_data):
             round_ = Round.query.get(int(round_id))
             if not round_:
                 return {'error': 'round not found'}
-            user = round_.user
-            if user.id != int(round_data['user_id']):
-                return {'error': 'user does not match round.user'}
+            else:
+                user = round_.user
+                # if user.username == 'guest':
+                #     return {'error': 'cannot edit guest account'}
+                if user.id != int(round_data['user_id']):
+                    return {'error': 'user does not match round.user'}
         else:
             user_id = round_data.get('user_id')
-            if user_id:
-                user = User.query.get(int(round_data['user_id']))
-                if user:
-                    round_ = Round()
-                else:
-                    return {'error': 'user not found'}
-            else:
+            if not user_id:
                 return {'error': 'need either round_id or user_id'}
+            else:
+                user = User.query.get(int(round_data['user_id']))
+                if not user:
+                    return {'error': 'user not found'}
+                else:
+                    # if user.username == 'guest':
+                    #     return {'error': 'cannot edit guest account'}
+                    round_ = Round()
 
         if round_data.get('date'):
             round_.date = str_to_date(round_data['date'])

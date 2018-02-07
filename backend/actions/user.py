@@ -22,13 +22,16 @@ def create_user(data):
         return {'success': True}
     except IntegrityError:
         db.session.rollback()
-        return {'error': 'IntegrityError'}
+        return {'error': 'IntegrityError: username already exists'}
 
 
 def update_user(data):
     user = User.query.get(data.get('id'))
     if not user:
         return {'error': 'user not found'}
+
+    if user.username == 'guest':
+        return {'error': 'cannot edit guest account'}
 
     if data.get('username'):
         user.username = data['username']

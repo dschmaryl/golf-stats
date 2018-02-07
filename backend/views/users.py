@@ -43,6 +43,10 @@ def change_password(username):
             return redirect(url_for('index'))
 
         if form.validate():
+            if username == 'guest':
+                flash('cannot edit guest account')
+                return redirect(url_for('user', username=username))
+
             if user.check_password(form.old_password.data):
                 user.set_password(form.new_password.data)
                 db.session.commit()
