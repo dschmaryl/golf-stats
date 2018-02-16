@@ -11,6 +11,10 @@ export class RoundsList extends React.Component {
     this.state = {selectedRound: null, rounds: {}};
   }
 
+  componentWillReceiveProps(nextProps) {
+    this.setState({selectedRound: null});
+  }
+
   onRoundClick(roundId) {
     if (Object.keys(this.state.rounds).indexOf(''+ roundId) !== -1) {
       this.setState({
