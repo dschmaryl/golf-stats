@@ -25,7 +25,8 @@
             <a href="{{ url_for('course_tee', course_nickname=course.nickname, tee_id=tee.id) }}"> {{ tee.color }} </a> |
           {% endfor %}
         {% endif %}
-        <a href="{{ url_for('course_tee', course_nickname=course.nickname) }}">add new tees</a>
+        <a href="{{ url_for('course_tee', course_nickname=course.nickname) }}">add new tees</a> |
+        <a href="{{ url_for('scrape_course', course_nickname=course.nickname) }}">scrape course</a>
       </div>
     </div>
   {% endif %}

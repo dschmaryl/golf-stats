@@ -21,6 +21,15 @@ class CourseForm(Form):
     ])
 
 
+class CourseScrapeForm(Form):
+    cancel = SubmitField('cancel')
+    url = StringField('url', [
+        validators.InputRequired(message='enter course url'),
+        validators.Length(min=60, message='url seems too short'),
+        validators.Length(max=200, message='url seems too long')
+    ])
+
+
 class CourseTeeForm(Form):
     cancel = SubmitField('cancel')
     delete = SubmitField('delete')

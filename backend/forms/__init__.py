@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from .change_password import ChangePasswordForm
-from .course import CourseForm, CourseTeeForm
+from .course import CourseForm, CourseScrapeForm, CourseTeeForm
 from .hole import HoleForm
 from .login import LoginForm
 from .round import RoundForm

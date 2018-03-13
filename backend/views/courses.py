@@ -3,8 +3,9 @@ from flask_login import login_required
 
 from backend import app, db
 from backend.models import Course
-from backend.forms import CourseForm, CourseTeeForm
+from backend.forms import CourseForm, CourseScrapeForm, CourseTeeForm
 from backend.actions import save_course_data, save_tee_data
+from backend.scrapers import swingbyswing as scraper
 from backend.dates import date_to_str
 from .flash_errors import flash_errors
 from .tees import TEES
@@ -131,3 +132,37 @@ def course_tee(course_nickname, tee_id=None):
 
     return render_template('course_tee.html', title=title, tee=course_tee,
                            form=form)
+
+
+@app.route('/course/<course_nickname>/scrape', methods=['GET', 'POST'])
+@login_required
+def scrape_course(course_nickname):
+    form = CourseScrapeForm(request.form)
+    title = 'scrape tee data for %s' % course_nickname
+
+    if request.method == 'POST':
+        if form.cancel.data:
+            flash('canceled course scrape')
+            return redirect(url_for('course_view',
+                                    course_nickname=course.nickname))
+
+        if form.validate():
+            course = Course.query.filter_by(nickname=course_nickname).first()
+
+            # # scrape tee data
+            # scraped_data = scraper.fetch_course(form.url.data)
+            # if scraped_data.get('error'):
+            #     flash('error scraping data: %s' % scraped_data['error'])
+            #     return redirect(url_for('scrape_course',
+            #                             course_nickname=course.nickname))
+            #
+            # tees = scraper.extract_course_data(scraped_data['data'])
+            # for tee in tees.keys():
+            #     # save tee data
+
+            flash('scraped %s' % form.url.data)
+            return redirect(url_for('course_view',
+                                    course_nickname=course.nickname))
+
+    return render_template('course_scrape.html', title=title, form=form,
+                           course_nickname=course_nickname)

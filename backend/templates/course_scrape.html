@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+
+<form action="" method="post" name="course_scrape">
+
+  <div class="row">
+    <div class="col-xs-12">
+      <h4>enter url:</h4>
+      {{ form.url(class="form-control text-input") }}
+    </div>
+  </div>
+
+  <div class="row extra-padding-top">
+    <div class="col-xs-12">
+      <input class="btn btn-default" type="submit" value="scrape" />
+      <input class="btn btn-default" type="submit" name="cancel" value="cancel" onclick="return confirm('Cancel course scrape?');return false;" />
+    </div>
+  </div>
+
+</form>
+
+{% endblock %}
