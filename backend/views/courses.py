@@ -144,7 +144,7 @@ def scrape_course(course_nickname):
         if form.cancel.data:
             flash('canceled course scrape')
             return redirect(url_for('course_view',
-                                    course_nickname=course.nickname))
+                                    course_nickname=course_nickname))
 
         if form.validate():
             course = Course.query.filter_by(nickname=course_nickname).first()
