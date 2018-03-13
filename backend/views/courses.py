@@ -43,7 +43,7 @@ def course_view(course_nickname=None):
         if form.delete.data:
             db.session.delete(course)
             db.session.commit()
-            flash('course %s deleted' % course.nickname)
+            flash('%s deleted' % course.nickname)
             return redirect(url_for('course_list'))
 
         if form.validate():
@@ -149,18 +149,20 @@ def scrape_course(course_nickname):
         if form.validate():
             course = Course.query.filter_by(nickname=course_nickname).first()
 
-            # # scrape tee data
-            # scraped_data = scraper.fetch_course(form.url.data)
-            # if scraped_data.get('error'):
-            #     flash('error scraping data: %s' % scraped_data['error'])
-            #     return redirect(url_for('scrape_course',
-            #                             course_nickname=course.nickname))
-            #
-            # tees = scraper.extract_course_data(scraped_data['data'])
-            # for tee in tees.keys():
-            #     # save tee data
+            # scrape tee data
+            scraped_data = scraper.fetch_course(form.url.data)
+            if scraped_data.get('error'):
+                flash('error scraping data: %s' % scraped_data['error'])
+                return redirect(url_for('scrape_course',
+                                        course_nickname=course.nickname))
 
-            flash('scraped %s' % form.url.data)
+            tees = scraper.extract_course_data(scraped_data['data'])
+            for tee in tees.keys():
+                if tee in TEES:
+                    tees[tee]['course_id'] = course.id
+                    save_tee_data(tees[tee])
+
+            flash('scraped tee data for %s' % course.nickname)
             return redirect(url_for('course_view',
                                     course_nickname=course.nickname))
 

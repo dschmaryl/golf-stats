@@ -2,7 +2,10 @@
 
 import requests
 from bs4 import BeautifulSoup
+from datetime import datetime
 from sys import argv
+
+from backend.dates import date_to_str
 
 
 BASE_URL = 'https://www.swingbyswing.com/courses/United-States/NY'
@@ -30,8 +33,12 @@ def extract_course_data(raw_data):
     tee_indices = {'blue': 15, 'white': 49, 'red': 83}
 
     for tee, i in tee_indices.items():
-        data[tee]['slope'] = int(raw_data[i+10])
+        data[tee]['name'] = tee
+        data[tee]['color'] = tee
+        data[tee]['gender'] = 'f' if tee == 'red' else 'm'
+        data[tee]['date'] = date_to_str(datetime.now())
         data[tee]['rating'] = float(raw_data[i+11])
+        data[tee]['slope'] = int(raw_data[i+10])
         data[tee]['holes'] = {}
         for j in range(9):
             data[tee]['holes'][j+1] = {}
