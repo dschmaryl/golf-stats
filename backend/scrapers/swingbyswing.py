@@ -3,12 +3,8 @@
 import requests
 from bs4 import BeautifulSoup
 from datetime import datetime
-from sys import argv
 
 from backend.dates import date_to_str
-
-
-BASE_URL = 'https://www.swingbyswing.com/courses/United-States/NY'
 
 
 def fetch_course(url):
@@ -22,7 +18,7 @@ def fetch_course(url):
 
     html = BeautifulSoup(source.text, 'html.parser')
     secs = [s for s in html.select('section')
-                if s['class'][0] == 'hole-set-scorecard-container']
+            if s['class'][0] == 'hole-set-scorecard-container']
     return {'data': [d.strip()
             for d in secs[0].text.split('\n') + secs[1].text.split('\n')
             if d.strip() != '']}
@@ -51,19 +47,3 @@ def extract_course_data(raw_data):
             data[tee]['holes'][j+10]['handicap'] = raw_data[i+j+140]
 
     return data
-
-
-if __name__ == '__main__':
-    if len(argv) != 2:
-        print('error with args')
-    else:
-        url = argv[-1]
-        if url[:4] != 'http':
-            if url[0] != '/':
-                url = '/' + url
-            url = BASE_URL + url
-        fetched_data = fetch_course(url)
-        if fetched_data.get('error'):
-            print('ERROR:', fetched_data['error'])
-        else:
-            print(extract_course_data(fetched_data['data']))
