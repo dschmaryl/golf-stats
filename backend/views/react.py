@@ -8,6 +8,6 @@ from backend import app, base_dir
 @app.route('/react/')
 @app.route('/react')
 @login_required
-def rindex():
+def react():
     build_dir = str(base_dir / 'frontend' / 'build')
     return send_from_directory(build_dir, 'index.html')
