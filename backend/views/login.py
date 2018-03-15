@@ -10,7 +10,6 @@ from .flash_errors import flash_errors
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm(request.form)
-    next_url = request.args.get('next')
 
     if request.method == 'POST':
         if form.validate():
@@ -28,7 +27,7 @@ def login():
                 flash('username not found')
                 return redirect(url_for('login'))
 
-            if next_url == '/react':
+            if request.args.get('next') == '/react':
                 return redirect(url_for('react'))
             else:
                 return redirect(url_for('stats', username=g.user.username))
