@@ -13,7 +13,6 @@ app = Flask(__name__)
 app.config.from_object('backend.config')
 
 base_dir = pathlib.Path(__file__).resolve().parent.parent
-app.public_folder = str(base_dir / 'frontend' / 'build')
 app.static_folder = str(base_dir / 'frontend' / 'build' / 'static')
 app.static_url_path = ''
 
