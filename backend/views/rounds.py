@@ -18,7 +18,7 @@ def round_list(username):
         return redirect(url_for('round_list', username=g.user.username))
 
     user = User.query.filter_by(username=username).first()
-    return render_template('round_list.html', title='old rounds',
+    return render_template('round_list.html', title='round list',
                            rounds=reversed(user.get_rounds()))
 
 
@@ -43,7 +43,7 @@ def round_view(username, round_id=None):
     form.tee_color.choices = [(i, TEES[i]) for i in range(len(TEES))]
 
     if golf_round:
-        title = 'edit round'
+        title = 'edit round: %s' % golf_round.date.strftime("%Y-%m-%d")
         holes = [golf_round.get_hole(i) for i in range(1, 19)]
         form.tee_color.data = TEES.index(golf_round.tee.color)
         form.course.data = golf_round.tee.course.id

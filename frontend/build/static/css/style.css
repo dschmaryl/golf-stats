@@ -1,12 +1,18 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
 body {
   height: 100%;
-  margin: 40px auto;
   color: #444;
+  text-align: center;
 }
 
 div.container {
-  max-width: 900px;
+  max-width: 640px;
   min-width: 340px;
+  margin: 40px auto;
 }
 
 header.row {
@@ -14,7 +20,16 @@ header.row {
 }
 
 footer.row {
-  padding-top: 20px;
+  padding-top: 50px;
+}
+
+footer, footer a {
+  color: #CCC;
+}
+
+footer a:hover {
+  color: #AAA;
+  text-decoration: none;
 }
 
 div.row {
@@ -49,23 +64,25 @@ table {
 }
 
 .table-hover {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 td input[type="checkbox"] {
-    float: left;
-    width: 100%;
+  float: left;
+  width: 100%;
 }
-
 
 .align-right {
   text-align: right;
 }
 
+.align-left {
+  text-align: left;
+}
+
 .align-center {
   text-align: center;
 }
-
 
 .date-input {
   max-width: 180px;
@@ -74,16 +91,13 @@ td input[type="checkbox"] {
 
 .number-input {
   max-width: 50px;
-  min-width: 40px;
-  text-align: right;
+  min-width: 42px;
+  text-align: center;
 }
 
 .text-input {
-  max-width: 300px;
-}
-
-.notes-input {
-  max-width: 300px;
+  max-width: 160px;
+  margin: 0 auto;
 }
 
 .checkbox {
@@ -102,6 +116,10 @@ nav, a {
 
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0px 1000px white inset !important;
 }

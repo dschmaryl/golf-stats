@@ -17,7 +17,6 @@
           {% else %}
             <h2>golf-stats</h2>
           {% endif %}
-          <hr />
         </div>
       </header>
 
@@ -25,7 +24,7 @@
         {% if messages %}
           <div class="row">
             <div class="col-xs-12">
-              <ul>
+              <ul class="list-unstyled">
                 {% for message in messages %}
                   <li>
                     {{ message }}
@@ -42,10 +41,9 @@
 
       <footer class="row">
         <div class="col-xs-12">
-          <hr />
-          <a href="https://github.com/dschmaryl/golf-flask" style="text-decoration: none; color: #BBB;">see this code on github</a>
-          <span style="color: #BBB;">-</span>
-          <a href="/react" style="text-decoration: none; color: #BBB;">try new react frontend (a work in progress)</a>
+          <a href="https://github.com/dschmaryl/golf-flask">see this code on github</a>
+          -
+          <a href="/react">try new react frontend (a work in progress)</a>
         </div>
       </footer>
     </div>
