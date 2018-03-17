@@ -1,25 +1,68 @@
-{% extends "base.html" %}
-{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+    <title>golf-stats</title>
+  </head>
+  <body>
 
-<form action="" method="post" name="login">
-  <div class="row">
-    <div class="col-xs-12">
-      {{ form.username(class="form-control text-input", placeholder="name") }}
+    <div class="login-wrapper">
+
+      <div class="container">
+        <header class="row">
+          <div class="col-xs-12">
+              <h2>welcome</h2>
+          </div>
+        </header>
+
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <div class="row">
+              <div class="col-xs-12">
+                <ul class="list-unstyled">
+                  {% for message in messages %}
+                    <li>
+                      {{ message }}
+                    </li>
+                  {% endfor %}
+                </ul>
+              </div>
+            </div>
+          {% endif %}
+        {% endwith %}
+
+          <form action="" method="post" name="login">
+            <div class="row">
+              <div class="col-xs-12">
+                {{ form.username(class="form-control text-input", placeholder="name") }}
+              </div>
+            </div>
+            <div class="row extra-padding-bottom">
+              <div class="col-xs-12">
+                {{ form.password(class="form-control text-input", placeholder="password") }}
+              </div>
+            </div>
+
+            <div class="row extra-padding-top">
+              <div class="col-xs-12">
+                <input class="btn btn-default" type="submit" value="login" />
+                <input class="btn btn-default extra-margin-left" type="submit" name="register" value="register" />
+              </div>
+            </div>
+          </form>
+
+        <footer class="row">
+          <div class="col-xs-12">
+            <a href="https://github.com/dschmaryl/golf-flask">see this code on github</a>
+          </div>
+        </footer>
+      </div>
+
     </div>
-  </div>
-  <div class="row">
-    <div class="col-xs-12">
-      {{ form.password(class="form-control text-input", placeholder="password") }}
-    </div>
-  </div>
 
-  <div class="row extra-padding-top">
-    <div class="col-xs-12">
-      <input class="btn btn-default" type="submit" value="login" />
-      <input class="btn btn-default extra-margin-left" type="submit" name="register" value="register" />
-    </div>
-  </div>
-
-</form>
-
-{% endblock %}
+  </body>
+</html>
