@@ -34,7 +34,7 @@ def login():
         else:
             flash_errors(form)
 
-    return render_template('login.html', title='log in',
+    return render_template('login.html', title='login',
                            form=form)
 
 
