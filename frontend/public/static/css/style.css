@@ -67,13 +67,16 @@ table {
   width: 100%;
 }
 
-.tr-pad {
+thead, tr, th, td {
+  border: 1px solid #EEE;
+}
+
+tr {
   height: 40px;
 }
 
-.table > thead > tr > th,
-.table > tbody > tr > td {
-  border: none;
+th, td {
+  padding: 0 4px 0 4px;
 }
 
 .table-hover {
@@ -107,13 +110,12 @@ table {
 }
 
 .number-input {
-  max-width: 28px;
-  min-width: 28px;
+  max-width: 30px;
+  min-width: 30px;
   text-align: right;
-  padding: 0 0 0 0;
-  border-top: none;
-  border-right: none;
-  border-left: none;
+  padding: 0 1px 0 0;
+  border: none;
+  box-shadow: none;
   float: right;
 }
 
@@ -137,6 +139,7 @@ table {
   width: 20px;
   height: 20px;
   float: right;
+  background-color: #FFF;
 }
 
 .extra-margin-left {

@@ -66,7 +66,7 @@ window.onload = function() {
     <div class="col-xs-12">
       <table>
         <thead>
-          <tr class="tr-pad">
+          <tr>
             <th class="align-left"><h4>hole:</h4></th>
             {% for i in range(1, 10) %}
               <th class="pad align-right"><h4>{{ i }}</h4></th>
@@ -75,13 +75,13 @@ window.onload = function() {
           </tr>
         </thead>
         <tbody>
-          <tr class="tr-pad">
+          <tr>
             <td class="align-left">par:</td>
             {% for i in range(1, 10) %}
               <td class="align-right"><span id="{{ 'hole%i_par' % i }}"></span></td>
             {% endfor %}
           </tr>
-          <tr class="tr-pad">
+          <tr>
             <td class="align-left">score:</td>
             {% for i in range(1, 10) %}
               <td class="align-right">
@@ -90,7 +90,7 @@ window.onload = function() {
             {% endfor %}
             <td class="align-right"><div id="total-front-strokes"></div></td>
           </tr>
-          <tr class="tr-pad">
+          <tr>
             <td class="align-left">putts:</td>
             {% for i in range(1, 10) %}
               <td class="align-right">
@@ -99,7 +99,7 @@ window.onload = function() {
             {% endfor %}
             <td class="align-right"><div id="total-front-putts"></div></td>
           </tr>
-          <tr class="tr-pad">
+          <tr>
             <td class="align-left">g.i.r.:</td>
             {% for i in range(1, 10) %}
               <td class="align-right">
@@ -117,7 +117,7 @@ window.onload = function() {
     <div class="col-xs-12">
       <table>
         <thead>
-          <tr class="tr-pad">
+          <tr>
             <th class="align-left"><h4>hole:</h4></th>
             {% for i in range(10, 19) %}
               <th class="pad align-right"><h4>{{ i }}</h4></th>
@@ -126,13 +126,13 @@ window.onload = function() {
           </tr>
         </thead>
         <tbody>
-          <tr class="tr-pad">
+          <tr>
             <td class="align-left">par:</td>
             {% for i in range(10, 19) %}
               <td class="align-right"><span id="{{ 'hole%i_par' % i }}"></span></td>
             {% endfor %}
           </tr>
-          <tr class="tr-pad">
+          <tr>
             <td class="align-left">score:</td>
             {% for i in range(10, 19) %}
               <td class="align-right">
@@ -141,7 +141,7 @@ window.onload = function() {
             {% endfor %}
             <td class="align-right"><div id="total-back-strokes"></div></td>
           </tr>
-          <tr class="tr-pad">
+          <tr>
             <td class="align-left">putts:</td>
             {% for i in range(10, 19) %}
               <td class="align-right">
@@ -150,7 +150,7 @@ window.onload = function() {
             {% endfor %}
             <td class="align-right"><div id="total-back-putts"></div></td>
           </tr>
-          <tr class="tr-pad">
+          <tr>
             <td class="align-left">g.i.r.:</td>
             {% for i in range(10, 19) %}
               <td class="align-right">
