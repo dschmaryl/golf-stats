@@ -16,17 +16,17 @@ window.onload = function() {
 <form action="" method="post" name="new_round">
 
   <div class="row">
-    <div class="col-xs-8 col-sm-4">
+    <div class="col-xs-4">
       <h4>date:</h4>
       {{ form.date(class="form-control date-input", type="date") }}
     </div>
 
-    <div class="col-xs-6 col-sm-4">
+    <div class="col-xs-4">
       <h4>course:</h4>
       {{ form.course(class="form-control select-input", id="course", onchange="pars.update()") }}
     </div>
 
-    <div class="col-xs-6 col-sm-4">
+    <div class="col-xs-4">
       <h4>tee:</h4>
       {{ form.tee_color(class="form-control select-input", id="tee-color", onchange="pars.update()") }}
     </div>
@@ -41,7 +41,7 @@ window.onload = function() {
 
     <div class="col-xs-4">
       <h4>totals:</h4>
-      <table class="table table-condensed">
+      <table class="table">
         <tbody>
           <tr>
             <td>score:</td>
@@ -62,14 +62,14 @@ window.onload = function() {
     </div>
   </div> -->
 
-  <div class="row extra-padding-top">
+  <div class="row extra-padding-top extra-padding-bottom">
     <div class="col-xs-12">
-      <table>
+      <table class="scorecard-table">
         <thead>
           <tr>
-            <th class="align-left"><h4>hole:</h4></th>
+            <th class="align-left"><h4>hole #</h4></th>
             {% for i in range(1, 10) %}
-              <th class="pad align-right"><h4>{{ i }}</h4></th>
+              <th class="pad align-center"><h4>{{ i }}</h4></th>
             {% endfor %}
             <th class="pad align-right"><h4>total</h4></th>
           </tr>
@@ -78,35 +78,35 @@ window.onload = function() {
           <tr>
             <td class="align-left">par:</td>
             {% for i in range(1, 10) %}
-              <td class="align-right"><span id="{{ 'hole%i_par' % i }}"></span></td>
+              <td class="align-center"><span id="{{ 'hole%i_par' % i }}"></span></td>
             {% endfor %}
           </tr>
           <tr>
             <td class="align-left">score:</td>
             {% for i in range(1, 10) %}
-              <td class="align-right">
+              <td>
                 <input class="form-control number-input" type="number" name="{{ 'hole%i_strokes' % i }}" id="{{ 'hole%i_strokes' % i }}" value="{{ holes[i - 1].strokes if holes else '' }}" oninput="totalStrokes.updateFront()" />
               </td>
             {% endfor %}
-            <td class="align-right"><div id="total-front-strokes"></div></td>
+            <td class="align-center"><div id="total-front-strokes"></div></td>
           </tr>
           <tr>
             <td class="align-left">putts:</td>
             {% for i in range(1, 10) %}
-              <td class="align-right">
+              <td>
                 <input class="form-control number-input" type="number" name="{{ 'hole%i_putts' % i }}" id="{{ 'hole%i_putts' % i }}" value="{{ holes[i - 1].putts if holes else '' }}" oninput="totalPutts.updateFront()" />
               </td>
             {% endfor %}
-            <td class="align-right"><div id="total-front-putts"></div></td>
+            <td class="align-center"><div id="total-front-putts"></div></td>
           </tr>
           <tr>
             <td class="align-left">g.i.r.:</td>
             {% for i in range(1, 10) %}
-              <td class="align-right">
+              <td>
                 <input class="checkbox" type="checkbox" name="{{ 'hole%i_gir' % i }}" {{ 'checked' if round and holes[i - 1].gir else '' }} />
               </td>
             {% endfor %}
-            <td class="align-right"><div id="total-front-gir"></div></td>
+            <td class="align-center"><div id="total-front-gir"></div></td>
           </tr>
         </tbody>
       </table>
@@ -115,12 +115,12 @@ window.onload = function() {
 
   <div class="row extra-padding-bottom">
     <div class="col-xs-12">
-      <table>
+      <table class="scorecard-table">
         <thead>
           <tr>
-            <th class="align-left"><h4>hole:</h4></th>
+            <th class="align-left"><h4>hole #</h4></th>
             {% for i in range(10, 19) %}
-              <th class="pad align-right"><h4>{{ i }}</h4></th>
+              <th class="pad align-center"><h4>{{ i }}</h4></th>
             {% endfor %}
             <th class="pad align-right"><h4>total</h4></th>
           </tr>
@@ -129,35 +129,35 @@ window.onload = function() {
           <tr>
             <td class="align-left">par:</td>
             {% for i in range(10, 19) %}
-              <td class="align-right"><span id="{{ 'hole%i_par' % i }}"></span></td>
+              <td class="align-center"><span id="{{ 'hole%i_par' % i }}"></span></td>
             {% endfor %}
           </tr>
           <tr>
             <td class="align-left">score:</td>
             {% for i in range(10, 19) %}
-              <td class="align-right">
+              <td>
                 <input class="form-control number-input" type="number" name="{{ 'hole%i_strokes' % i }}" id="{{ 'hole%i_strokes' % i }}" value="{{ holes[i - 1].strokes if holes else '' }}" oninput="totalStrokes.updateBack()" />
               </td>
             {% endfor %}
-            <td class="align-right"><div id="total-back-strokes"></div></td>
+            <td class="align-center"><div id="total-back-strokes"></div></td>
           </tr>
           <tr>
             <td class="align-left">putts:</td>
             {% for i in range(10, 19) %}
-              <td class="align-right">
+              <td>
                 <input class="form-control number-input" type="number" name="{{ 'hole%i_putts' % i }}" id="{{ 'hole%i_putts' % i }}" value="{{ holes[i - 1].putts if holes else '' }}" oninput="totalPutts.updateBack()" />
               </td>
             {% endfor %}
-            <td class="align-right"><div id="total-back-putts"></div></td>
+            <td class="align-center"><div id="total-back-putts"></div></td>
           </tr>
           <tr>
             <td class="align-left">g.i.r.:</td>
             {% for i in range(10, 19) %}
-              <td class="align-right">
+              <td>
                 <input class="checkbox" type="checkbox" name="{{ 'hole%i_gir' % i }}" {{ 'checked' if round and holes[i - 1].gir else '' }} />
               </td>
             {% endfor %}
-            <td class="align-right"><div id="total-back-gir"></div></td>
+            <td class="align-center"><div id="total-back-gir"></div></td>
           </tr>
         </tbody>
       </table>
