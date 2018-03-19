@@ -80,11 +80,6 @@ table {
   cursor: pointer;
 }
 
-td input[type="checkbox"] {
-  float: left;
-  width: 100%;
-}
-
 .align-right {
   text-align: right;
 }
@@ -112,9 +107,14 @@ td input[type="checkbox"] {
 }
 
 .number-input {
-  max-width: 50px;
-  min-width: 42px;
-  text-align: center;
+  max-width: 28px;
+  min-width: 28px;
+  text-align: right;
+  padding: 0 0 0 0;
+  border-top: none;
+  border-right: none;
+  border-left: none;
+  float: right;
 }
 
 .wide-number-input {
@@ -136,6 +136,7 @@ td input[type="checkbox"] {
 .checkbox {
   width: 20px;
   height: 20px;
+  float: right;
 }
 
 .extra-margin-left {
