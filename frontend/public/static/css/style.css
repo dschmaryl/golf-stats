@@ -127,6 +127,21 @@ table {
   box-shadow: none !important;
 }
 
+.course-number-input {
+  max-width: 32px;
+  min-width: 32px;
+  max-height: 20px;
+  min-height: 20px;
+  text-align: center;
+  padding: 0 0 0 2px;
+  margin: 0;
+  margin-left: 2px;
+  border: none;
+  border-bottom: 1px solid #BBB;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
 .wide-number-input {
   min-width: 60px;
   max-width: 80px;
