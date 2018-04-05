@@ -5,12 +5,18 @@ import { Rounds } from './components/Rounds/Rounds';
 import { Stats } from './components/Stats/Stats';
 
 const ContainerDiv = styled.div`
-  max-width: 900px;
+  max-width: 720px;
   min-width: 340px;
+  margin: auto;
+  padding: 0;
 `;
 
 const PaddedDiv = styled.div`
   padding-top: 20px;
+`;
+
+const Header = styled.div`
+  text-align: center;
 `;
 
 export class App extends React.Component {
@@ -46,11 +52,11 @@ export class App extends React.Component {
 
     return (
       <ContainerDiv className="container">
-        <header className="row">
+        <Header className="row">
           <div className="col-xs-12">
             <h3>all statistics:</h3>
           </div>
-        </header>
+        </Header>
         <PaddedDiv className="row">
           <div className="col-xs-12">
             <Stats

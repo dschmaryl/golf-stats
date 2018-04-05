@@ -48,7 +48,7 @@ export function SelectedRoundData(props) {
 
   return (
     <div className="row">
-      <div className="col-xs-10">
+      <div className="col-xs-12">
         <table className="table" style={{width: '100%'}}>
           <thead>
             <tr>

@@ -6,7 +6,7 @@ export function RoundsHeader(props) {
   function renderItem(value, key, reverse) {
     let className = 'col-xs-1 round-header-stat';
     if (value === 'date' || value === 'course') {
-      className = `col-xs-2 round-header-${value}`;
+      className = `col-xs-3 round-header-${value}`;
     }
 
     return (

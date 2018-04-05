@@ -31,7 +31,7 @@ export class Stats extends React.Component {
     }
 
     return (
-      <table style={{width: '80%'}}>
+      <table style={{width: '100%'}}>
         <StatsHeader
           seasons={Object.keys(this.state.statsData).sort().reverse()}
           onClick={season => this.props.onSeasonClick(season)}

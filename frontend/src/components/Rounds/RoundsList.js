@@ -70,9 +70,9 @@ export class RoundsList extends React.Component {
         >
           {renderRowCell(
             <Moment format="YYYY-MM-DD">{round['date']}</Moment>,
-            'col-xs-2 round-date'
+            'col-xs-3 round-date'
           )}
-          {renderRowCell(round['course'], 'col-xs-2 round-course')}
+          {renderRowCell(round['course'], 'col-xs-3 round-course')}
           {renderRowCell(round['total_strokes'], 'col-xs-1 round-stat')}
           {renderRowCell(round['front_9_strokes'], 'col-xs-1 round-stat')}
           {renderRowCell(round['back_9_strokes'], 'col-xs-1 round-stat')}
