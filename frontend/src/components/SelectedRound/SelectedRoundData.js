@@ -4,7 +4,7 @@ const alignLeft = {textAlign: 'left'};
 const alignRight = {textAlign: 'right'};
 const tableRight = {textAlign: 'Right', maxWidth: '28px'}
 
-export function SelectedRoundStats(props) {
+export function SelectedRoundData(props) {
   const round = props.roundData;
 
   function nineHoleTotal(startHole, stat) {

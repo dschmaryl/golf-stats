@@ -3,8 +3,6 @@ import axios from 'axios';
 import { StatsHeader } from './StatsHeader';
 import { StatsList } from './StatsList';
 
-import './Stats.css';
-
 export class Stats extends React.Component {
   constructor(props) {
     super(props);

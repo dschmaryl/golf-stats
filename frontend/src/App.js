@@ -1,9 +1,17 @@
 import React from 'react';
 import axios from 'axios';
+import styled from 'styled-components';
 import { Rounds } from './components/Rounds/Rounds';
 import { Stats } from './components/Stats/Stats';
 
-import './App.css';
+const ContainerDiv = styled.div`
+  max-width: 900px;
+  min-width: 340px;
+`;
+
+const PaddedDiv = styled.div`
+  padding-top: 20px;
+`;
 
 export class App extends React.Component {
   constructor() {
@@ -37,29 +45,29 @@ export class App extends React.Component {
     }
 
     return (
-      <div className="container">
+      <ContainerDiv className="container">
         <header className="row">
           <div className="col-xs-12">
             <h3>all statistics:</h3>
           </div>
         </header>
-        <div className="row extra-padding-top">
+        <PaddedDiv className="row">
           <div className="col-xs-12">
             <Stats
               userData={this.state.userData}
               onSeasonClick={season => this.onSeasonClick(season)}
             />
           </div>
-        </div>
-        <div className="row">
-          <div className="col-xs-12 extra-padding-top">
+        </PaddedDiv>
+        <PaddedDiv className="row">
+          <div className="col-xs-12">
             <Rounds
               userData={this.state.userData}
               selectedSeason={this.state.selectedSeason}
             />
           </div>
-        </div>
-      </div>
+        </PaddedDiv>
+      </ContainerDiv>
     );
   }
 }

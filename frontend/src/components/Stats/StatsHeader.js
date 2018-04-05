@@ -1,4 +1,10 @@
 import React from 'react';
+import styled from 'styled-components';
+
+const SeasonTh = styled.th`
+  cursor: pointer;
+  text-align: right;
+`;
 
 export function StatsHeader(props) {
   return (
@@ -7,13 +13,12 @@ export function StatsHeader(props) {
         <th>season:</th>
         {props.seasons.map(season => {
           return (
-            <th
+            <SeasonTh
               onClick={() => props.onClick(season)}
-              className='stats-season'
               key={season}
             >
               {season === '2046' ? 'overall' : season}
-            </th>
+            </SeasonTh>
           );
         })}
       </tr>

@@ -1,4 +1,10 @@
 import React from 'react';
+import styled from 'styled-components';
+
+const SeasonTd = styled.td`
+  cursor: pointer;
+  text-align: right;
+`;
 
 export function StatsList(props) {
   const stats = {
@@ -19,13 +25,12 @@ export function StatsList(props) {
             <td>{stats[stat]}:</td>
             {props.seasons.map(season => {
               return (
-                <td
+                <SeasonTd
                   onClick={() => props.onClick(season)}
-                  className='stats-season'
                   key={season + '-' + stat}
                 >
                   {props.statsData[season][stat]}
-                </td>
+                </SeasonTd>
               );
             })}
           </tr>

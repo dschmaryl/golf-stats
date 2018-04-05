@@ -1,8 +1,15 @@
 import React from 'react';
 import Moment from 'react-moment';
-import { SelectedRoundStats } from './SelectedRoundStats';
+import styled from 'styled-components';
+import { SelectedRoundData } from './SelectedRoundData';
 
-import './SelectedRound.css';
+const SelectedDiv = styled.div`
+  background-color: #f1f5f1;
+`;
+
+const TextRightSpan = styled.div`
+  text-align: right;
+`;
 
 export function SelectedRound(props) {
   const round = props.roundData;
@@ -20,21 +27,23 @@ export function SelectedRound(props) {
   function renderRowItem(key) {
     if (key === 'date') {
       return (
-        <div className='col-xs-2 selected-round-date' key={key}>
+        <SelectedDiv className='col-xs-2' key={key}>
           <Moment format="YYYY-MM-DD">{props.roundData['date']}</Moment>
-        </div>
+        </SelectedDiv>
       );
     } else if (key === 'course') {
       return (
-        <div className='col-xs-2 selected-round-course' key={key}>
+        <SelectedDiv className='col-xs-2' key={key}>
           {props.roundData['course']}
-        </div>
+        </SelectedDiv>
       );
     } else {
       return (
-        <div className='col-xs-1 selected-round-stat' key={key}>
-          {props.roundData[key]}
-        </div>
+        <SelectedDiv className='col-xs-1' key={key}>
+          <TextRightSpan>
+            {props.roundData[key]}
+          </TextRightSpan>
+        </SelectedDiv>
       );
     }
   }
@@ -49,7 +58,7 @@ export function SelectedRound(props) {
         {renderRowItems()}
       </div>
 
-      <SelectedRoundStats roundData={round} />
+      <SelectedRoundData roundData={round} />
     </div>
   );
 }
