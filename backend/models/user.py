@@ -65,7 +65,7 @@ class User(db.Model):
 
     def get_all_averages_by_season(self, mavg=False, period=20):
         average = self._mavg if mavg else self._avg
-        seasons = [2017, 2016, 2015]
+        seasons = [2018, 2017, 2016, 2015]
         stats = {
             'strokes': 'total_strokes',
             'putts': 'total_putts',
