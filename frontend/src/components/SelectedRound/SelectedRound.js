@@ -27,22 +27,20 @@ export function SelectedRound(props) {
   function renderRowItem(key) {
     if (key === 'date') {
       return (
-        <SelectedDiv className='col-xs-3' key={key}>
+        <SelectedDiv className="col-xs-3" key={key}>
           <Moment format="YYYY-MM-DD">{props.roundData['date']}</Moment>
         </SelectedDiv>
       );
     } else if (key === 'course') {
       return (
-        <SelectedDiv className='col-xs-3' key={key}>
+        <SelectedDiv className="col-xs-3" key={key}>
           {props.roundData['course']}
         </SelectedDiv>
       );
     } else {
       return (
-        <SelectedDiv className='col-xs-1' key={key}>
-          <TextRightSpan>
-            {props.roundData[key]}
-          </TextRightSpan>
+        <SelectedDiv className="col-xs-1" key={key}>
+          <TextRightSpan>{props.roundData[key]}</TextRightSpan>
         </SelectedDiv>
       );
     }
@@ -53,10 +51,8 @@ export function SelectedRound(props) {
   }
 
   return (
-    <div onClick={props.onClick} style={{cursor: 'pointer'}}>
-      <div className="row selected-round-row">
-        {renderRowItems()}
-      </div>
+    <div onClick={props.onClick} style={{ cursor: 'pointer' }}>
+      <div className="row selected-round-row">{renderRowItems()}</div>
 
       <SelectedRoundData roundData={round} />
     </div>

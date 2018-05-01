@@ -8,20 +8,21 @@ export class Rounds extends React.Component {
     super(props);
     this.state = {
       lastSortedBy: '',
-      lastSortReversed: false,
+      lastSortReversed: false
     };
   }
 
   componentDidMount() {
-    axios.get('/api/user/' + this.props.userData['id'] + '/rounds')
+    axios
+      .get('/api/user/' + this.props.userData['id'] + '/rounds')
       .then(roundsData => {
         if (roundsData['error']) {
-          this.setState({requestFailed: true});
+          this.setState({ requestFailed: true });
         } else {
-          this.setState({roundsData: roundsData.data});
+          this.setState({ roundsData: roundsData.data });
         }
       })
-      .catch(() => this.setState({requestFailed: true}));
+      .catch(() => this.setState({ requestFailed: true }));
   }
 
   sortRounds(sortBy, reversed) {
@@ -52,12 +53,15 @@ export class Rounds extends React.Component {
       });
     }
     if (sortBy === this.state.lastSortedBy) {
-      this.setState({roundsData: sortRoundsData(sortBy, !lastSortReversed)});
+      this.setState({ roundsData: sortRoundsData(sortBy, !lastSortReversed) });
     } else {
-      this.setState({roundsData: sortRoundsData(sortBy, reversed)});
+      this.setState({ roundsData: sortRoundsData(sortBy, reversed) });
       lastSortReversed = !reversed;
     }
-    this.setState({lastSortedBy: sortBy, lastSortReversed: !lastSortReversed});
+    this.setState({
+      lastSortedBy: sortBy,
+      lastSortReversed: !lastSortReversed
+    });
   }
 
   seasonRoundsData() {
@@ -89,9 +93,7 @@ export class Rounds extends React.Component {
         <RoundsHeader
           onClick={(value, reverse) => this.sortRounds(value, reverse)}
         />
-        <RoundsList
-          roundsData={this.seasonRoundsData()}
-        />
+        <RoundsList roundsData={this.seasonRoundsData()} />
       </div>
     );
   }

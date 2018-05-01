@@ -6,19 +6,20 @@ import { StatsList } from './StatsList';
 export class Stats extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {requestFailed: false};
+    this.state = { requestFailed: false };
   }
 
   componentDidMount() {
-    axios.get('/api/user/' + this.props.userData['id'] + '/stats')
+    axios
+      .get('/api/user/' + this.props.userData['id'] + '/stats')
       .then(statsData => {
         if (statsData['error']) {
-          this.setState({requestFailed: true});
+          this.setState({ requestFailed: true });
         } else {
-          this.setState({statsData: statsData.data});
+          this.setState({ statsData: statsData.data });
         }
       })
-      .catch(() => this.setState({requestFailed: true}));
+      .catch(() => this.setState({ requestFailed: true }));
   }
 
   render() {
@@ -31,13 +32,17 @@ export class Stats extends React.Component {
     }
 
     return (
-      <table style={{width: '100%'}}>
+      <table style={{ width: '100%' }}>
         <StatsHeader
-          seasons={Object.keys(this.state.statsData).sort().reverse()}
+          seasons={Object.keys(this.state.statsData)
+            .sort()
+            .reverse()}
           onClick={season => this.props.onSeasonClick(season)}
         />
         <StatsList
-          seasons={Object.keys(this.state.statsData).sort().reverse()}
+          seasons={Object.keys(this.state.statsData)
+            .sort()
+            .reverse()}
           statsData={this.state.statsData}
           onClick={season => this.props.onSeasonClick(season)}
         />

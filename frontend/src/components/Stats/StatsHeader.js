@@ -13,10 +13,7 @@ export function StatsHeader(props) {
         <th>season:</th>
         {props.seasons.map(season => {
           return (
-            <SeasonTh
-              onClick={() => props.onClick(season)}
-              key={season}
-            >
+            <SeasonTh onClick={() => props.onClick(season)} key={season}>
               {season === '2046' ? 'overall' : season}
             </SeasonTh>
           );

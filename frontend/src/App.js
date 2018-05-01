@@ -22,23 +22,24 @@ const Header = styled.div`
 export class App extends React.Component {
   constructor() {
     super();
-    this.state = {requestFailed: false};
+    this.state = { requestFailed: false };
   }
 
   componentDidMount() {
-    axios.get('/api/my_info')
+    axios
+      .get('/api/my_info')
       .then(userData => {
         if (userData.data['error']) {
-          this.setState({requestFailed: true});
+          this.setState({ requestFailed: true });
         } else {
-          this.setState({userData: userData.data});
+          this.setState({ userData: userData.data });
         }
       })
-      .catch(() => this.setState({requestFailed: true}));
+      .catch(() => this.setState({ requestFailed: true }));
   }
 
   onSeasonClick(season) {
-    this.setState({selectedSeason: season});
+    this.setState({ selectedSeason: season });
   }
 
   render() {

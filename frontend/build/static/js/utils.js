@@ -24,10 +24,12 @@ var createTotal = function(stat) {
   var backNineTotal = 0;
 
   var nineHoleTotal = function(startHole, stat) {
-    return Array(9).fill().reduce((total, v, index) => {
-      var holeNumber = index + startHole;
-      return total + getValue('hole' + holeNumber + '_' + stat);
-    }, 0);
+    return Array(9)
+      .fill()
+      .reduce((total, v, index) => {
+        var holeNumber = index + startHole;
+        return total + getValue('hole' + holeNumber + '_' + stat);
+      }, 0);
   };
 
   var updateTotals = function() {
@@ -53,16 +55,16 @@ var createTotal = function(stat) {
 };
 
 var loadPars = function() {
-  const tees = JSON.parse(document.getElementById("tees-json").innerHTML);
+  const tees = JSON.parse(document.getElementById('tees-json').innerHTML);
 
   return {
     update: function() {
-      var selectedCourse = getSelected("course");
-      var selectedTeeColor = getSelected("tee-color");
+      var selectedCourse = getSelected('course');
+      var selectedTeeColor = getSelected('tee-color');
 
       tees[selectedCourse][selectedTeeColor].forEach((par, i) => {
-        updateInner("hole" + (i + 1) + "_par", par);
-      })
+        updateInner('hole' + (i + 1) + '_par', par);
+      });
     }
   };
 };

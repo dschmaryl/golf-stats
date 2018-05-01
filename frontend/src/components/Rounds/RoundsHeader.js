@@ -10,17 +10,14 @@ export function RoundsHeader(props) {
     }
 
     return (
-      <div
-        className={className}
-        onClick={() => props.onClick(key, reverse)}
-      >
+      <div className={className} onClick={() => props.onClick(key, reverse)}>
         {value}
       </div>
     );
   }
 
   return (
-    <div className="row" style={{cursor: 'pointer'}}>
+    <div className="row" style={{ cursor: 'pointer' }}>
       {renderItem('date', 'date', false)}
       {renderItem('course', 'course', false)}
       {renderItem('score', 'total_strokes', true)}
@@ -30,5 +27,5 @@ export function RoundsHeader(props) {
       {renderItem('girs', 'total_gir', false)}
       {renderItem('hdcp', 'handicap_index', true)}
     </div>
-  )
+  );
 }

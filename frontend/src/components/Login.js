@@ -26,19 +26,13 @@ export function Login(props) {
     <LoginWrapper>
       <LoginContainer class="container">
         <Header class="row">
-          <div class="col-xs-12">
-            welcome
-          </div>
+          <div class="col-xs-12">welcome</div>
         </Header>
         <div class="row">
-          <div class="col-xs-12">
-            name
-          </div>
+          <div class="col-xs-12">name</div>
         </div>
         <div class="row">
-          <div class="col-xs-12">
-            password
-          </div>
+          <div class="col-xs-12">password</div>
         </div>
       </LoginContainer>
     </LoginWrapper>

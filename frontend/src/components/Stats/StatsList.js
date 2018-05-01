@@ -8,13 +8,13 @@ const SeasonTd = styled.td`
 
 export function StatsList(props) {
   const stats = {
-    'strokes': 'scoring average',
-    'putts': 'putts per round',
-    'gir': 'greens per round',
-    'handicap': 'handicap',
-    'par3': 'par 3 average',
-    'par4': 'par 4 average',
-    'par5': 'par 5 average'
+    strokes: 'scoring average',
+    putts: 'putts per round',
+    gir: 'greens per round',
+    handicap: 'handicap',
+    par3: 'par 3 average',
+    par4: 'par 4 average',
+    par5: 'par 5 average'
   };
 
   return (
