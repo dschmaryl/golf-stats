@@ -1,70 +1,70 @@
-var asNumber = function(value) {
+function asNumber(value) {
   if (isNaN(value)) {
     return 0;
   } else {
     return value;
   }
-};
+}
 
-var getValue = function(id) {
+function getValue(id) {
   return asNumber(parseInt(document.getElementById(id).value));
-};
+}
 
-var getSelected = function(elementId) {
-  var element = document.getElementById(elementId);
+function getSelected(elementId) {
+  const element = document.getElementById(elementId);
   return element.options[element.selectedIndex].text;
-};
+}
 
-var updateInner = function(id, value) {
+function updateInner(id, value) {
   document.getElementById(id).innerHTML = value;
-};
+}
 
-var createTotal = function(stat) {
-  var frontNineTotal = 0;
-  var backNineTotal = 0;
+function createTotal(stat) {
+  let frontNineTotal = 0;
+  let backNineTotal = 0;
 
-  var nineHoleTotal = function(startHole, stat) {
+  function nineHoleTotal(startHole, stat) {
     return Array(9)
       .fill()
       .reduce((total, v, index) => {
-        var holeNumber = index + startHole;
+        const holeNumber = index + startHole;
         return total + getValue('hole' + holeNumber + '_' + stat);
       }, 0);
-  };
+  }
 
-  var updateTotals = function() {
+  function updateTotals() {
     updateInner('total-front-' + stat, frontNineTotal);
     updateInner('total-back-' + stat, backNineTotal);
     updateInner('total-' + stat, frontNineTotal + backNineTotal);
-  };
+  }
 
   return {
-    updateFront: function() {
+    updateFront() {
       frontNineTotal = nineHoleTotal(1, stat);
       updateTotals();
     },
-    updateBack: function() {
+    updateBack() {
       backNineTotal = nineHoleTotal(10, stat);
       updateTotals();
     },
-    update: function() {
+    update() {
       this.updateFront();
       this.updateBack();
     }
   };
-};
+}
 
-var loadPars = function() {
+function loadPars() {
   const tees = JSON.parse(document.getElementById('tees-json').innerHTML);
 
   return {
-    update: function() {
-      var selectedCourse = getSelected('course');
-      var selectedTeeColor = getSelected('tee-color');
+    update() {
+      const selectedCourse = getSelected('course');
+      const selectedTeeColor = getSelected('tee-color');
 
       tees[selectedCourse][selectedTeeColor].forEach((par, i) => {
         updateInner('hole' + (i + 1) + '_par', par);
       });
     }
   };
-};
+}
