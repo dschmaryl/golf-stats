@@ -1,4 +1,4 @@
-from math import ceil
+from math import floor
 
 from backend import db
 from backend.dates import date_to_str
@@ -116,7 +116,7 @@ class Round(db.Model):
 
         # my own version; i think its more fair to golfers with only a few
         # rounds entered
-        return ceil(len(rounds)/2)
+        return max(1, floor(len(rounds)/2))
 
     def calc_diff(self):
         adjusted_score = self.get_adjusted_score()
