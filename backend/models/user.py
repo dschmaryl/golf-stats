@@ -19,6 +19,9 @@ class User(db.Model):
     def get_handicap(self, round_id):
         return self.get_round(round_id).handicap_index
 
+    def get_latest_handicap(self):
+        return self.get_latest_round().handicap_index
+
     def get_round(self, round_id):
         return self.rounds.filter_by(id=round_id).first()
 
@@ -103,8 +106,13 @@ class User(db.Model):
                     )
 
         if all_stats:
+            # season 2046 contains 'overall' stats, ie avg off all seasons
+            # except handicap which is always the most recent handicap
             averages[2046] = {}
+            averages[2046]['handicap'] = self.get_latest_handicap()
             for stat, stats_array in all_stats.items():
+                if stat == 'handicap':
+                    continue
                 averages[2046][stat] = round(average(stats_array, period), 2)
 
         return averages
