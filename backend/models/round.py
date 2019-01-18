@@ -90,8 +90,7 @@ class Round(db.Model):
         diffs = sorted([r.calc_diff() for r in rounds])[:num_of_diffs_used]
 
         # calculate handicap and truncate to one decimal place
-        handicap_str = str(sum(diffs) / len(diffs) * .96)
-        handicap = float(handicap_str[:handicap_str.find('.') + 2])
+        handicap = floor((sum(diffs) / len(diffs) * 0.96) * 10) / 10
 
         self.handicap_index = min(handicap, 50)
 
