@@ -2,7 +2,6 @@ import React from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
 
-import { Login } from './components/Login';
 import { Rounds } from './components/Rounds/Rounds';
 import { Stats } from './components/Stats/Stats';
 
@@ -10,15 +9,19 @@ const ContainerDiv = styled.div`
   max-width: 720px;
   min-width: 340px;
   margin: auto;
-  padding: 0;
 `;
 
 const PaddedDiv = styled.div`
   padding-top: 20px;
+  padding-bottom: 20px;
 `;
 
 const Header = styled.div`
   text-align: center;
+`;
+
+const ErrorDiv = styled.div`
+  padding: 10%;
 `;
 
 export class App extends React.Component {
@@ -42,13 +45,15 @@ export class App extends React.Component {
 
   render() {
     if (!this.state.userData) {
-      if (this.state.notAuthorized) {
-        return <Login />;
-      } else if (this.state.requestFailed) {
-        return <p>Failed to retrieve user data</p>;
-      } else {
-        return <p>Loading user data...</p>;
-      }
+      return (
+        <ErrorDiv className="container">
+          {this.state.notAuthorized
+            ? 'Not authorized'
+            : this.state.requestFailed
+            ? 'Failed to retrieve user data'
+            : 'Loading user data...'}
+        </ErrorDiv>
+      );
     }
 
     return (
