@@ -1,18 +1,13 @@
 import React from 'react';
 import axios from 'axios';
+
 import { RoundsHeader } from './RoundsHeader';
 import { RoundsList } from './RoundsList';
 
 export class Rounds extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      lastSortedBy: '',
-      lastSortReversed: false
-    };
-  }
+  state = { lastSortedBy: '', lastSortReversed: false };
 
-  componentDidMount() {
+  componentDidMount = () =>
     axios
       .get('/api/user/' + this.props.userData['id'] + '/rounds')
       .then(roundsData => {
@@ -23,14 +18,13 @@ export class Rounds extends React.Component {
         }
       })
       .catch(() => this.setState({ requestFailed: true }));
-  }
 
-  sortRounds(sortBy, reversed) {
+  sortRounds = (sortBy, reversed) => {
     const roundsData = this.state.roundsData;
     let lastSortReversed = this.state.lastSortReversed;
 
-    function sortRoundsData(sortBy, reversed) {
-      return Object.values(roundsData).sort((a, b) => {
+    const sortRoundsData = (sortBy, reversed) =>
+      Object.values(roundsData).sort((a, b) => {
         if (sortBy === 'date') {
           if (reversed) {
             return new Date(b['date']) - new Date(a['date']);
@@ -51,7 +45,7 @@ export class Rounds extends React.Component {
           }
         }
       });
-    }
+
     if (sortBy === this.state.lastSortedBy) {
       this.setState({ roundsData: sortRoundsData(sortBy, !lastSortReversed) });
     } else {
@@ -62,9 +56,9 @@ export class Rounds extends React.Component {
       lastSortedBy: sortBy,
       lastSortReversed: !lastSortReversed
     });
-  }
+  };
 
-  seasonRoundsData() {
+  seasonRoundsData = () => {
     if (!this.props.selectedSeason || this.props.selectedSeason === '2046') {
       return this.state.roundsData;
     } else {
@@ -77,9 +71,9 @@ export class Rounds extends React.Component {
       });
       return seasonRounds;
     }
-  }
+  };
 
-  render() {
+  render = () => {
     if (!this.state.roundsData) {
       if (this.state.requestFailed) {
         return <p>error getting rounds</p>;
@@ -96,5 +90,5 @@ export class Rounds extends React.Component {
         <RoundsList roundsData={this.seasonRoundsData()} />
       </div>
     );
-  }
+  };
 }

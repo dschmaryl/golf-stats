@@ -30,33 +30,27 @@ export class App extends React.Component {
   componentDidMount = () =>
     axios
       .get('/api/my_info')
-      .then(userData => {
-        if (userData.data.error === 'not authorized') {
-          this.setState({ notAuthorized: true });
-        } else if (userData.data['error']) {
-          this.setState({ requestFailed: true });
-        } else {
-          this.setState({ userData: userData.data });
-        }
-      })
+      .then(userData =>
+        userData.data.error === 'not authorized'
+          ? this.setState({ notAuthorized: true })
+          : userData.data['error']
+          ? this.setState({ requestFailed: true })
+          : this.setState({ userData: userData.data })
+      )
       .catch(() => this.setState({ requestFailed: true }));
 
   onSeasonClick = season => this.setState({ selectedSeason: season });
 
-  render() {
-    if (!this.state.userData) {
-      return (
-        <ErrorDiv className="container">
-          {this.state.notAuthorized
-            ? 'Not authorized'
-            : this.state.requestFailed
-            ? 'Failed to retrieve user data'
-            : 'Loading user data...'}
-        </ErrorDiv>
-      );
-    }
-
-    return (
+  render = () =>
+    !this.state.userData ? (
+      <ErrorDiv className="container">
+        {this.state.notAuthorized
+          ? 'Not authorized'
+          : this.state.requestFailed
+          ? 'Failed to retrieve user data'
+          : 'Loading user data...'}
+      </ErrorDiv>
+    ) : (
       <ContainerDiv className="container">
         <Header className="row">
           <div className="col-xs-12">
@@ -81,5 +75,4 @@ export class App extends React.Component {
         </PaddedDiv>
       </ContainerDiv>
     );
-  }
 }

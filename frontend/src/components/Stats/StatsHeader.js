@@ -6,19 +6,15 @@ const SeasonTh = styled.th`
   text-align: right;
 `;
 
-export function StatsHeader(props) {
-  return (
-    <thead>
-      <tr>
-        <th>season:</th>
-        {props.seasons.map(season => {
-          return (
-            <SeasonTh onClick={() => props.onClick(season)} key={season}>
-              {season === '2046' ? 'overall' : season}
-            </SeasonTh>
-          );
-        })}
-      </tr>
-    </thead>
-  );
-}
+export const StatsHeader = ({ seasons, onClick }) => (
+  <thead>
+    <tr>
+      <th>season:</th>
+      {seasons.map(season => (
+        <SeasonTh onClick={() => onClick(season)} key={season}>
+          {season === '2046' ? 'overall' : season}
+        </SeasonTh>
+      ))}
+    </tr>
+  </thead>
+);

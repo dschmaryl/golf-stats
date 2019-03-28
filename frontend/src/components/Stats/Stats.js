@@ -1,15 +1,13 @@
 import React from 'react';
 import axios from 'axios';
+
 import { StatsHeader } from './StatsHeader';
 import { StatsList } from './StatsList';
 
 export class Stats extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { requestFailed: false };
-  }
+  state = { requestFailed: false };
 
-  componentDidMount() {
+  componentDidMount = () =>
     axios
       .get('/api/user/' + this.props.userData['id'] + '/stats')
       .then(statsData => {
@@ -20,9 +18,8 @@ export class Stats extends React.Component {
         }
       })
       .catch(() => this.setState({ requestFailed: true }));
-  }
 
-  render() {
+  render = () => {
     if (!this.state.statsData) {
       if (this.state.requestFailed) {
         return <p>error gettings stats</p>;
@@ -48,5 +45,5 @@ export class Stats extends React.Component {
         />
       </table>
     );
-  }
+  };
 }
