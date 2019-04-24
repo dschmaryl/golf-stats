@@ -1,6 +1,6 @@
-import requests
-from bs4 import BeautifulSoup
 from datetime import datetime
+from bs4 import BeautifulSoup
+import requests
 
 from backend.dates import date_to_str
 
@@ -17,9 +17,12 @@ def fetch_course(url):
     html = BeautifulSoup(source.text, 'html.parser')
     secs = [s for s in html.select('section')
             if s['class'][0] == 'hole-set-scorecard-container']
-    return {'data': [d.strip()
-            for d in secs[0].text.split('\n') + secs[1].text.split('\n')
-            if d.strip() != '']}
+
+    return {'data': [
+        d.strip()
+        for d in secs[0].text.split('\n') + secs[1].text.split('\n')
+        if d.strip() != ''
+    ]}
 
 
 def extract_course_data(raw_data):
