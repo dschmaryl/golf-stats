@@ -16,8 +16,7 @@ def get_course(course_id):
     course = Course.query.get(course_id)
     if course:
         return jsonify(course.as_dict())
-    else:
-        return jsonify(error='not found')
+    return jsonify(error='not found')
 
 
 @app.route('/api/update_course', methods=['POST'])
@@ -26,7 +25,6 @@ def get_course(course_id):
 def post_course():
     if g.user.username != 'daryl':
         return jsonify(error='must be daryl')
-
     return jsonify(save_course_data(request.get_json()))
 
 
@@ -43,8 +41,7 @@ def get_tee(tee_id):
     tee = CourseTee.query.get(tee_id)
     if tee:
         return jsonify(tee.as_dict())
-    else:
-        return jsonify(error='not found')
+    return jsonify(error='not found')
 
 
 @app.route('/api/add_tee', methods=['POST'])
@@ -53,7 +50,6 @@ def get_tee(tee_id):
 def post_tee():
     if g.user.username != 'daryl':
         return jsonify(error='must be daryl')
-
     return jsonify(save_tee_data(request.get_json()))
 
 
@@ -73,5 +69,4 @@ def get_tee_hole(hole_id):
     hole = CourseHole.query.get(hole_id)
     if hole:
         return jsonify(hole.as_dict())
-    else:
-        return jsonify(error='not found')
+    return jsonify(error='not found')

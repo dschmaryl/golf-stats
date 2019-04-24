@@ -9,6 +9,5 @@ def check_authorization(func):
     def wrapper(*args, **kwargs):
         if current_user.is_authenticated:
             return func(*args, **kwargs)
-        else:
-            return jsonify(error='not authorized')
+        return jsonify(error='not authorized')
     return wrapper

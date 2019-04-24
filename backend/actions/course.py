@@ -41,8 +41,8 @@ def save_tee_data(tee_data):
             course = Course.query.get(tee_data['course_id'])
             if not course:
                 return {'error': 'course not found'}
-            else:
-                tee = course.get_new_tee()
+
+            tee = course.get_new_tee()
 
         tee.name = tee_data.get('name')
         tee.color = tee_data['color']

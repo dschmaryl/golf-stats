@@ -6,6 +6,8 @@ from .hole import Hole
 
 
 class Round(db.Model):
+    # pylint: disable=too-many-instance-attributes
+
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     tee_id = db.Column(db.Integer, db.ForeignKey('course_tee.id'))
@@ -81,18 +83,14 @@ class Round(db.Model):
 
     def calc_handicap(self):
         rounds = self.get_twenty_rounds()
-
         num_of_diffs_used = self.get_num_of_diffs(rounds)
         if num_of_diffs_used == 0:
             self.handicap_index = 50
-            return None
-
-        diffs = sorted([r.calc_diff() for r in rounds])[:num_of_diffs_used]
-
-        # calculate handicap and truncate to one decimal place
-        handicap = floor((sum(diffs) / len(diffs) * 0.96) * 10) / 10
-
-        self.handicap_index = min(handicap, 50)
+        else:
+            diffs = sorted([r.calc_diff() for r in rounds])[:num_of_diffs_used]
+            # calculate handicap and truncate to one decimal place
+            handicap = floor((sum(diffs) / len(diffs) * 0.96) * 10) / 10
+            self.handicap_index = min(handicap, 50)
 
     def get_twenty_rounds(self):
         # get rounds and slice to no more than 20 rounds with
@@ -101,7 +99,8 @@ class Round(db.Model):
         round_idx = rounds.index(self)
         return rounds[max(0, round_idx - 19):round_idx + 1]
 
-    def get_num_of_diffs(self, rounds):
+    @staticmethod
+    def get_num_of_diffs(rounds):
         # return number of diffs to be used to calculate handicap based on
         # the number of rounds that have been recorded so far.
         #
@@ -132,12 +131,12 @@ class Round(db.Model):
         old_handicap = previous_round.handicap_index
         course_handicap = round(old_handicap * self.tee.slope / 113, 0)
         if course_handicap < 10:
-            # TODO: max is double bogey. this needs to be fixed
+            # max is double bogey. this needs to be fixed
             max_score = 7
         else:
             max_score = int(course_handicap / 10 + 6)
 
-        # TODO: this needs to be refactored to fix single-digit handicap max
+        # this needs to be refactored to fix single-digit handicap max
         adjusted_score = sum([min(max_score, hole.strokes)
                               for hole in self.holes])
         return adjusted_score

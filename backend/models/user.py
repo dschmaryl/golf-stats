@@ -36,8 +36,7 @@ class User(db.Model):
         round_idx = rounds.index(golf_round)
         if round_idx == 0:
             return None
-        else:
-            return rounds[round_idx - 1]
+        return rounds[round_idx - 1]
 
     def get_rounds_thru(self, golf_round):
         rounds = self.get_rounds()
@@ -85,21 +84,22 @@ class User(db.Model):
             rounds = self.get_season_rounds(season)
             if rounds:
                 averages[season] = {}
-                season_stats = {stat: [] for stat in stats.keys()}
-                for r in rounds:
-                    season_stats['strokes'].append(r.total_strokes)
-                    season_stats['putts'].append(r.total_putts)
-                    season_stats['gir'].append(r.total_gir)
-                    season_stats['handicap'].append(r.handicap_index)
-                    season_stats['par3'].append(r.par_3_avg)
-                    season_stats['par4'].append(r.par_4_avg)
-                    season_stats['par5'].append(r.par_5_avg)
+                season_stats = {stat: [] for stat, _ in stats.items()}
+                for _round in rounds:
+                    season_stats['strokes'].append(_round.total_strokes)
+                    season_stats['putts'].append(_round.total_putts)
+                    season_stats['gir'].append(_round.total_gir)
+                    season_stats['handicap'].append(_round.handicap_index)
+                    season_stats['par3'].append(_round.par_3_avg)
+                    season_stats['par4'].append(_round.par_4_avg)
+                    season_stats['par5'].append(_round.par_5_avg)
 
                 for stat, stats_array in season_stats.items():
                     if all_stats.get(stat):
                         all_stats[stat].extend(season_stats[stat])
                     else:
                         all_stats[stat] = season_stats[stat]
+
                     averages[season][stat] = round(
                         average(stats_array, period),
                         2
@@ -124,30 +124,32 @@ class User(db.Model):
             rounds = self.get_rounds()
 
         stats = {'par3': [], 'par4': [], 'par5': []}
-        for r in rounds:
-            stats['par3'].append(r.par_3_avg)
-            stats['par4'].append(r.par_4_avg)
-            stats['par5'].append(r.par_5_avg)
+        for _round in rounds:
+            stats['par3'].append(_round.par_3_avg)
+            stats['par4'].append(_round.par_4_avg)
+            stats['par5'].append(_round.par_5_avg)
 
         avgs = {'par3': 0, 'par4': 0, 'par5': 0}
-        for k in avgs.keys():
+        for key, _ in avgs.items():
             if mavg:
-                avgs[k] = self._mavg(stats[k], period)
+                avgs[key] = self._mavg(stats[key], period)
             else:
-                avgs[k] = self._avg(stats[k])
+                avgs[key] = self._avg(stats[key])
 
         return avgs
 
-    def _avg(self, stats, period=None):
+    @staticmethod
+    def _avg(stats):
         return sum(stats) / len(stats)
 
-    def _mavg(self, stats, period):
+    @staticmethod
+    def _mavg(stats, period):
         return Series(stats).ewm(period).mean().iloc[-1]
 
     def recalc_handicaps(self, golf_round):
         rounds = self.get_rounds()
-        for r in rounds[rounds.index(golf_round) + 1:]:
-            r.calc_handicap()
+        for _round in rounds[rounds.index(golf_round) + 1:]:
+            _round.calc_handicap()
 
     def set_password(self, password):
         self.password = bcrypt.generate_password_hash(password)
@@ -168,17 +170,13 @@ class User(db.Model):
         return False
 
     def get_id(self):
-        try:
-            return unicode(self.id)
-        except NameError:
-            return str(self.id)
+        return str(self.id)
 
     def as_dict(self):
         return {
             'id': self.id,
             'username': self.username,
             'default_tees': self.default_tees
-            # 'rounds': {r.id: r.date for r in self.rounds}
         }
 
     def __repr__(self):

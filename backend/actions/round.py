@@ -10,41 +10,45 @@ def update_round(round_data):
     try:
         round_id = round_data.get('round_id')
         if round_id:
-            round_ = Round.query.get(int(round_id))
-            if not round_:
-                return {'error': 'round not found'}
+            _round = Round.query.get(int(round_id))
+            if not _round:
+                error = {'error': 'round not found'}
             else:
-                user = round_.user
+                user = _round.user
                 if user.username == 'guest':
-                    return {'error': 'cannot edit guest account'}
+                    error = {'error': 'cannot edit guest account'}
                 if user.id != int(round_data['user_id']):
-                    return {'error': 'user does not match round.user'}
+                    error = {'error': 'user does not match round.user'}
         else:
             user_id = round_data.get('user_id')
             if not user_id:
-                return {'error': 'need either round_id or user_id'}
+                error = {'error': 'need either round_id or user_id'}
             else:
                 user = User.query.get(int(round_data['user_id']))
                 if not user:
-                    return {'error': 'user not found'}
+                    error = {'error': 'user not found'}
                 else:
                     if user.username == 'guest':
-                        return {'error': 'cannot edit guest account'}
-                    round_ = Round()
+                        error = {'error': 'cannot edit guest account'}
+                    else:
+                        _round = Round()
+
+        if error:
+            return error
 
         if round_data.get('date'):
-            round_.date = str_to_date(round_data['date'])
+            _round.date = str_to_date(round_data['date'])
         else:
-            round_.date = datetime.now()
+            _round.date = datetime.now()
 
         notes = round_data.get('notes')
         if notes and notes not in [None, '']:
-            round_.notes = notes
+            _round.notes = notes
 
-        round_.tee = CourseTee.query.get(int(round_data['tee_id']))
+        _round.tee = CourseTee.query.get(int(round_data['tee_id']))
 
         for hole_num, hole_data in round_data['holes'].items():
-            hole = round_.get_hole(int(hole_num))
+            hole = _round.get_hole(int(hole_num))
             hole.set_course_hole_data()
 
             hole.strokes = int(hole_data['strokes'])
@@ -54,12 +58,12 @@ def update_round(round_data):
     except (ValueError, TypeError, KeyError) as error:
         return {'error': '%s: %s' % (type(error).__name__, error)}
 
-    if not round_.user:
-        user.rounds.append(round_)
+    if not _round.user:
+        user.rounds.append(_round)
 
-    round_.calc_totals()
-    round_.calc_handicap()
-    user.recalc_handicaps(round_)
+    _round.calc_totals()
+    _round.calc_handicap()
+    user.recalc_handicaps(_round)
 
     try:
         db.session.commit()

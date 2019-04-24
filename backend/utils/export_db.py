@@ -8,8 +8,8 @@ from backend.models import Course, User
 
 def dump(data, filename):
     dump_file = app.static_folder + '/' + filename
-    with open(dump_file, 'wb') as f:
-        pickle.dump(data, f)
+    with open(dump_file, 'wb') as file_:
+        pickle.dump(data, file_)
 
 
 def dictify_courses():
@@ -34,11 +34,11 @@ def dictify_users():
     for user in users:
         data[user.id] = user.as_dict()
 
-        for r in user.rounds:
-            data[user.id]['rounds'][r.id] = r.as_dict()
+        for _round in user.rounds:
+            data[user.id]['rounds'][_round.id] = _round.as_dict()
 
-            for hole in r.holes:
-                data[user.id]['rounds'][r.id]['holes'][hole.id] = (
+            for hole in _round.holes:
+                data[user.id]['rounds'][_round.id]['holes'][hole.id] = (
                     hole.as_dict()
                 )
     return data

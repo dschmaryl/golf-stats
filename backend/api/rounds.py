@@ -13,10 +13,8 @@ def get_round(round_id):
     if golf_round:
         if golf_round.user.username == g.user.username:
             return jsonify(golf_round.as_dict())
-        else:
-            return jsonify(error='round belongs to another user')
-    else:
-        return jsonify(error='not found')
+        return jsonify(error='round belongs to another user')
+    return jsonify(error='not found')
 
 
 @app.route('/api/round/hole/<hole_id>')
@@ -26,10 +24,8 @@ def get_hole(hole_id):
     if hole:
         if hole.round.user.username == g.user.username:
             return jsonify(hole.as_dict())
-        else:
-            return jsonify(error='hole belongs to another user')
-    else:
-        return jsonify(error='not found')
+        return jsonify(error='hole belongs to another user')
+    return jsonify(error='not found')
 
 
 @app.route('/api/add_round', methods=['POST'])
@@ -39,7 +35,6 @@ def post_round():
     try:
         if User.query.get(int(request.form['user_id'])) == g.user.username:
             return jsonify(update_round(request.get_json()))
-        else:
-            return jsonify(error='not permitted')
+        return jsonify(error='not permitted')
     except (KeyError, TypeError, KeyError) as error:
         return jsonify(error='%s: %s' % (type(error).__name__, error))

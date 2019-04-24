@@ -11,11 +11,10 @@ from backend.actions import save_tee_data, update_round
 def load(filename):
     pickle_file = app.static_folder + '/' + filename
     if os.path.isfile(pickle_file):
-        with open(pickle_file, 'rb') as f:
-            data = pickle.load(f)
+        with open(pickle_file, 'rb') as file_:
+            data = pickle.load(file_)
         return data
-    else:
-        exit("Error: '%s' not found" % filename)
+    return None
 
 
 def add_courses(courses):
@@ -44,15 +43,15 @@ def add_users(users):
         user = User(
             username=user_data['username'],
             default_tees=user_data['default_tees']
-            )
+        )
         user.set_password('asdf')
         db.session.add(user)
         db.session.commit()
 
-        for round_id, round_data in user_data['rounds'].items():
+        for _, round_data in user_data['rounds'].items():
             course = Course.query.filter_by(
                 nickname=round_data['course']
-                ).first()
+            ).first()
             course_tee = course.get_tee_by_color(round_data['tee_color'])
 
             round_data['user_id'] = user.id
@@ -69,8 +68,11 @@ def add_users(users):
 
 def import_all():
     data = load('export.pk')
-    add_courses(data['courses'])
-    add_users(data['users'])
+    if data:
+        add_courses(data['courses'])
+        add_users(data['users'])
+    else:
+        print('error loading data file')
 
 
 if __name__ == '__main__':
