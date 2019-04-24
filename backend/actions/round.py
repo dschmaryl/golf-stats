@@ -9,6 +9,8 @@ from backend.dates import str_to_date
 def update_round(round_data):
     try:
         round_id = round_data.get('round_id')
+        error = None
+
         if round_id:
             _round = Round.query.get(int(round_id))
             if not _round:
