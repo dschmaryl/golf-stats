@@ -10,17 +10,17 @@ from .flash_errors import flash_errors
 from .tees import TEES
 
 
-def check_user(username, return_url='/stats'):
+def check_user(username):
     if g.user.username == username:
         return True
-    else:
-        flash('wrong user!')
-        return False
+
+    flash('wrong user!')
+    return False
 
 
 @login_manager.user_loader
-def load_user(id):
-    return User.query.get(int(id))
+def load_user(user_id):
+    return User.query.get(int(user_id))
 
 
 @app.before_request
@@ -45,18 +45,18 @@ def change_password(username):
         if form.validate():
             if username == 'guest':
                 flash('cannot edit guest account')
-                return redirect(url_for('user', username=username))
+                return redirect(url_for('user_settings', username=username))
 
             if user.check_password(form.old_password.data):
                 user.set_password(form.new_password.data)
                 db.session.commit()
                 flash('password changed')
-                return redirect(url_for('user', username=username))
-            else:
-                flash('old password is incorrect')
+                return redirect(url_for('user_settings', username=username))
+
+            flash('old password is incorrect')
             return redirect(url_for('change_password', username=username))
-        else:
-            flash_errors(form)
+
+        flash_errors(form)
 
     return render_template('change_password.html', username=username,
                            title='change password', form=form)
@@ -64,9 +64,9 @@ def change_password(username):
 
 @app.route('/user/<username>/settings', methods=['GET', 'POST'])
 @login_required
-def user(username):
+def user_settings(username):
     if not check_user(username):
-        return redirect(url_for('user', username=g.user.username))
+        return redirect(url_for('user_settings', username=g.user.username))
 
     user = User.query.filter_by(username=username).first()
     form = UserSettingsForm(request.form, obj=user)
@@ -87,12 +87,12 @@ def user(username):
             })
             if result.get('error'):
                 flash(result['error'])
-                return redirect(url_for('user', username=username))
-            else:
-                flash('settings saved')
-                return redirect(url_for('index'))
-        else:
-            flash_errors(form)
+                return redirect(url_for('user_settings', username=username))
+
+            flash('settings saved')
+            return redirect(url_for('index'))
+
+        flash_errors(form)
 
     return render_template('user.html', title='settings', form=form)
 
@@ -116,8 +116,8 @@ def user_new():
             if result.get('success'):
                 flash('added user %s' % form.username.data)
                 return redirect(url_for('login'))
-            else:
-                flash(result['error'])
+
+            flash(result['error'])
         else:
             flash_errors(form)
 

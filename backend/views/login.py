@@ -29,10 +29,9 @@ def login():
 
             if request.args.get('next') == '/react':
                 return redirect(url_for('react'))
-            else:
-                return redirect(url_for('stats', username=g.user.username))
-        else:
-            flash_errors(form)
+            return redirect(url_for('stats', username=g.user.username))
+
+        flash_errors(form)
 
     return render_template('login.html', title='login',
                            form=form)

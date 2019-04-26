@@ -20,6 +20,7 @@ def create_user(data):
         db.session.add(new_user)
         db.session.commit()
         return {'success': True}
+
     except IntegrityError:
         db.session.rollback()
         return {'error': 'IntegrityError: username already exists'}

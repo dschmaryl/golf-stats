@@ -1,85 +1,98 @@
-{% extends "base.html" %}
-{% block content %}
+{% extends "base.html" %} {% block content %}
 
 <div class="row">
   <div class="col-xs-12">
     {% if seasons %}
-      <table class="table table-condensed">
-        <thead>
-          <tr>
-            <th class="align-left">season:</th>
-            {% for season in seasons %}
-              <th class="align-center">{{ season }}</th>
-            {% endfor %}
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td class="align-left">handicap:</td>
-            {% for season in seasons %}
-              <td>{{ user.get_season_rounds(season)[-1].handicap_index }}</td>
-            {% endfor %}
-          </tr>
-          <tr>
-            <td class="align-left">scoring average:</td>
-            {% for season in seasons %}
-              <td>{{ "%.1f" % user.get_average('score', season=season) }}</td>
-            {% endfor %}
-          </tr>
-          <tr>
-            <td class="align-left">avg relative to par:</td>
-            {% for season in seasons %}
-              <td>{{ "%.1f" % user.get_average('score_to_par', season=season) }}</td>
-            {% endfor %}
-          </tr>
-          <tr>
-            <td class="align-left">putts per round:</td>
-            {% for season in seasons %}
-              <td>{{ "%.1f" % user.get_average('putts', season=season) }}</td>
-            {% endfor %}
-          </tr>
-          <tr>
-            <td class="align-left">putts per hole:</td>
-            {% for season in seasons %}
-              <td>{{ "%.2f" % (user.get_average('putts', season=season) / 18) }}</td>
-            {% endfor %}
-          </tr>
-          <tr>
-            <td class="align-left">greens per round:</td>
-            {% for season in seasons %}
-              <td>{{ "%.2f" % user.get_average('gir', season=season) }}</td>
-            {% endfor %}
-          </tr>
-          <tr>
-            <td class="align-left">g.i.r. avg %:</td>
-            {% for season in seasons %}
-              <td>{{ "%.1f" % (user.get_average('gir', season=season) / 18 * 100) }}</td>
-            {% endfor %}
-          </tr>
-
-          {% for k, v in {'par3': 'par 3 avg:', 'par4': 'par 4 avg:', 'par5': 'par 5 avg:'}.items() %}
-            <tr>
-              <td class="align-left">{{ v }}</td>
-              {% for season in seasons %}
-                {% set avgs = user.get_par_avgs(season) %}
-                <td>{{ "%.2f" % avgs[k] }}</td>
-              {% endfor %}
-            </tr>
+    <table class="table table-condensed">
+      <thead>
+        <tr>
+          <th class="align-left">season:</th>
+          {% for season in seasons %}
+          <th class="align-center">{{ season }}</th>
           {% endfor %}
-        </tbody>
-      </table>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="align-left">handicap:</td>
+          {% for season in seasons %}
+          <td>{{ user.get_season_rounds(season)[-1].handicap_index }}</td>
+          {% endfor %}
+        </tr>
+        <tr>
+          <td class="align-left">scoring average:</td>
+          {% for season in seasons %}
+          <td>{{ "%.1f" % user.get_average('score', season=season) }}</td>
+          {% endfor %}
+        </tr>
+        <tr>
+          <td class="align-left">avg relative to par:</td>
+          {% for season in seasons %}
+          <td>
+            {{ "%.1f" % user.get_average('score_to_par', season=season) }}
+          </td>
+          {% endfor %}
+        </tr>
+        <tr>
+          <td class="align-left">putts per round:</td>
+          {% for season in seasons %}
+          <td>{{ "%.1f" % user.get_average('putts', season=season) }}</td>
+          {% endfor %}
+        </tr>
+        <tr>
+          <td class="align-left">putts per hole:</td>
+          {% for season in seasons %}
+          <td>
+            {{ "%.2f" % (user.get_average('putts', season=season) / 18) }}
+          </td>
+          {% endfor %}
+        </tr>
+        <tr>
+          <td class="align-left">greens per round:</td>
+          {% for season in seasons %}
+          <td>{{ "%.2f" % user.get_average('gir', season=season) }}</td>
+          {% endfor %}
+        </tr>
+        <tr>
+          <td class="align-left">g.i.r. avg %:</td>
+          {% for season in seasons %}
+          <td>
+            {{ "%.1f" % (user.get_average('gir', season=season) / 18 * 100) }}
+          </td>
+          {% endfor %}
+        </tr>
+
+        {% for k, v in {'par3': 'par 3 avg:', 'par4': 'par 4 avg:', 'par5': 'par
+        5 avg:'}.items() %}
+        <tr>
+          <td class="align-left">{{ v }}</td>
+          {% for season in seasons %} {% set avgs = user.get_par_avgs(season) %}
+          <td>{{ '%.2f' % avgs[k] }}</td>
+          {% endfor %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
     {% else %}
-      <h4>no rounds found</h4>
+    <h4>no rounds found</h4>
     {% endif %}
   </div>
 </div>
 
 <div class="row">
   <div class="col-xs-12">
-    <a href="{{ url_for('round_view', username=g.user.username) }}"><button class="btn btn-default">new round</button></a>
-    <a href="{{ url_for('round_list', username=g.user.username) }}"><button class="btn btn-default">old rounds</button></a>
-    <a href="{{ url_for('user', username=g.user.username) }}"><button class="btn btn-default extra-margin-left">settings</button></a>
-    <a href="{{ url_for('logout') }}"><button class="btn btn-default">logout</button></a>
+    <a href="{{ url_for('round_view', username=g.user.username) }}"
+      ><button class="btn btn-default">new round</button></a
+    >
+    <a href="{{ url_for('round_list', username=g.user.username) }}"
+      ><button class="btn btn-default">old rounds</button></a
+    >
+    <a href="{{ url_for('user_settings', username=g.user.username) }}"
+      ><button class="btn btn-default extra-margin-left">settings</button></a
+    >
+    <a href="{{ url_for('logout') }}"
+      ><button class="btn btn-default">logout</button></a
+    >
   </div>
 </div>
 
