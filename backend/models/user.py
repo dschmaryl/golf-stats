@@ -66,7 +66,11 @@ class User(db.Model):
         return avgs
 
     def get_all_averages_by_season(self, mavg=False, period=20):
-        average = self._mavg if mavg else self._avg
+        def average(data):
+            if mavg:
+                return self._mavg(data, period)
+            return self._avg(data)
+
         seasons = [2018, 2017, 2016, 2015]
         stats = {
             'strokes': 'total_strokes',
@@ -101,7 +105,7 @@ class User(db.Model):
                         all_stats[stat] = season_stats[stat]
 
                     averages[season][stat] = round(
-                        average(stats_array, period),
+                        average(stats_array),
                         2
                     )
 
@@ -113,7 +117,7 @@ class User(db.Model):
             for stat, stats_array in all_stats.items():
                 if stat == 'handicap':
                     continue
-                averages[2046][stat] = round(average(stats_array, period), 2)
+                averages[2046][stat] = round(average(stats_array), 2)
 
         return averages
 

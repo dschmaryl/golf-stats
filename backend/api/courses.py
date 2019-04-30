@@ -3,7 +3,7 @@ from flask import g, jsonify, request
 from backend import app
 from backend.models import Course, CourseTee, CourseHole
 from backend.actions import save_course_data, save_tee_data
-from .authorize import check_authorization
+from .authorize import check_auth
 
 
 @app.route('/api/courses')
@@ -21,7 +21,7 @@ def get_course(course_id):
 
 @app.route('/api/update_course', methods=['POST'])
 @app.route('/api/create_course', methods=['POST'])
-@check_authorization
+@check_auth
 def post_course():
     if g.user.username != 'daryl':
         return jsonify(error='must be daryl')
@@ -46,7 +46,7 @@ def get_tee(tee_id):
 
 @app.route('/api/add_tee', methods=['POST'])
 @app.route('/api/update_tee', methods=['POST'])
-@check_authorization
+@check_auth
 def post_tee():
     if g.user.username != 'daryl':
         return jsonify(error='must be daryl')

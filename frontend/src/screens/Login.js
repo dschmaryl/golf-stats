@@ -1,6 +1,8 @@
 import React from 'react';
-import axios from 'axios';
 import styled from 'styled-components';
+import { connect } from 'react-redux';
+
+import { login } from '../actions/auth';
 
 const LoginContainer = styled.div`
   min-width: 320px;
@@ -16,33 +18,22 @@ const InputRow = styled.div`
   margin: 20px 0 20px 0;
 `;
 
-export class Login extends React.Component {
+export class LoginComponent extends React.Component {
   state = { username: '', password: '' };
 
-  handleSubmit = event => {
-    if (this.state.username) {
-      const formData = new FormData();
-      formData.append('username', this.state.username);
-      formData.append('password', this.state.password);
+  handleKeyPress = event => (event.key === 'Enter' ? this.login(event) : null);
 
-      axios
-        .post({
-          method: 'post',
-          url: '/api/login',
-          data: formData,
-          config: { headers: { 'Content-Type': 'multipart/form-data' } }
-        })
-        .then()
-        .catch();
-    }
+  login = event => {
+    event.preventDefault();
+    this.props.login(this.state.username, this.state.password);
   };
 
   render = () => (
-    <LoginContainer>
+    <LoginContainer onKeyPress={this.handleKeyPress}>
       <Header>
         <div>welcome</div>
       </Header>
-      <form onSubmit={this.handleSubmit}>
+      <form>
         <InputRow>
           <input
             name="username"
@@ -64,9 +55,23 @@ export class Login extends React.Component {
           />
         </InputRow>
         <InputRow>
-          <input type="submit" value="login" className="btn btn-default" />
+          <input
+            type="submit"
+            value="login"
+            className="btn btn-default"
+            onClick={event => this.login(event)}
+          />
         </InputRow>
       </form>
     </LoginContainer>
   );
 }
+
+const mapDispatchToProps = dispatch => ({
+  login: (username, password) => dispatch(login(username, password))
+});
+
+export const Login = connect(
+  null,
+  mapDispatchToProps
+)(LoginComponent);

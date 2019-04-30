@@ -6,7 +6,7 @@ const SeasonTd = styled.td`
   text-align: right;
 `;
 
-const stats = {
+const statKeys = {
   strokes: 'scoring average',
   putts: 'putts per round',
   gir: 'greens per round',
@@ -16,14 +16,14 @@ const stats = {
   par5: 'par 5 average'
 };
 
-export const StatsList = ({ seasons, statsData, onClick }) => (
+export const StatsList = ({ seasons, stats, onClick }) => (
   <tbody>
-    {Object.keys(stats).map(stat => (
+    {Object.keys(statKeys).map(stat => (
       <tr key={stat}>
-        <td>{stats[stat]}:</td>
+        <td>{statKeys[stat]}:</td>
         {seasons.map(season => (
           <SeasonTd onClick={() => onClick(season)} key={season + '-' + stat}>
-            {statsData[season][stat]}
+            {stats[season][stat]}
           </SeasonTd>
         ))}
       </tr>

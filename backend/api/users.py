@@ -8,7 +8,7 @@ from .authorize import check_auth, generate_token, verify_token
 @app.route('/api/get_token', methods=['POST'])
 def get_token():
     incoming = request.get_json()
-    user = User.query.filter_by(username=incoming['username'])
+    user = User.query.filter_by(username=incoming['username']).first()
     if user:
         if user.check_password(incoming['password']):
             return jsonify(token=generate_token(user))
@@ -36,11 +36,11 @@ def get_user_id():
 @app.route('/api/user/rounds')
 @check_auth
 def get_rounds():
-    rounds = g.user.get_rounds()
+    rounds = g.current_user.get_rounds()
     return jsonify({i: rounds[i].as_dict() for i in range(len(rounds))})
 
 
 @app.route('/api/user/stats')
 @check_auth
 def get_user_stats():
-    return jsonify(g.user.get_all_averages_by_season())
+    return jsonify(g.current_user.get_all_averages_by_season())

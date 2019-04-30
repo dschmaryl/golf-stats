@@ -6,6 +6,7 @@ from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from itsdangerous import SignatureExpired, BadSignature
 
 from backend import app
+from backend.models import User
 
 TWO_WEEKS = 1209600
 
@@ -34,6 +35,7 @@ def verify_token(token):
         data = serialized.loads(token)
     except (BadSignature, SignatureExpired):
         return None
+
     return data
 
 
@@ -43,7 +45,7 @@ def check_auth(func):
         token = request.headers.get('Authorization', None)
         if token:
             string_token = token.encode('ascii', 'ignore')
-            user = verify_token(string_token)
+            user = User.query.get(verify_token(string_token)['id'])
 
             if user:
                 g.current_user = user

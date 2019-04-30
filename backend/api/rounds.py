@@ -3,11 +3,11 @@ from flask import g, jsonify, request
 from backend import app
 from backend.models import Hole, Round, User
 from backend.actions import update_round
-from .authorize import check_authorization
+from .authorize import check_auth
 
 
 @app.route('/api/round/<round_id>')
-@check_authorization
+@check_auth
 def get_round(round_id):
     golf_round = Round.query.get(round_id)
     if golf_round:
@@ -18,7 +18,7 @@ def get_round(round_id):
 
 
 @app.route('/api/round/hole/<hole_id>')
-@check_authorization
+@check_auth
 def get_hole(hole_id):
     hole = Hole.query.get(hole_id)
     if hole:
@@ -30,7 +30,7 @@ def get_hole(hole_id):
 
 @app.route('/api/add_round', methods=['POST'])
 @app.route('/api/update_round', methods=['POST'])
-@check_authorization
+@check_auth
 def post_round():
     try:
         if User.query.get(int(request.form['user_id'])) == g.user.username:

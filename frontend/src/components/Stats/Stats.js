@@ -1,49 +1,51 @@
 import React from 'react';
-import axios from 'axios';
+import { connect } from 'react-redux';
+
+import { selectSeason } from '../../actions/stats';
+
+import { PaddedDiv } from '../../components/PaddedDiv';
 
 import { StatsHeader } from './StatsHeader';
 import { StatsList } from './StatsList';
 
-export class Stats extends React.Component {
-  state = { requestFailed: false };
-
-  componentDidMount = () =>
-    axios
-      .get('/api/user/' + this.props.userData['id'] + '/stats')
-      .then(statsData => {
-        if (statsData['error']) {
-          this.setState({ requestFailed: true });
-        } else {
-          this.setState({ statsData: statsData.data });
-        }
-      })
-      .catch(() => this.setState({ requestFailed: true }));
-
-  render = () => {
-    if (!this.state.statsData) {
-      if (this.state.requestFailed) {
-        return <p>error gettings stats</p>;
-      } else {
-        return <p>loading stats</p>;
-      }
-    }
+export const StatsComponent = ({ statsLoaded, stats, selectSeason }) => {
+  if (!statsLoaded) {
+    return <p>loading stats</p>;
+  } else {
+    const seasons = Object.keys(stats)
+      .sort()
+      .reverse();
 
     return (
-      <table style={{ width: '100%' }}>
-        <StatsHeader
-          seasons={Object.keys(this.state.statsData)
-            .sort()
-            .reverse()}
-          onClick={season => this.props.onSeasonClick(season)}
-        />
-        <StatsList
-          seasons={Object.keys(this.state.statsData)
-            .sort()
-            .reverse()}
-          statsData={this.state.statsData}
-          onClick={season => this.props.onSeasonClick(season)}
-        />
-      </table>
+      <PaddedDiv className="row">
+        <div className="col-xs-12">
+          <table style={{ width: '100%' }}>
+            <StatsHeader
+              seasons={seasons}
+              onClick={season => selectSeason(season)}
+            />
+            <StatsList
+              seasons={seasons}
+              stats={stats}
+              onClick={season => selectSeason(season)}
+            />
+          </table>
+        </div>
+      </PaddedDiv>
     );
-  };
-}
+  }
+};
+
+const mapStateToProps = state => ({
+  statsLoaded: state.stats.statsLoaded,
+  stats: state.stats.data
+});
+
+const mapDispatchToProps = dispatch => ({
+  selectSeason: season => dispatch(selectSeason(season))
+});
+
+export const Stats = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(StatsComponent);
