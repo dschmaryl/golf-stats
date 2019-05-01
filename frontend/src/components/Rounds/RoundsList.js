@@ -1,6 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 import Moment from 'react-moment';
+import { connect } from 'react-redux';
+
 import axios from 'axios';
 
 import { SelectedRound } from '../SelectedRound/SelectedRound';
@@ -9,7 +11,7 @@ const ItemRight = styled.div`
   text-align: right;
 `;
 
-export class RoundsList extends React.Component {
+class RoundsListComponent extends React.Component {
   state = { selectedRound: null, rounds: {} };
 
   componentWillReceiveProps = () => this.setState({ selectedRound: null });
@@ -34,10 +36,22 @@ export class RoundsList extends React.Component {
   };
 
   render = () =>
-    Object.keys(this.props.roundsData)
-      .reverse()
+    Object.keys(this.props.rounds)
+      .filter(
+        key =>
+          !this.props.selectedSeason ||
+          this.props.rounds[key].date.split('-')[0] ===
+            this.props.selectedSeason
+      )
+      .sort(
+        (a, b) =>
+          this.props.rounds[this.props.reverseSort ? b : a][
+            this.props.sortKey
+          ] -
+          this.props.rounds[this.props.reverseSort ? a : b][this.props.sortKey]
+      )
       .map(key => {
-        const round = this.props.roundsData[key];
+        const round = this.props.rounds[key];
 
         return round.id === this.state.selectedRound ? (
           <SelectedRound
@@ -54,7 +68,7 @@ export class RoundsList extends React.Component {
             key={key}
           >
             <div className="col-xs-3">
-              <Moment format="YYYY-MM-DD">{round['date']}</Moment>
+              {round['date'].split(' ')[0]}
             </div>
             <div className="col-xs-3">{round['course']}</div>
             <ItemRight className="col-xs-1">{round['total_strokes']}</ItemRight>
@@ -73,3 +87,12 @@ export class RoundsList extends React.Component {
         );
       });
 }
+
+const mapStateToProps = state => ({
+  rounds: state.rounds.data,
+  sortKey: state.rounds.sortKey,
+  reverseSort: state.rounds.reverseSort,
+  selectedSeason: state.stats.selectedSeason
+});
+
+export const RoundsList = connect(mapStateToProps)(RoundsListComponent);

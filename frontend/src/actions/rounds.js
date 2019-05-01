@@ -7,6 +7,6 @@ export const addRounds = () => (dispatch, getState) => {
     .catch(() => console.log('failed to get rounds'));
 };
 
-export const setSortKey = sortKey => ({ type: 'SORT_BY', sortKey });
+export const setSortKey = sortKey => ({ type: 'SET_SORT_KEY', sortKey });
 
 export const toggleSortOrder = () => ({ type: 'TOGGLE_SORT_ORDER' });

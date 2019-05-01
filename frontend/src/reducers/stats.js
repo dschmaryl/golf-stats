@@ -7,7 +7,10 @@ export const stats = (
       return { ...state, statsLoaded: true, data: { ...action.data } };
 
     case 'SELECT_SEASON':
-      return { ...state, selectedSeason: action.season };
+      return {
+        ...state,
+        selectedSeason: action.season === '2046' ? null : action.season
+      };
 
     default:
       return state;

@@ -8,16 +8,15 @@ import { PaddedDiv } from '../../components/PaddedDiv';
 import { RoundsHeader } from './RoundsHeader';
 import { RoundsList } from './RoundsList';
 
-export const RoundsComponent = props => {
-  if (!props.roundsLoaded) {
+export const RoundsComponent = ({ roundsLoaded, setSortKey }) => {
+  if (!roundsLoaded) {
     return <p>loading rounds</p>;
   } else {
-
     return (
       <PaddedDiv className="row">
         <div className="col-xs-12">
-          <RoundsHeader onClick={value => props.setSortKey(value)} />
-          <RoundsList roundsData={props.rounds} />
+          <RoundsHeader onClick={value => setSortKey(value)} />
+          <RoundsList />
         </div>
       </PaddedDiv>
     );
@@ -25,8 +24,7 @@ export const RoundsComponent = props => {
 };
 
 const mapStateToProps = state => ({
-  roundsLoaded: state.rounds.roundsLoaded,
-  rounds: state.rounds.data
+  roundsLoaded: state.rounds.roundsLoaded
 });
 
 const mapDispatchToProps = dispatch => ({
