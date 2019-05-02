@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import moment from 'moment';
 import { connect } from 'react-redux';
 
 import { selectRound } from '../../../actions/rounds';
@@ -17,11 +18,22 @@ const RoundsListComponent = props =>
         !props.selectedSeason ||
         props.rounds[key].date.split('-')[0] === props.selectedSeason
     )
-    .sort(
-      (a, b) =>
-        props.rounds[props.reverseSort ? b : a][props.sortKey] -
-        props.rounds[props.reverseSort ? a : b][props.sortKey]
-    )
+    .sort((a, b) => {
+      if (props.sortKey === 'date') {
+        return moment(props.rounds[props.reverseSort ? b : a]['date']).diff(
+          moment(props.rounds[props.reverseSort ? a : b]['date'])
+        );
+      } else if (props.sortKey === 'course') {
+        const first = props.rounds[props.reverseSort ? b : a]['course'];
+        const second = props.rounds[props.reverseSort ? a : b]['course'];
+        return first > second ? 1 : -1;
+      } else {
+        return (
+          props.rounds[props.reverseSort ? b : a][props.sortKey] -
+          props.rounds[props.reverseSort ? a : b][props.sortKey]
+        );
+      }
+    })
     .map(key => {
       const round = props.rounds[key];
 
