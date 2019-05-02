@@ -1,7 +1,7 @@
 from flask import g, jsonify, request
 
 from backend import app
-from backend.models import Hole, Round, User
+from backend.models import Hole, Round
 from backend.actions import update_round
 from .authorize import check_auth
 
@@ -11,7 +11,7 @@ from .authorize import check_auth
 def get_round(round_id):
     golf_round = Round.query.get(round_id)
     if golf_round:
-        if golf_round.user.username == g.user.username:
+        if golf_round.user.username == g.current_user.username:
             return jsonify(golf_round.as_dict())
         return jsonify(error='round belongs to another user')
     return jsonify(error='not found')
@@ -22,7 +22,7 @@ def get_round(round_id):
 def get_hole(hole_id):
     hole = Hole.query.get(hole_id)
     if hole:
-        if hole.round.user.username == g.user.username:
+        if hole.round.user.username == g.current_user.username:
             return jsonify(hole.as_dict())
         return jsonify(error='hole belongs to another user')
     return jsonify(error='not found')
@@ -33,8 +33,7 @@ def get_hole(hole_id):
 @check_auth
 def post_round():
     try:
-        if User.query.get(int(request.form['user_id'])) == g.user.username:
-            return jsonify(update_round(request.get_json()))
-        return jsonify(error='not permitted')
+        return jsonify(update_round(request.get_json()))
+
     except (KeyError, TypeError, KeyError) as error:
         return jsonify(error='%s: %s' % (type(error).__name__, error))

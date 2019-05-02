@@ -37,7 +37,7 @@ def get_user_id():
 @check_auth
 def get_rounds():
     rounds = g.current_user.get_rounds()
-    return jsonify({i: rounds[i].as_dict() for i in range(len(rounds))})
+    return jsonify({i: rounds[i].info_as_dict() for i in range(len(rounds))})
 
 
 @app.route('/api/user/stats')

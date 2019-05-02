@@ -166,5 +166,19 @@ class Round(db.Model):
             'holes': {h.hole_number: h.as_dict() for h in self.holes}
         }
 
+    def info_as_dict(self):
+        return {
+            'id': self.id,
+            'date': date_to_str(self.date),
+            'course': self.tee.course.nickname,
+            'tee_color': self.tee.color,
+            'front_9_strokes': self.front_9_strokes,
+            'back_9_strokes': self.back_9_strokes,
+            'total_strokes': self.total_strokes,
+            'total_putts': self.total_putts,
+            'total_gir': self.total_gir,
+            'handicap_index': self.handicap_index,
+        }
+
     def __repr__(self):
         return '<Round %r>' % (self.date)

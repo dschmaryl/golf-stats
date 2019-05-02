@@ -2,11 +2,11 @@ import React from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 
-import { addRounds } from '../actions/rounds';
-import { addStats } from '../actions/stats';
+import { addRounds } from '../../actions/rounds';
+import { addStats } from '../../actions/stats';
 
-import { Rounds } from '../components/Rounds/Rounds';
-import { Stats } from '../components/Stats/Stats';
+import { Rounds } from './Rounds';
+import { Stats } from './Stats';
 
 const ContainerDiv = styled.div`
   max-width: 720px;

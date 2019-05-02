@@ -1,9 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { selectSeason } from '../../actions/stats';
+import { selectSeason } from '../../../actions/stats';
 
-import { PaddedDiv } from '../../components/PaddedDiv';
+import { PaddedDiv } from '../../../components/PaddedDiv';
 
 import { StatsHeader } from './StatsHeader';
 import { StatsList } from './StatsList';

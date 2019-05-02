@@ -1,9 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { setSortKey } from '../../actions/rounds';
+import { setSortKey } from '../../../actions/rounds';
 
-import { PaddedDiv } from '../../components/PaddedDiv';
+import { PaddedDiv } from '../../../components/PaddedDiv';
 
 import { RoundsHeader } from './RoundsHeader';
 import { RoundsList } from './RoundsList';
