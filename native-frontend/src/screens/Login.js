@@ -37,7 +37,7 @@ export class LoginComponent extends React.Component {
           type="text"
           value={this.state.username}
           placeholder="name"
-          onChange={event => this.setState({ username: event.target.value })}
+          onChangeText={text => this.setState({ username: text })}
         />
       </View>
       <View>
@@ -46,7 +46,7 @@ export class LoginComponent extends React.Component {
           type="password"
           value={this.state.password}
           placeholder="password"
-          onChange={event => this.setState({ password: event.target.value })}
+          onChangeText={text => this.setState({ password: text })}
         />
       </View>
       <View>

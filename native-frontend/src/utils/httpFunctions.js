@@ -1,5 +1,7 @@
 import axios from 'axios';
 
+import { url } from '../App';
+
 const tokenConfig = token => ({
   headers: {
     'Authorization': token // prettier-ignore
@@ -7,9 +9,10 @@ const tokenConfig = token => ({
 });
 
 export const getToken = (username, password) =>
-  axios.post('/api/get_token', { username, password });
+  axios.post(url + '/api/get_token', { username, password });
 
 export const validateToken = token =>
-  axios.post('/api/is_token_valid', { token });
+  axios.post(url + '/api/is_token_valid', { token });
 
-export const getData = (url, token) => axios.get(url, tokenConfig(token));
+export const getData = (urlExt, token) =>
+  axios.get(url + urlExt, tokenConfig(token));

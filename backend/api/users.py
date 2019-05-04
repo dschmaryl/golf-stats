@@ -8,7 +8,7 @@ from .authorize import check_auth, generate_token, verify_token
 @app.route('/api/get_token', methods=['POST'])
 def get_token():
     incoming = request.get_json()
-    user = User.query.filter_by(username=incoming['username']).first()
+    user = User.query.filter_by(username=incoming.get('username')).first()
     if user:
         if user.check_password(incoming['password']):
             return jsonify(token=generate_token(user))
