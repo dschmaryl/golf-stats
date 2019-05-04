@@ -2,7 +2,7 @@ export const auth = (
   state = {
     isAuthenticated: false,
     authenticationFailed: false,
-    statusText: null
+    statusText: 'Please log in'
   },
   action
 ) => {
@@ -11,7 +11,7 @@ export const auth = (
       return {
         isAuthenticated: true,
         authenticationFailed: false,
-        statusText: 'You are logged in.'
+        statusText: 'You are logged in'
       };
 
     case 'LOGIN_FAILURE':
@@ -25,7 +25,7 @@ export const auth = (
       return {
         isAuthenticated: false,
         authenticationFailed: false,
-        statusText: 'You are logged out.'
+        statusText: 'Please log in'
       };
 
     default:
