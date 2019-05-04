@@ -1,22 +1,23 @@
 import React from 'react';
-import styled from 'styled-components';
+import { View, Text, StyleSheet } from 'react-native';
+// import styled from 'styled-components';
 import { connect } from 'react-redux';
 
 import { addRounds } from '../../actions/rounds';
 import { addStats } from '../../actions/stats';
 
-import { Rounds } from './Rounds';
-import { Stats } from './Stats';
+// import { Rounds } from './Rounds';
+// import { Stats } from './Stats';
 
-const ContainerDiv = styled.div`
-  max-width: 720px;
-  min-width: 340px;
-  margin: auto;
-`;
+// const ContainerDiv = styled.div`
+//   max-width: 720px;
+//   min-width: 340px;
+//   margin: auto;
+// `;
 
-const Header = styled.div`
-  text-align: center;
-`;
+// const Header = styled.div`
+//   text-align: center;
+// `;
 
 class MainComponent extends React.Component {
   componentDidMount = () => {
@@ -30,16 +31,28 @@ class MainComponent extends React.Component {
     }
   };
 
+  // render = () => (
+  //   <ContainerDiv className="container">
+  //     <Header className="row">
+  //       <div className="col-xs-12">
+  //         <h3>all statistics</h3>
+  //       </div>
+  //     </Header>
+  //     <Stats />
+  //     <Rounds />
+  //   </ContainerDiv>
+  // );
   render = () => (
-    <ContainerDiv className="container">
-      <Header className="row">
-        <div className="col-xs-12">
-          <h3>all statistics</h3>
-        </div>
-      </Header>
-      <Stats />
-      <Rounds />
-    </ContainerDiv>
+    <View>
+      <View>
+        <Text>all statistics</Text>
+      </View>
+      {/* <Stats />
+      <Rounds /> */}
+      <View>
+        <Text>testering</Text>
+      </View>
+    </View>
   );
 }
 

@@ -1,33 +1,51 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import { Provider, connect } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
+
+import { store, persistor } from './store';
 
 import { checkToken } from './actions/auth';
 
 import { Login } from './screens/Login';
 import { Main } from './screens/Main';
 
-class AppComponent extends React.Component {
-  componentDidMount = () => {
-    if (!this.props.isAuthenticated) {
-      const token = localStorage.getItem('token');
-      if (token) {
-        this.props.checkToken(token);
-      }
-    }
-  };
+// persistor.purge();
 
-  render = () => (!this.props.isAuthenticated ? <Login /> : <Main />);
-}
+const AppComponent = ({
+  token,
+  isAuthenticated,
+  authenticationFailed,
+  checkToken
+}) => {
+  if (token && isAuthenticated) {
+    return <Main />;
+  } else if (!token || authenticationFailed) {
+    return <Login />;
+  } else {
+    checkToken();
+    return null;
+  }
+};
 
 const mapStateToProps = state => ({
-  isAuthenticated: state.auth.isAuthenticated
+  token: state.token,
+  isAuthenticated: state.auth.isAuthenticated,
+  authenticationFailed: state.auth.authenticationFailed
 });
 
 const mapDispatchToProps = dispatch => ({
-  checkToken: token => dispatch(checkToken(token))
+  checkToken: () => dispatch(checkToken())
 });
 
-export const App = connect(
+export const AppContainer = connect(
   mapStateToProps,
   mapDispatchToProps
 )(AppComponent);
+
+export const App = () => (
+  <Provider store={store}>
+    <PersistGate loading={null} persistor={persistor}>
+      <AppContainer />
+    </PersistGate>
+  </Provider>
+);

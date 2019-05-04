@@ -1,22 +1,20 @@
 import React from 'react';
-import styled from 'styled-components';
+import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
 
 import { login } from '../actions/auth';
 
-const LoginContainer = styled.div`
-  min-width: 320px;
-  max-width: 420px;
-  padding: 10% 0 0 20%;
-`;
-
-const Header = styled.div`
-  font-size: 3em;
-`;
-
-const InputRow = styled.div`
-  margin: 20px 0 20px 0;
-`;
+const styles = StyleSheet.create({
+  loginContainer: {
+    //
+  },
+  headerView: {
+    //
+  },
+  headerText: {
+    fontSize: 30
+  }
+});
 
 export class LoginComponent extends React.Component {
   state = { username: '', password: '' };
@@ -29,41 +27,32 @@ export class LoginComponent extends React.Component {
   };
 
   render = () => (
-    <LoginContainer onKeyPress={this.handleKeyPress}>
-      <Header>
-        <div>welcome</div>
-      </Header>
-      <form>
-        <InputRow>
-          <input
-            name="username"
-            type="text"
-            className="form-control text-input"
-            value={this.state.username}
-            placeholder="name"
-            onChange={event => this.setState({ username: event.target.value })}
-          />
-        </InputRow>
-        <InputRow>
-          <input
-            name="password"
-            type="password"
-            className="form-control text-input"
-            value={this.state.password}
-            placeholder="password"
-            onChange={event => this.setState({ password: event.target.value })}
-          />
-        </InputRow>
-        <InputRow>
-          <input
-            type="submit"
-            value="login"
-            className="btn btn-default"
-            onClick={event => this.login(event)}
-          />
-        </InputRow>
-      </form>
-    </LoginContainer>
+    <View style={styles.loginContainer} onKeyPress={this.handleKeyPress}>
+      <View style={styles.headerView}>
+        <Text style={styles.headerText}>welcome</Text>
+      </View>
+      <View>
+        <TextInput
+          name="username"
+          type="text"
+          value={this.state.username}
+          placeholder="name"
+          onChange={event => this.setState({ username: event.target.value })}
+        />
+      </View>
+      <View>
+        <TextInput
+          name="password"
+          type="password"
+          value={this.state.password}
+          placeholder="password"
+          onChange={event => this.setState({ password: event.target.value })}
+        />
+      </View>
+      <View>
+        <Button title="login" onPress={event => this.login(event)} />
+      </View>
+    </View>
   );
 }
 
