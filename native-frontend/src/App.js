@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import { Provider, connect } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
+import { Provider as PaperProvider } from 'react-native-paper';
 
 import { store, persistor } from './store';
 
@@ -52,7 +53,9 @@ export const AppContainer = connect(
 export const App = () => (
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>
-      <AppContainer />
+      <PaperProvider>
+        <AppContainer />
+      </PaperProvider>
     </PersistGate>
   </Provider>
 );

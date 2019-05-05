@@ -9,14 +9,10 @@ const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center'
-  },
-  loginContainer: {
-    alignSelf: 'stretch',
-    padding: 40
+    alignItems: 'center',
+    paddingTop: '20%'
   },
   titleView: {
-    alignSelf: 'stretch',
     paddingBottom: 30
   },
   titleText: {
@@ -32,7 +28,6 @@ const styles = StyleSheet.create({
     marginBottom: 6
   },
   button: {
-    // padding: 4,
     marginTop: 4,
     marginBottom: 6
   }
@@ -49,8 +44,8 @@ export class LoginComponent extends React.Component {
   };
 
   render = () => (
-    <View style={styles.mainContainer}>
-      <View style={styles.loginContainer} onKeyPress={this.handleKeyPress}>
+    <View style={styles.mainContainer} onKeyPress={this.handleKeyPress}>
+      <View>
         <View style={styles.titleView}>
           <Title style={styles.titleText}>welcome</Title>
         </View>

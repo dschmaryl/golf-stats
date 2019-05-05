@@ -1,6 +1,6 @@
 import React from 'react';
 import { View } from 'react-native';
-import { DataTable } from 'react-native-paper';
+import { DataTable, Text } from 'react-native-paper';
 import { connect } from 'react-redux';
 
 import { selectSeason } from '../../../actions/stats';
@@ -10,14 +10,14 @@ import { StatsList } from './StatsList';
 
 export const StatsComponent = ({ statsLoaded, stats, selectSeason }) => {
   if (!statsLoaded) {
-    return <p>loading stats</p>;
+    return <View><Text>loading stats...</Text></View>;
   } else {
     const seasons = Object.keys(stats)
       .sort()
       .reverse();
 
     return (
-      <View>
+      <View style={{ alignSelf: 'stretch' }}>
         <DataTable>
           <StatsHeader
             seasons={seasons}
