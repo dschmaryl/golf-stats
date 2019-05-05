@@ -13,7 +13,7 @@ import { Main } from './screens/Main';
 // persistor.purge();
 
 export const url =
-  'http://' + (__DEV__ ? '192.168.1.4:5000' : 'golf-stats.herokuapp.com');
+  'http://' + (__DEV__ ? '10.0.0.3:5000' : 'golf-stats.herokuapp.com');
 
 const AppComponent = ({
   token,
