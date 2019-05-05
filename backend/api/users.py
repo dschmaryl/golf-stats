@@ -19,7 +19,7 @@ def get_token():
 @app.route("/api/is_token_valid", methods=["POST"])
 def is_token_valid():
     incoming = request.get_json()
-    is_valid = verify_token(incoming["token"])
+    is_valid = verify_token(incoming.get("token"))
 
     if is_valid:
         return jsonify(token_is_valid=True)
