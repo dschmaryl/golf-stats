@@ -48,7 +48,7 @@ def check_auth(func):
             verified = verify_token(string_token)
 
             if verified:
-                user = User.query.get(verify_token(string_token).get('id'))
+                user = User.query.get(verified.get('id'))
                 if user:
                     g.current_user = user
                     return func(*args, **kwargs)
