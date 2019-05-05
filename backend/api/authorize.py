@@ -45,11 +45,13 @@ def check_auth(func):
         token = request.headers.get('Authorization', None)
         if token:
             string_token = token.encode('ascii', 'ignore')
-            user = User.query.get(verify_token(string_token)['id'])
+            verified = verify_token(string_token)
 
-            if user:
-                g.current_user = user
-                return func(*args, **kwargs)
+            if verified:
+                user = User.query.get(verify_token(string_token).get('id'))
+                if user:
+                    g.current_user = user
+                    return func(*args, **kwargs)
 
         return jsonify(error='not authorized'), 401
 

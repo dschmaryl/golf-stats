@@ -8,9 +8,9 @@ from .authorize import check_auth, generate_token, verify_token
 @app.route('/api/get_token', methods=['POST'])
 def get_token():
     incoming = request.get_json()
-    user = User.query.filter_by(username=incoming['username']).first()
+    user = User.query.filter_by(username=incoming.get('username')).first()
     if user:
-        if user.check_password(incoming['password']):
+        if user.check_password(incoming.get('password')):
             return jsonify(token=generate_token(user))
 
     return jsonify(error='unable to get token'), 403
@@ -19,7 +19,7 @@ def get_token():
 @app.route("/api/is_token_valid", methods=["POST"])
 def is_token_valid():
     incoming = request.get_json()
-    is_valid = verify_token(incoming["token"])
+    is_valid = verify_token(incoming.get('token'))
 
     if is_valid:
         return jsonify(token_is_valid=True)
