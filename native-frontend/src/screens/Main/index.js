@@ -1,23 +1,26 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-// import styled from 'styled-components';
+import { View, StyleSheet } from 'react-native';
+import { Text, Title } from 'react-native-paper';
 import { connect } from 'react-redux';
 
 import { addRounds } from '../../actions/rounds';
 import { addStats } from '../../actions/stats';
 
 // import { Rounds } from './Rounds';
-// import { Stats } from './Stats';
+import { Stats } from './Stats';
 
-// const ContainerDiv = styled.div`
-//   max-width: 720px;
-//   min-width: 340px;
-//   margin: auto;
-// `;
-
-// const Header = styled.div`
-//   text-align: center;
-// `;
+const styles = StyleSheet.create({
+  mainContainer: {
+    padding: 40
+  },
+  titleView: {
+    alignSelf: 'stretch',
+    paddingBottom: 30
+  },
+  titleText: {
+    fontSize: 30
+  }
+});
 
 class MainComponent extends React.Component {
   componentDidMount = () => {
@@ -43,12 +46,12 @@ class MainComponent extends React.Component {
   //   </ContainerDiv>
   // );
   render = () => (
-    <View>
-      <View>
-        <Text>all statistics</Text>
+    <View style={styles.mainContainer}>
+      <View style={styles.titleView}>
+        <Title style={styles.titleText}>all statistics</Title>
       </View>
-      {/* <Stats />
-      <Rounds /> */}
+      <Stats />
+      {/* <Rounds /> */}
       <View>
         <Text>testering</Text>
       </View>

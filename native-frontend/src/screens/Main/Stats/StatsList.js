@@ -1,10 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
-
-const SeasonTd = styled.td`
-  cursor: pointer;
-  text-align: right;
-`;
+import { DataTable } from 'react-native-paper';
 
 const statKeys = {
   strokes: 'scoring average',
@@ -16,17 +11,17 @@ const statKeys = {
   par5: 'par 5 average'
 };
 
-export const StatsList = ({ seasons, stats, onClick }) => (
-  <tbody>
-    {Object.keys(statKeys).map(stat => (
-      <tr key={stat}>
-        <td>{statKeys[stat]}:</td>
-        {seasons.map(season => (
-          <SeasonTd onClick={() => onClick(season)} key={season + '-' + stat}>
-            {stats[season][stat]}
-          </SeasonTd>
-        ))}
-      </tr>
-    ))}
-  </tbody>
-);
+export const StatsList = ({ seasons, stats, onClick }) =>
+  Object.keys(statKeys).map(stat => (
+    <DataTable.Row key={stat}>
+      <DataTable.Cell>{statKeys[stat]}:</DataTable.Cell>
+      {seasons.map(season => (
+        <DataTable.Cell
+          onClick={() => onClick(season)}
+          key={season + '-' + stat}
+        >
+          {stats[season][stat]}
+        </DataTable.Cell>
+      ))}
+    </DataTable.Row>
+  ));

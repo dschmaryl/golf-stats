@@ -10,7 +10,7 @@ import { checkToken } from './actions/auth';
 import { Login } from './screens/Login';
 import { Main } from './screens/Main';
 
-// persistor.purge();
+persistor.purge();
 
 export const url = '';
 

@@ -1,9 +1,9 @@
 import React from 'react';
+import { View } from 'react-native';
+import { DataTable } from 'react-native-paper';
 import { connect } from 'react-redux';
 
 import { selectSeason } from '../../../actions/stats';
-
-import { PaddedDiv } from '../../../components/PaddedDiv';
 
 import { StatsHeader } from './StatsHeader';
 import { StatsList } from './StatsList';
@@ -17,21 +17,19 @@ export const StatsComponent = ({ statsLoaded, stats, selectSeason }) => {
       .reverse();
 
     return (
-      <PaddedDiv className="row">
-        <div className="col-xs-12">
-          <table style={{ width: '100%' }}>
-            <StatsHeader
-              seasons={seasons}
-              onClick={season => selectSeason(season)}
-            />
-            <StatsList
-              seasons={seasons}
-              stats={stats}
-              onClick={season => selectSeason(season)}
-            />
-          </table>
-        </div>
-      </PaddedDiv>
+      <View>
+        <DataTable>
+          <StatsHeader
+            seasons={seasons}
+            onClick={season => selectSeason(season)}
+          />
+          <StatsList
+            seasons={seasons}
+            stats={stats}
+            onClick={season => selectSeason(season)}
+          />
+        </DataTable>
+      </View>
     );
   }
 };
