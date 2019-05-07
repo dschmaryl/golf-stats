@@ -1,15 +1,11 @@
 import React from 'react';
-import styled from 'styled-components';
+import { DataTable } from 'react-native-paper';
 import moment from 'moment';
 import { connect } from 'react-redux';
 
 import { selectRound } from '../../../actions/rounds';
 
-import { SelectedRound } from './SelectedRound';
-
-const ItemRight = styled.div`
-  text-align: right;
-`;
+// import { SelectedRound } from './SelectedRound';
 
 const RoundsListComponent = props =>
   Object.keys(props.rounds)
@@ -37,28 +33,26 @@ const RoundsListComponent = props =>
     .map(key => {
       const round = props.rounds[key];
 
-      return key === props.selectedRoundIndex ? (
-        <SelectedRound
-          roundData={round.roundData}
-          onClick={() => props.selectRound(null)}
-          key={key}
-        />
-      ) : (
-        <div
-          className="row"
-          onClick={() => props.selectRound(key)}
+      return key === props.selectedRoundIndex ? null : (
+        // <SelectedRound
+        //   roundData={round.roundData}
+        //   onClick={() => props.selectRound(null)}
+        //   key={key}
+        // />
+        <DataTable.Row
+          onPress={() => props.selectRound(key)}
           style={{ cursor: 'pointer' }}
           key={key}
         >
-          <div className="col-xs-3">{round['date'].split(' ')[0]}</div>
-          <div className="col-xs-3">{round['course']}</div>
-          <ItemRight className="col-xs-1">{round['total_strokes']}</ItemRight>
-          <ItemRight className="col-xs-1">{round['front_9_strokes']}</ItemRight>
-          <ItemRight className="col-xs-1">{round['back_9_strokes']}</ItemRight>
-          <ItemRight className="col-xs-1">{round['total_putts']}</ItemRight>
-          <ItemRight className="col-xs-1">{round['total_gir']}</ItemRight>
-          <ItemRight className="col-xs-1">{round['handicap_index']}</ItemRight>
-        </div>
+          <DataTable.Cell>{round['date'].split(' ')[0]}</DataTable.Cell>
+          <DataTable.Cell>{round['course']}</DataTable.Cell>
+          <DataTable.Cell numeric>{round['total_strokes']}</DataTable.Cell>
+          <DataTable.Cell numeric>{round['front_9_strokes']}</DataTable.Cell>
+          <DataTable.Cell numeric>{round['back_9_strokes']}</DataTable.Cell>
+          <DataTable.Cell numeric>{round['total_putts']}</DataTable.Cell>
+          <DataTable.Cell numeric>{round['total_gir']}</DataTable.Cell>
+          <DataTable.Cell numeric>{round['handicap_index']}</DataTable.Cell>
+        </DataTable.Row>
       );
     });
 

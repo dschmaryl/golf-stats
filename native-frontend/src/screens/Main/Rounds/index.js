@@ -1,27 +1,27 @@
 import React from 'react';
+import { View } from 'react-native';
+import { DataTable, Text } from 'react-native-paper';
 import { connect } from 'react-redux';
 
 import { setSortKey } from '../../../actions/rounds';
 
-import { PaddedDiv } from '../../../components/PaddedDiv';
-
 import { RoundsHeader } from './RoundsHeader';
 import { RoundsList } from './RoundsList';
 
-export const RoundsComponent = ({ roundsLoaded, setSortKey }) => {
-  if (!roundsLoaded) {
-    return <p>loading rounds</p>;
-  } else {
-    return (
-      <PaddedDiv className="row">
-        <div className="col-xs-12">
-          <RoundsHeader onClick={value => setSortKey(value)} />
-          <RoundsList />
-        </div>
-      </PaddedDiv>
-    );
-  }
-};
+export const RoundsComponent = ({ roundsLoaded, setSortKey }) => (
+  <View style={{ paddingTop: 40 }}>
+    {!roundsLoaded ? (
+      <View>
+        <Text>loading rounds...</Text>
+      </View>
+    ) : (
+      <DataTable>
+        <RoundsHeader onClick={value => setSortKey(value)} />
+        <RoundsList />
+      </DataTable>
+    )}
+  </View>
+);
 
 const mapStateToProps = state => ({
   roundsLoaded: state.rounds.roundsLoaded

@@ -17,8 +17,9 @@ export const StatsList = ({ seasons, stats, onClick }) =>
       <DataTable.Cell>{statKeys[stat]}:</DataTable.Cell>
       {seasons.map(season => (
         <DataTable.Cell
-          onClick={() => onClick(season)}
+          onPress={() => onClick(season)}
           key={season + '-' + stat}
+          numeric
         >
           {stats[season][stat]}
         </DataTable.Cell>

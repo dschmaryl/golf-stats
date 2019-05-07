@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { addRounds } from '../../actions/rounds';
 import { addStats } from '../../actions/stats';
 
-// import { Rounds } from './Rounds';
+import { Rounds } from './Rounds';
 import { Stats } from './Stats';
 
 const { width } = Dimensions.get('window');
@@ -50,10 +50,7 @@ class MainComponent extends React.Component {
           <Title style={styles.titleText}>all statistics</Title>
         </View>
         <Stats />
-        {/* <Rounds /> */}
-        <View>
-          <Text>testering</Text>
-        </View>
+        <Rounds />
       </View>
     </View>
   );

@@ -10,7 +10,11 @@ import { StatsList } from './StatsList';
 
 export const StatsComponent = ({ statsLoaded, stats, selectSeason }) => {
   if (!statsLoaded) {
-    return <View><Text>loading stats...</Text></View>;
+    return (
+      <View>
+        <Text>loading stats...</Text>
+      </View>
+    );
   } else {
     const seasons = Object.keys(stats)
       .sort()
