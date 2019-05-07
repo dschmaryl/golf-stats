@@ -10,7 +10,7 @@ import rootReducer from './reducers';
 
 const store = createStore(
   persistReducer(
-    { key: 'golf-stats', storage, whitelist: ['token'], timeout: null },
+    { key: 'golf-stats', storage, whitelist: ['token'] },
     rootReducer
   ),
   applyMiddleware(thunk)
@@ -18,7 +18,7 @@ const store = createStore(
 
 const persistor = persistStore(store);
 
-export const ReduxProvider = ({ children }) => (
+export const ReduxProvider = ({ children }: { children: any }) => (
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>
       {children}
