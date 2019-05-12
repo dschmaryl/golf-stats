@@ -5,6 +5,10 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  /* mine */
+  line-height: 1.6;
+  color: #555;
 }
 
 code {

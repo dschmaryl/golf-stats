@@ -1,26 +1,52 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { Dispatch } from 'redux';
+import { connect } from 'react-redux';
 
-const App: React.FC = () => {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+import { checkToken } from './actions/auth';
 
-export default App;
+import { token, AppStateType } from './types';
+
+import { Login } from './screens/Login';
+import { Main } from './screens/Main';
+
+type PropTypes = {
+  token: token;
+  isAuthenticated: boolean;
+  authenticationFailed: boolean;
+  checkToken: Function;
+};
+
+const AppComponent: React.FC<PropTypes> = ({
+  token,
+  isAuthenticated,
+  authenticationFailed,
+  checkToken
+}) => {
+  if (token && isAuthenticated) {
+    return <Main />;
+  } else if (!token || authenticationFailed) {
+    return <Login />;
+  } else {
+    checkToken();
+    return (
+      <div>
+        <p>authenticating...</p>
+      </div>
+    );
+  }
+};
+
+const mapStateToProps = (state: AppStateType) => ({
+  token: state.token,
+  isAuthenticated: state.auth.isAuthenticated,
+  authenticationFailed: state.auth.authenticationFailed
+});
+
+const mapDispatchToProps = (dispatch: Dispatch) => ({
+  checkToken: () => dispatch(checkToken())
+});
+
+export const App = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(AppComponent);
