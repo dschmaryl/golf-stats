@@ -1,5 +1,5 @@
 export interface Stat {
-  strokes: number;
+  [strokes: string]: number;
   putts: number;
   gir: number;
   handicap: number;
@@ -14,6 +14,6 @@ export interface StatsType {
 
 export interface StatsStateType {
   statsLoaded: boolean;
-  selectedSeason: null | number;
+  selectedSeason: number;
   data: StatsType;
 }

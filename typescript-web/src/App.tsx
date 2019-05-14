@@ -1,17 +1,18 @@
 import React from 'react';
-import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
+import { AnyAction } from 'redux';
+import { ThunkDispatch } from 'redux-thunk';
 
 import { checkToken } from './actions/auth';
 
 import { AppStateType } from './types';
-import { token } from './types/auth';
+import { Token } from './types/auth';
 
 import { Login } from './screens/Login';
 import { Main } from './screens/Main';
 
 type PropTypes = {
-  token: token;
+  token: Token;
   isAuthenticated: boolean;
   authenticationFailed: boolean;
   checkToken: Function;
@@ -43,7 +44,9 @@ const mapStateToProps = (state: AppStateType) => ({
   authenticationFailed: state.auth.authenticationFailed
 });
 
-const mapDispatchToProps = (dispatch: Dispatch) => ({
+const mapDispatchToProps = (
+  dispatch: ThunkDispatch<AppStateType, null, AnyAction>
+) => ({
   checkToken: () => dispatch(checkToken())
 });
 

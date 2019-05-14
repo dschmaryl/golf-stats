@@ -1,4 +1,5 @@
 export interface Hole {
+  [key: string]: null | boolean | string | number;
   hole_number: number;
   round_id: number;
   id: number;
@@ -22,6 +23,7 @@ export interface HolesType {
 }
 
 export interface RoundData {
+  [key: string]: string | number | HolesType;
   date: string;
   id: number;
   user_id: number;
@@ -49,6 +51,7 @@ export interface RoundData {
 }
 
 export interface Round {
+  [key: string]: string | number | RoundData;
   date: string;
   id: number;
   course: string;

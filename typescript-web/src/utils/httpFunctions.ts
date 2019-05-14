@@ -1,8 +1,8 @@
 import axios from 'axios';
 
-import { token } from '../types/auth';
+import { Token } from '../types/auth';
 
-const tokenConfig = (token: token) => ({
+const tokenConfig = (token: Token) => ({
   headers: {
     'Authorization': token // prettier-ignore
   }
@@ -11,8 +11,8 @@ const tokenConfig = (token: token) => ({
 export const getToken = (username: string, password: string) =>
   axios.post('/api/get_token', { username, password });
 
-export const validateToken = (token: token) =>
+export const validateToken = (token: Token) =>
   axios.post('/api/is_token_valid', { token });
 
-export const getData = (url: string, token: token) =>
+export const getData = (url: string, token: Token) =>
   axios.get(url, tokenConfig(token));

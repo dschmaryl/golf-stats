@@ -1,6 +1,8 @@
 import React from 'react';
-import Moment from 'react-moment';
 import styled from 'styled-components';
+import Moment from 'react-moment';
+
+import { RoundData } from '../../../../types/rounds';
 
 import { SelectedRoundData } from './SelectedRoundData';
 
@@ -23,8 +25,13 @@ const roundDataKeys = [
   'handicap_index'
 ];
 
-export const SelectedRound = ({ roundData, onClick }) => {
-  const renderRowItem = key =>
+interface PropTypes {
+  roundData: RoundData;
+  onClick: Function;
+}
+
+export const SelectedRound: React.FC<PropTypes> = ({ roundData, onClick }) => {
+  const renderRowItem = (key: string) =>
     key === 'date' ? (
       <SelectedDiv className="col-xs-3" key={key}>
         <Moment format="YYYY-MM-DD">{roundData['date']}</Moment>
@@ -40,7 +47,7 @@ export const SelectedRound = ({ roundData, onClick }) => {
     );
 
   return (
-    <div onClick={onClick} style={{ cursor: 'pointer' }}>
+    <div onClick={() => onClick()} style={{ cursor: 'pointer' }}>
       <div className="row selected-round-row">
         {roundDataKeys.map(key => renderRowItem(key))}
       </div>

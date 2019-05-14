@@ -18,7 +18,7 @@ export const checkToken = (): ThunkAction<
   AppStateType,
   null,
   AnyAction
-> => (dispatch: ThunkDispatch<{}, {}, AnyAction>, getState) => {
+> => (dispatch, getState) => {
   const token = getState().token;
   validateToken(token)
     .then(response => response.data)
@@ -36,9 +36,7 @@ export const checkToken = (): ThunkAction<
 export const login = (
   username: string,
   password: string
-): ThunkAction<void, AppStateType, null, AnyAction> => (
-  dispatch: ThunkDispatch<{}, {}, AnyAction>
-) => {
+): ThunkAction<void, AppStateType, null, AnyAction> => dispatch => {
   getToken(username, password)
     .then(response => response.data)
     .then(response => {

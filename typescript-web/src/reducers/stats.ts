@@ -5,7 +5,7 @@ import { StatsStateType } from '../types/stats';
 export const stats: Reducer = (
   state: StatsStateType = {
     statsLoaded: false,
-    selectedSeason: null,
+    selectedSeason: 2046,
     data: {}
   },
   action
@@ -17,7 +17,7 @@ export const stats: Reducer = (
     case 'SELECT_SEASON':
       return {
         ...state,
-        selectedSeason: action.season === '2046' ? null : action.season
+        selectedSeason: action.season
       };
 
     default:

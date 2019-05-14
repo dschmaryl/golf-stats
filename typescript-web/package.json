@@ -9,6 +9,7 @@
     "@types/react-dom": "16.8.4",
     "@types/react-redux": "^7.0.8",
     "@types/redux-thunk": "^2.1.0",
+    "@types/styled-components": "^4.1.15",
     "axios": "^0.18.0",
     "moment": "^2.24.0",
     "react": "^16.8.6",
@@ -19,6 +20,7 @@
     "redux": "^4.0.1",
     "redux-persist": "^5.10.0",
     "redux-thunk": "^2.3.0",
+    "styled-components": "^4.2.0",
     "typescript": "3.4.5"
   },
   "scripts": {
