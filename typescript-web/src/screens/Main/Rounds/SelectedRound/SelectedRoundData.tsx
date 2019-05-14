@@ -18,7 +18,7 @@ const TdRight = styled.td`
 `;
 
 const nineHoleArray = (func: Function) =>
-  Array.from({ length: 9 }, (_, i) => func());
+  Array.from({ length: 9 }, (v, i) => func(v, i));
 
 interface PropTypes {
   roundData: RoundData;
