@@ -1,5 +1,5 @@
 export const stats = (
-  state = { statsLoaded: false, selectedSeason: null, data: {} },
+  state = { statsLoaded: false, selectedSeason: 2046, data: {} },
   action
 ) => {
   switch (action.type) {
@@ -9,7 +9,7 @@ export const stats = (
     case 'SELECT_SEASON':
       return {
         ...state,
-        selectedSeason: action.season === '2046' ? null : action.season
+        selectedSeason: action.season
       };
 
     default:

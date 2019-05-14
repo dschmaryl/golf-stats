@@ -19,6 +19,7 @@ class Hole(db.Model):
     yardage = db.Column(db.Integer)
     handicap = db.Column(db.Integer)
 
+    # for eventually adding proper adjustment for single digit handicaps
     adjusted_strokes = db.Column(db.Integer)
 
     def set_course_hole_data(self):

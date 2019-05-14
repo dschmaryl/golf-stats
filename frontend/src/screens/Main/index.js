@@ -10,7 +10,7 @@ import { Stats } from './Stats';
 
 const ContainerDiv = styled.div`
   max-width: 720px;
-  min-width: 340px;
+  min-width: 480px;
   margin: auto;
 `;
 

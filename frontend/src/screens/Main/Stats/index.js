@@ -13,6 +13,7 @@ export const StatsComponent = ({ statsLoaded, stats, selectSeason }) => {
     return <p>loading stats</p>;
   } else {
     const seasons = Object.keys(stats)
+      .map(s => parseInt(s))
       .sort()
       .reverse();
 
@@ -20,15 +21,8 @@ export const StatsComponent = ({ statsLoaded, stats, selectSeason }) => {
       <PaddedDiv className="row">
         <div className="col-xs-12">
           <table style={{ width: '100%' }}>
-            <StatsHeader
-              seasons={seasons}
-              onClick={season => selectSeason(season)}
-            />
-            <StatsList
-              seasons={seasons}
-              stats={stats}
-              onClick={season => selectSeason(season)}
-            />
+            <StatsHeader seasons={seasons} onClick={selectSeason} />
+            <StatsList seasons={seasons} stats={stats} onClick={selectSeason} />
           </table>
         </div>
       </PaddedDiv>
