@@ -1,6 +1,6 @@
 import { Reducer } from 'redux';
 
-import { TokenStateType } from '../types';
+import { TokenStateType } from '../types/auth';
 
 export const token: Reducer = (state: TokenStateType = null, action) => {
   switch (action.type) {

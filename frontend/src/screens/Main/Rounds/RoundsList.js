@@ -15,8 +15,8 @@ const RoundsListComponent = props =>
   Object.keys(props.rounds)
     .filter(
       key =>
-        !props.selectedSeason ||
-        props.rounds[key].date.split('-')[0] === props.selectedSeason
+        props.selectedSeason === 2046 ||
+        props.rounds[key].date.split('-')[0] === '' + props.selectedSeason
     )
     .sort((a, b) => {
       if (props.sortKey === 'date') {

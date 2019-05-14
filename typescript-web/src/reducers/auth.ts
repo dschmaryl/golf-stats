@@ -1,6 +1,6 @@
 import { Reducer } from 'redux';
 
-import { AuthStateType } from '../types';
+import { AuthStateType, AuthActionTypes } from '../types/auth';
 
 export const auth: Reducer = (
   state: AuthStateType = {
@@ -8,7 +8,7 @@ export const auth: Reducer = (
     authenticationFailed: false,
     statusText: 'Please log in'
   },
-  action
+  action: AuthActionTypes
 ) => {
   switch (action.type) {
     case 'LOGIN_SUCCESS':

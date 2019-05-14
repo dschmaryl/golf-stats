@@ -4,7 +4,8 @@ import { connect } from 'react-redux';
 
 import { checkToken } from './actions/auth';
 
-import { token, AppStateType } from './types';
+import { AppStateType } from './types';
+import { token } from './types/auth';
 
 import { Login } from './screens/Login';
 import { Main } from './screens/Main';

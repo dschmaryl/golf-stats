@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { token } from '../types';
+import { token } from '../types/auth';
 
 const tokenConfig = (token: token) => ({
   headers: {

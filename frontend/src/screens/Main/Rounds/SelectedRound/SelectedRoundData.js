@@ -7,6 +7,9 @@ const tableRight = { textAlign: 'Right', maxWidth: '28px' };
 const nineHoleArray = func => Array.from({ length: 9 }, func);
 
 export const SelectedRoundData = ({ roundData }) => {
+  console.log(roundData);
+
+
   const nineHoleTotal = (startHole, stat) =>
     nineHoleArray((_, i) => roundData['holes'][i + startHole][stat]).reduce(
       (total, hole) => total + hole

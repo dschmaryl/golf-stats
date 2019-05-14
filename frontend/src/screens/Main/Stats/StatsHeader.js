@@ -12,7 +12,7 @@ export const StatsHeader = ({ seasons, onClick }) => (
       <th>season:</th>
       {seasons.map(season => (
         <SeasonTh onClick={() => onClick(season)} key={season}>
-          {season === '2046' ? 'overall' : season}
+          {season === 2046 ? 'overall' : season}
         </SeasonTh>
       ))}
     </tr>

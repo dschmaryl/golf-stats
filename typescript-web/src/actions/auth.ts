@@ -1,5 +1,5 @@
-import { Action } from 'redux';
-import { ThunkAction } from 'redux-thunk';
+import { AnyAction } from 'redux';
+import { ThunkAction, ThunkDispatch } from 'redux-thunk';
 
 import { AppStateType } from '../types';
 import { getToken, validateToken } from '../utils/httpFunctions';
@@ -16,11 +16,9 @@ export const loginFailure = (error: string) => ({
 export const checkToken = (): ThunkAction<
   void,
   AppStateType,
-  // null,
-  // Action<string>
-  void,
-  Action
-> => (dispatch, getState) => {
+  null,
+  AnyAction
+> => (dispatch: ThunkDispatch<{}, {}, AnyAction>, getState) => {
   const token = getState().token;
   validateToken(token)
     .then(response => response.data)
@@ -38,7 +36,9 @@ export const checkToken = (): ThunkAction<
 export const login = (
   username: string,
   password: string
-): ThunkAction<void, AppStateType, null, Action> => dispatch => {
+): ThunkAction<void, AppStateType, null, AnyAction> => (
+  dispatch: ThunkDispatch<{}, {}, AnyAction>
+) => {
   getToken(username, password)
     .then(response => response.data)
     .then(response => {
@@ -50,12 +50,9 @@ export const login = (
     });
 };
 
-export const logout = (): ThunkAction<
-  void,
-  AppStateType,
-  null,
-  Action
-> => dispatch => {
+export const logout = (): ThunkAction<void, AppStateType, null, AnyAction> => (
+  dispatch: ThunkDispatch<{}, {}, AnyAction>
+) => {
   dispatch({ type: 'CLEAR_TOKEN' });
   return { type: 'LOGOUT' };
 };
