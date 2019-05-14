@@ -4,15 +4,6 @@ import { ThunkAction, ThunkDispatch } from 'redux-thunk';
 import { AppStateType } from '../types';
 import { getToken, validateToken } from '../utils/httpFunctions';
 
-export const loginSuccess = () => ({
-  type: 'LOGIN_SUCCESS'
-});
-
-export const loginFailure = (error: string) => ({
-  type: 'LOGIN_FAILURE',
-  error
-});
-
 export const checkToken = (): ThunkAction<
   void,
   AppStateType,
@@ -24,29 +15,43 @@ export const checkToken = (): ThunkAction<
     .then(response => response.data)
     .then(response => {
       if (response) {
-        return dispatch(loginSuccess());
+        return dispatch({
+          type: 'LOGIN_SUCCESS'
+        });
       } else {
         dispatch({ type: 'CLEAR_TOKEN' });
-        return dispatch(loginFailure('Invalid token'));
+        return dispatch({
+          type: 'LOGIN_FAILURE',
+          error: 'Invalid token'
+        });
       }
     })
-    .catch(() => dispatch(loginFailure('Invalid token')));
+    .catch(() =>
+      dispatch({
+        type: 'LOGIN_FAILURE',
+        error: 'Invalid token'
+      })
+    );
 };
 
 export const login = (
   username: string,
   password: string
-): ThunkAction<void, AppStateType, null, AnyAction> => dispatch => {
+): ThunkAction<void, AppStateType, null, AnyAction> => dispatch =>
   getToken(username, password)
     .then(response => response.data)
     .then(response => {
       dispatch({ type: 'SET_TOKEN', token: response.token });
-      dispatch(loginSuccess());
+      return dispatch({
+        type: 'LOGIN_SUCCESS'
+      });
     })
     .catch(() => {
-      dispatch(loginFailure('Invalid username or password'));
+      dispatch({
+        type: 'LOGIN_FAILURE',
+        error: 'Invalid username or password'
+      });
     });
-};
 
 export const logout = (): ThunkAction<void, AppStateType, null, AnyAction> => (
   dispatch: ThunkDispatch<{}, {}, AnyAction>

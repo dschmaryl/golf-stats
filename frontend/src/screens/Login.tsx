@@ -46,43 +46,41 @@ export class LoginComponent extends React.Component<PropTypes> {
       <div>
         <h5>{this.props.statusText}</h5>
       </div>
-      <form>
-        <InputRow>
-          <input
-            name="username"
-            type="text"
-            className="form-control text-input"
-            value={this.state.username}
-            placeholder="name"
-            onChange={event => this.setState({ username: event.target.value })}
-          />
-        </InputRow>
-        <InputRow>
-          <input
-            name="password"
-            type="password"
-            className="form-control text-input"
-            value={this.state.password}
-            placeholder="password"
-            onChange={event => this.setState({ password: event.target.value })}
-          />
-        </InputRow>
+      <InputRow>
+        <input
+          name="username"
+          type="text"
+          className="form-control text-input"
+          value={this.state.username}
+          placeholder="name"
+          onChange={event => this.setState({ username: event.target.value })}
+        />
+      </InputRow>
+      <InputRow>
+        <input
+          name="password"
+          type="password"
+          className="form-control text-input"
+          value={this.state.password}
+          placeholder="password"
+          onChange={event => this.setState({ password: event.target.value })}
+        />
+      </InputRow>
 
-        <InputRow>
-          <input
-            type="submit"
-            value="login"
-            className="btn btn-default"
-            onClick={this.login}
-          />
-          <input
-            type="submit"
-            value="register"
-            className="btn btn-default"
-            onClick={() => {}}
-          />
-        </InputRow>
-      </form>
+      <InputRow>
+        <input
+          type="submit"
+          value="login"
+          className="btn btn-default"
+          onClick={this.login}
+        />
+        <input
+          type="submit"
+          value="register"
+          className="btn btn-default"
+          onClick={() => {}}
+        />
+      </InputRow>
     </LoginContainer>
   );
 }
