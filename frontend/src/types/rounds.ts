@@ -1,4 +1,4 @@
-export interface Hole {
+interface Hole {
   [key: string]: null | boolean | string | number;
   hole_number: number;
   round_id: number;
@@ -18,7 +18,7 @@ export interface Hole {
   handicap: number;
 }
 
-export interface HolesType {
+interface HolesType {
   [hole_number: number]: Hole;
 }
 

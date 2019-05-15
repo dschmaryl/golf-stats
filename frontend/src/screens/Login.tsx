@@ -8,9 +8,8 @@ import { login } from '../actions/auth';
 import { AppStateType } from '../types';
 
 const LoginContainer = styled.div`
-  min-width: 320px;
-  max-width: 420px;
-  padding: 10% 0 0 20%;
+  width: 180px;
+  margin: 20% 0 0 20%;
 `;
 
 const Header = styled.div`
@@ -19,6 +18,15 @@ const Header = styled.div`
 
 const InputRow = styled.div`
   margin: 20px 0 20px 0;
+`;
+
+const Button = styled.input`
+  min-width: 80px;
+`;
+
+const ButtonRight = styled.input`
+  margin-left: 20px;
+  min-width: 80px;
 `;
 
 interface PropTypes {
@@ -34,12 +42,11 @@ export class LoginComponent extends React.Component<PropTypes> {
   };
 
   login = () => {
-    // event.preventDefault();
     this.props.login(this.state.username, this.state.password);
   };
 
   render = () => (
-    <LoginContainer onKeyPress={this.handleKeyPress}>
+    <LoginContainer onKeyDown={this.handleKeyPress}>
       <Header>
         <div>welcome</div>
       </Header>
@@ -68,13 +75,13 @@ export class LoginComponent extends React.Component<PropTypes> {
       </InputRow>
 
       <InputRow>
-        <input
+        <Button
           type="submit"
           value="login"
           className="btn btn-default"
           onClick={this.login}
         />
-        <input
+        <ButtonRight
           type="submit"
           value="register"
           className="btn btn-default"

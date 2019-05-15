@@ -1,4 +1,4 @@
-export interface Stat {
+interface Stat {
   [strokes: string]: number;
   putts: number;
   gir: number;
