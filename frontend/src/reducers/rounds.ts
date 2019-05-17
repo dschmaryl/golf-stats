@@ -1,5 +1,9 @@
-export const rounds = (
-  state = {
+import { Reducer } from 'redux';
+
+import { RoundsStateType } from '../types/rounds';
+
+export const rounds: Reducer = (
+  state: RoundsStateType = {
     roundsLoaded: false,
     sortKey: 'date',
     reverseSort: true,
