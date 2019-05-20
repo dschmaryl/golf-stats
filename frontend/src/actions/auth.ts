@@ -1,7 +1,9 @@
 import { AnyAction, ActionCreator } from 'redux';
 import { ThunkAction } from 'redux-thunk';
+import jwtDecode from 'jwt-decode';
 
 import { AppStateType } from '../types';
+import { DecodedToken } from '../types/auth';
 import { getToken, validateToken } from '../utils/httpFunctions';
 
 export const checkToken: ActionCreator<
@@ -11,7 +13,8 @@ export const checkToken: ActionCreator<
     .then(response => response.data)
     .then(response => {
       if (response) {
-        return dispatch({ type: 'LOGIN_SUCCESS' });
+        const username = jwtDecode<DecodedToken>(getState().token)['username'];
+        return dispatch({ type: 'LOGIN_SUCCESS', username });
       } else {
         dispatch({ type: 'CLEAR_TOKEN' });
         return dispatch({ type: 'LOGIN_FAILURE', error: 'Invalid token' });
@@ -26,9 +29,7 @@ export const login: ActionCreator<
     .then(response => response.data)
     .then(response => {
       dispatch({ type: 'SET_TOKEN', token: response.token });
-      return dispatch({
-        type: 'LOGIN_SUCCESS'
-      });
+      return dispatch({ type: 'LOGIN_SUCCESS', username });
     })
     .catch(() =>
       dispatch({

@@ -7,7 +7,9 @@ export const rounds: Reducer = (
     roundsLoaded: false,
     sortKey: 'date',
     reverseSort: true,
-    selectedRoundIndex: null,
+    selectedRoundIndex: 0,
+    selectedRoundIsLoaded: false,
+    showRoundDialog: false,
     data: {}
   },
   action
@@ -19,31 +21,29 @@ export const rounds: Reducer = (
     case 'ADD_ROUND_DATA':
       return {
         ...state,
+        selectedRoundIsLoaded: true,
         data: {
           ...state.data,
           [action.roundIndex]: {
             ...state.data[action.roundIndex],
-            roundData: { ...action.roundData }
+            roundData: { ...action.data }
           }
         }
       };
 
-    case 'SELECT_ROUND':
-      if (action.data) {
-        return {
-          ...state,
-          selectedRoundIndex: action.roundIndex,
-          data: {
-            ...state.data,
-            [action.roundIndex]: {
-              ...state.data[action.roundIndex],
-              roundData: { ...action.data }
-            }
-          }
-        };
-      } else {
-        return { ...state, selectedRoundIndex: action.roundIndex };
-      }
+    case 'SET_SELECTED_ROUND_IS_LOADED':
+      return { ...state, selectedRoundIsLoaded: true };
+
+    case 'SHOW_ROUND_DIALOG':
+      return {
+        ...state,
+        showRoundDialog: true,
+        selectedRoundIndex: action.roundIndex,
+        selectedRoundIsLoaded: false
+      };
+
+    case 'HIDE_ROUND_DIALOG':
+      return { ...state, showRoundDialog: false };
 
     case 'SET_SORT_KEY':
       if (action.sortKey === state.sortKey) {

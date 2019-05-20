@@ -1,57 +1,66 @@
 import React from 'react';
-import styled from 'styled-components';
-import Moment from 'react-moment';
+import { connect } from 'react-redux';
+import { AnyAction } from 'redux';
+import { ThunkDispatch } from 'redux-thunk';
 
-import { RoundData } from '../../../../types/rounds';
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
-import { SelectedRoundData } from './SelectedRoundData';
+import { hideRoundDialog } from '../../../../actions/rounds';
 
-const SelectedDiv = styled.div`
-  background-color: #f1f5f1;
-`;
+import { AppStateType } from '../../../../types';
+import { Round } from '../../../../types/rounds';
 
-const TextRight = styled.div`
-  text-align: right;
-`;
-
-const roundDataKeys = [
-  'date',
-  'course',
-  'total_strokes',
-  'front_9_strokes',
-  'back_9_strokes',
-  'total_putts',
-  'total_gir',
-  'handicap_index'
-];
+import { SelectedRoundTable } from './SelectedRoundTable';
 
 interface PropTypes {
-  roundData: RoundData;
-  onClick: Function;
+  showRoundDialog: boolean;
+  round: Round;
+  hideRoundDialog: Function;
 }
 
-export const SelectedRound: React.FC<PropTypes> = ({ roundData, onClick }) => {
-  const renderRowItem = (key: string) =>
-    key === 'date' ? (
-      <SelectedDiv className="col-xs-3" key={key}>
-        <Moment format="YYYY-MM-DD">{roundData['date']}</Moment>
-      </SelectedDiv>
-    ) : key === 'course' ? (
-      <SelectedDiv className="col-xs-3" key={key}>
-        {roundData['course']}
-      </SelectedDiv>
-    ) : (
-      <SelectedDiv className="col-xs-1" key={key}>
-        <TextRight>{roundData[key]}</TextRight>
-      </SelectedDiv>
-    );
+export const SelectedRoundComponent: React.FC<PropTypes> = ({
+  showRoundDialog,
+  round,
+  hideRoundDialog
+}) => (
+  <Dialog
+    open={showRoundDialog}
+    onClose={event => hideRoundDialog()}
+    maxWidth="md"
+    fullWidth={true}
+  >
+    <DialogTitle>{round ? round.date.split(' ')[0] : ''}</DialogTitle>
+    <DialogContent>
+      <SelectedRoundTable />
+    </DialogContent>
+    <DialogActions>
+      <Button
+        variant="outlined"
+        style={{ marginTop: '10px' }}
+        onClick={event => hideRoundDialog()}
+      >
+        close
+      </Button>
+    </DialogActions>
+  </Dialog>
+);
 
-  return (
-    <div onClick={() => onClick()} style={{ cursor: 'pointer' }}>
-      <div className="row selected-round-row">
-        {roundDataKeys.map(key => renderRowItem(key))}
-      </div>
-      <SelectedRoundData roundData={roundData} />
-    </div>
-  );
-};
+const mapStateToProps = (state: AppStateType) => ({
+  showRoundDialog: state.rounds.showRoundDialog,
+  round: state.rounds.data[state.rounds.selectedRoundIndex]
+});
+
+const mapDispatchToProps = (
+  dispatch: ThunkDispatch<AppStateType, null, AnyAction>
+) => ({
+  hideRoundDialog: () => dispatch(hideRoundDialog())
+});
+
+export const SelectedRound = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SelectedRoundComponent);

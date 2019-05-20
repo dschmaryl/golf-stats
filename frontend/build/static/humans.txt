@@ -1,7 +1,0 @@
-/* PERSON */
-    Developer: Daryl Smith
-    From: New York
-    GitHub: https://github.com/dschmaryl
-
-/* SITE */
-    golf-stats.herokuapp.com

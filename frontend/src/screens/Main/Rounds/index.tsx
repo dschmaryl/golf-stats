@@ -3,14 +3,16 @@ import { connect } from 'react-redux';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 
+import Table from '@material-ui/core/Table';
+
 import { setSortKey } from '../../../actions/rounds';
 
 import { AppStateType } from '../../../types';
 
-import { PaddedDiv } from '../../../components/PaddedDiv';
-
 import { RoundsHeader } from './RoundsHeader';
 import { RoundsList } from './RoundsList';
+
+import { SelectedRound } from './SelectedRound';
 
 interface PropTypes {
   roundsLoaded: boolean;
@@ -21,16 +23,20 @@ export const RoundsComponent: React.FC<PropTypes> = ({
   roundsLoaded,
   setSortKey
 }) => (
-  <PaddedDiv className="row">
+  <div style={{ marginTop: '40px', marginBottom: '50px' }}>
+    <h2>rounds</h2>
     {!roundsLoaded ? (
-      <p>loading rounds...</p>
+      <div style={{ padding: '10px' }}>
+        <h5>loading rounds...</h5>
+      </div>
     ) : (
-      <div className="col-xs-12">
+      <Table padding="dense" style={{ marginTop: '-10px' }}>
         <RoundsHeader onClick={setSortKey} />
         <RoundsList />
-      </div>
+      </Table>
     )}
-  </PaddedDiv>
+    <SelectedRound />
+  </div>
 );
 
 const mapStateToProps = (state: AppStateType) => ({

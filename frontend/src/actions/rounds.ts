@@ -12,34 +12,26 @@ export const addRounds: ActionCreator<
     .then(data => dispatch({ type: 'ADD_ROUNDS', data }))
     .catch(() => console.log('failed to get rounds'));
 
-export const addRoundData: ActionCreator<
-  ThunkAction<void, AppStateType, null, AnyAction>
-> = (roundId: number) => (dispatch, getState) =>
-  getData('/api/round/' + roundId, getState().token)
-    .then(response => response.data)
-    .then(data => dispatch({ type: 'ADD_ROUND_data', roundId, data }))
-    .catch(() => console.log('failed to get rounds'));
-
-export const selectRound: ActionCreator<
+export const showRoundDialog: ActionCreator<
   ThunkAction<void, AppStateType, null, AnyAction>
 > = (roundIndex: number) => (dispatch, getState) => {
-  if (roundIndex === null) {
-    return dispatch({ type: 'SELECT_ROUND', roundIndex });
+  dispatch({ type: 'SHOW_ROUND_DIALOG', roundIndex });
+
+  const rounds = getState().rounds.data;
+
+  if (!rounds[roundIndex].roundData) {
+    return getData('/api/round/' + rounds[roundIndex].id, getState().token)
+      .then(response => response.data)
+      .then(data => dispatch({ type: 'ADD_ROUND_DATA', roundIndex, data }))
+      .catch(() => console.log('failed to get round data'));
   } else {
-    const rounds = getState().rounds;
-    if (rounds.data[roundIndex].roundData) {
-      return dispatch({ type: 'SELECT_ROUND', roundIndex });
-    } else {
-      return getData(
-        '/api/round/' + rounds.data[roundIndex].id,
-        getState().token
-      )
-        .then(response => response.data)
-        .then(data => dispatch({ type: 'SELECT_ROUND', roundIndex, data }))
-        .catch(() => console.log('failed to get round data'));
-    }
+    return dispatch({ type: 'SET_SELECTED_ROUND_IS_LOADED' });
   }
 };
+
+export const hideRoundDialog: ActionCreator<AnyAction> = () => ({
+  type: 'HIDE_ROUND_DIALOG'
+});
 
 export const setSortKey: ActionCreator<AnyAction> = (sortKey: string) => ({
   type: 'SET_SORT_KEY',

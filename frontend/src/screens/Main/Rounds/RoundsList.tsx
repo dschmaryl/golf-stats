@@ -1,32 +1,28 @@
 import React from 'react';
-import styled from 'styled-components';
 import moment from 'moment';
 import { connect } from 'react-redux';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 
-import { selectRound } from '../../../actions/rounds';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableRow from '@material-ui/core/TableRow';
+
+import { showRoundDialog } from '../../../actions/rounds';
 
 import { AppStateType } from '../../../types';
 import { RoundsType } from '../../../types/rounds';
-
-import { SelectedRound } from './SelectedRound';
-
-const ItemRight = styled.div`
-  text-align: right;
-`;
 
 interface PropTypes {
   rounds: RoundsType;
   sortKey: string;
   reverseSort: boolean;
   selectedSeason: number;
-  selectedRoundIndex: null | number;
-  selectRound: Function;
+  showRoundDialog: Function;
 }
 
 const RoundsListComponent: React.FC<PropTypes> = props => (
-  <div>
+  <TableBody>
     {Object.keys(props.rounds)
       .map(k => parseInt(k))
       .filter(
@@ -48,51 +44,37 @@ const RoundsListComponent: React.FC<PropTypes> = props => (
       .map(key => {
         const round = props.rounds[key];
 
-        return key === props.selectedRoundIndex ? (
-          <SelectedRound
-            roundData={round.roundData}
-            onClick={() => props.selectRound(null)}
+        return (
+          <TableRow
             key={key}
-          />
-        ) : (
-          <div
-            className="row"
-            onClick={() => props.selectRound(key)}
+            onClick={() => props.showRoundDialog(key)}
             style={{ cursor: 'pointer' }}
-            key={key}
           >
-            <div className="col-xs-3">{round['date'].split(' ')[0]}</div>
-            <div className="col-xs-3">{round['course']}</div>
-            <ItemRight className="col-xs-1">{round['total_strokes']}</ItemRight>
-            <ItemRight className="col-xs-1">
-              {round['front_9_strokes']}
-            </ItemRight>
-            <ItemRight className="col-xs-1">
-              {round['back_9_strokes']}
-            </ItemRight>
-            <ItemRight className="col-xs-1">{round['total_putts']}</ItemRight>
-            <ItemRight className="col-xs-1">{round['total_gir']}</ItemRight>
-            <ItemRight className="col-xs-1">
-              {round['handicap_index']}
-            </ItemRight>
-          </div>
+            <TableCell>{round['date'].split(' ')[0]}</TableCell>
+            <TableCell>{round['course']}</TableCell>
+            <TableCell align="right">{round['total_strokes']}</TableCell>
+            <TableCell align="right">{round['front_9_strokes']}</TableCell>
+            <TableCell align="right">{round['back_9_strokes']}</TableCell>
+            <TableCell align="right">{round['total_putts']}</TableCell>
+            <TableCell align="right">{round['total_gir']}</TableCell>
+            <TableCell align="right">{round['handicap_index']}</TableCell>
+          </TableRow>
         );
       })}
-  </div>
+  </TableBody>
 );
 
 const mapStateToProps = (state: AppStateType) => ({
   rounds: state.rounds.data,
   sortKey: state.rounds.sortKey,
   reverseSort: state.rounds.reverseSort,
-  selectedSeason: state.stats.selectedSeason,
-  selectedRoundIndex: state.rounds.selectedRoundIndex
+  selectedSeason: state.stats.selectedSeason
 });
 
 const mapDispatchToProps = (
   dispatch: ThunkDispatch<AppStateType, null, AnyAction>
 ) => ({
-  selectRound: (roundIndex: number) => dispatch(selectRound(roundIndex))
+  showRoundDialog: (roundIndex: number) => dispatch(showRoundDialog(roundIndex))
 });
 
 export const RoundsList = connect(

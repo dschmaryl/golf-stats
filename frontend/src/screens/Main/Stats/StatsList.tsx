@@ -1,12 +1,9 @@
 import React from 'react';
-import styled from 'styled-components';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableRow from '@material-ui/core/TableRow';
 
 import { StatsType } from '../../../types/stats';
-
-const SeasonTd = styled.td`
-  cursor: pointer;
-  text-align: right;
-`;
 
 type StatKeysType = { [stat: string]: string };
 
@@ -27,16 +24,21 @@ interface PropTypes {
 }
 
 export const StatsList: React.FC<PropTypes> = ({ seasons, stats, onClick }) => (
-  <tbody>
+  <TableBody>
     {Object.keys(statKeys).map(stat => (
-      <tr key={stat}>
-        <td>{statKeys[stat]}:</td>
+      <TableRow key={stat}>
+        <TableCell>{statKeys[stat]}:</TableCell>
         {seasons.map(season => (
-          <SeasonTd onClick={() => onClick(season)} key={season + '-' + stat}>
+          <TableCell
+            align="right"
+            key={season + '-' + stat}
+            onClick={() => onClick(season)}
+            style={{ cursor: 'pointer' }}
+          >
             {stats[season][stat]}
-          </SeasonTd>
+          </TableCell>
         ))}
-      </tr>
+      </TableRow>
     ))}
-  </tbody>
+  </TableBody>
 );

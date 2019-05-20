@@ -73,6 +73,8 @@ export interface RoundsStateType {
   roundsLoaded: boolean;
   sortKey: string;
   reverseSort: boolean;
-  selectedRoundIndex: null | number;
+  selectedRoundIndex: number;
+  selectedRoundIsLoaded: boolean;
+  showRoundDialog: boolean;
   data: RoundsType;
 }

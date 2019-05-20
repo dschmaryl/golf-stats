@@ -2,9 +2,10 @@ export interface AuthStateType {
   isAuthenticated: boolean;
   authenticationFailed: boolean;
   statusText: string;
+  username: string;
 }
 
-export type Token = null | string;
+export type Token = string;
 
 export type TokenStateType = Token;
 
@@ -13,7 +14,12 @@ type ClearTokenType = { type: 'CLEAR_TOKEN' };
 
 export type TokenActionTypes = SetTokenType | ClearTokenType;
 
-type LoginSuccessType = { type: 'LOGIN_SUCCESS' };
+export interface DecodedToken {
+  id: number;
+  username: string;
+}
+
+type LoginSuccessType = { type: 'LOGIN_SUCCESS'; username: string };
 type LoginFailureType = { type: 'LOGIN_FAILURE'; error: string };
 type Logout = { type: 'LOGOUT' };
 

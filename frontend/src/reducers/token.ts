@@ -3,7 +3,7 @@ import { Reducer } from 'redux';
 import { TokenStateType, TokenActionTypes } from '../types/auth';
 
 export const token: Reducer = (
-  state: TokenStateType = null,
+  state: TokenStateType = '',
   action: TokenActionTypes
 ) => {
   switch (action.type) {
@@ -11,7 +11,7 @@ export const token: Reducer = (
       return action.token;
 
     case 'CLEAR_TOKEN':
-      return null;
+      return '';
 
     default:
       return state;

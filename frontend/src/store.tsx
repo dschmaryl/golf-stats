@@ -18,6 +18,8 @@ const store = createStore(
 
 const persistor = persistStore(store);
 
+// persistor.purge();
+
 export const ReduxProvider = ({ children }: { children: any }) => (
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>

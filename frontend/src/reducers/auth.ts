@@ -6,7 +6,8 @@ export const auth: Reducer = (
   state: AuthStateType = {
     isAuthenticated: false,
     authenticationFailed: false,
-    statusText: 'Please log in'
+    statusText: 'Please log in',
+    username: ''
   },
   action: AuthActionTypes
 ) => {
@@ -15,7 +16,8 @@ export const auth: Reducer = (
       return {
         isAuthenticated: true,
         authenticationFailed: false,
-        statusText: 'You are logged in'
+        statusText: 'You are logged in',
+        username: action.username
       };
 
     case 'LOGIN_FAILURE':

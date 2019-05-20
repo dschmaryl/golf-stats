@@ -1,5 +1,4 @@
 import React from 'react';
-import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
@@ -14,17 +13,21 @@ import { RoundsType } from '../../types/rounds';
 import { Rounds } from './Rounds';
 import { Stats } from './Stats';
 
-const ContainerDiv = styled.div`
-  max-width: 720px;
-  min-width: 480px;
-  margin: auto;
-`;
-
-const Header = styled.div`
-  text-align: center;
-`;
+const styles = {
+  mainContainer: {
+    maxWidth: '720px',
+    minWidth: '480px',
+    margin: 'auto'
+  },
+  headerRow: {
+    marginTop: '20px'
+    // display: 'flex',
+    // justifyContent: 'center'
+  }
+};
 
 interface PropTypes {
+  username: string;
   stats: StatsType;
   rounds: RoundsType;
   addStats: Function;
@@ -44,19 +47,18 @@ class MainComponent extends React.Component<PropTypes> {
   };
 
   render = () => (
-    <ContainerDiv className="container">
-      <Header className="row">
-        <div className="col-xs-12">
-          <h3>all statistics</h3>
-        </div>
-      </Header>
+    <div style={styles.mainContainer}>
+      <div style={styles.headerRow}>
+        <h1>hello {this.props.username}</h1>
+      </div>
       <Stats />
       <Rounds />
-    </ContainerDiv>
+    </div>
   );
 }
 
 const mapStateToProps = (state: AppStateType) => ({
+  username: state.auth.username,
   rounds: state.rounds.data,
   stats: state.stats.data
 });

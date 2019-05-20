@@ -3,12 +3,12 @@ import { connect } from 'react-redux';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 
+import Table from '@material-ui/core/Table';
+
 import { selectSeason } from '../../../actions/stats';
 
 import { AppStateType } from '../../../types';
 import { StatsType } from '../../../types/stats';
-
-import { PaddedDiv } from '../../../components/PaddedDiv';
 
 import { StatsHeader } from './StatsHeader';
 import { StatsList } from './StatsList';
@@ -24,25 +24,26 @@ export const StatsComponent: React.FC<PropTypes> = ({
   stats,
   selectSeason
 }) => {
-  if (!statsLoaded) {
-    return <p>loading stats...</p>;
-  } else {
-    const seasons = Object.keys(stats)
-      .map(s => parseInt(s))
-      .sort()
-      .reverse();
+  const seasons = Object.keys(stats)
+    .map(s => parseInt(s))
+    .sort()
+    .reverse();
 
-    return (
-      <PaddedDiv className="row">
-        <div className="col-xs-12">
-          <table style={{ width: '100%' }}>
-            <StatsHeader seasons={seasons} onClick={selectSeason} />
-            <StatsList seasons={seasons} stats={stats} onClick={selectSeason} />
-          </table>
+  return (
+    <div style={{ marginTop: '20px' }}>
+      <h2>statistics</h2>
+      {!statsLoaded ? (
+        <div style={{ padding: '10px' }}>
+          <h5>loading stats...</h5>
         </div>
-      </PaddedDiv>
-    );
-  }
+      ) : (
+        <Table style={{ marginTop: '-10px' }}>
+          <StatsHeader seasons={seasons} onClick={selectSeason} />
+          <StatsList seasons={seasons} stats={stats} onClick={selectSeason} />
+        </Table>
+      )}
+    </div>
+  );
 };
 
 const mapStateToProps = (state: AppStateType) => ({

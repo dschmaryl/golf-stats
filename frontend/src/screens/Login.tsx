@@ -1,33 +1,23 @@
 import React from 'react';
-import styled from 'styled-components';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { connect } from 'react-redux';
 
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
+
 import { login } from '../actions/auth';
 import { AppStateType } from '../types';
 
-const LoginContainer = styled.div`
-  width: 180px;
-  margin: 20% 0 0 20%;
-`;
-
-const Header = styled.div`
-  font-size: 3em;
-`;
-
-const InputRow = styled.div`
-  margin: 20px 0 20px 0;
-`;
-
-const Button = styled.input`
-  min-width: 80px;
-`;
-
-const ButtonRight = styled.input`
-  margin-left: 20px;
-  min-width: 80px;
-`;
+const styles = {
+  loginContainer: {
+    width: '190px',
+    margin: '20% 0 0 20%'
+  },
+  rowContainer: {
+    marginBottom: '20px'
+  }
+};
 
 interface PropTypes {
   statusText: string;
@@ -46,49 +36,45 @@ export class LoginComponent extends React.Component<PropTypes> {
   };
 
   render = () => (
-    <LoginContainer onKeyDown={this.handleKeyPress}>
-      <Header>
-        <div>welcome</div>
-      </Header>
-      <div>
-        <h5>{this.props.statusText}</h5>
-      </div>
-      <InputRow>
-        <input
-          name="username"
-          type="text"
-          className="form-control text-input"
+    <div style={styles.loginContainer} onKeyDown={this.handleKeyPress}>
+      <h2>welcome</h2>
+      <h5>{this.props.statusText}</h5>
+      <div style={styles.rowContainer}>
+        <TextField
+          label="username"
           value={this.state.username}
           placeholder="name"
           onChange={event => this.setState({ username: event.target.value })}
         />
-      </InputRow>
-      <InputRow>
-        <input
-          name="password"
+      </div>
+      <div style={styles.rowContainer}>
+        <TextField
+          label="password"
           type="password"
-          className="form-control text-input"
+          autoComplete="current-password"
           value={this.state.password}
           placeholder="password"
           onChange={event => this.setState({ password: event.target.value })}
         />
-      </InputRow>
+      </div>
 
-      <InputRow>
+      <div style={styles.rowContainer}>
         <Button
-          type="submit"
-          value="login"
-          className="btn btn-default"
+          variant="outlined"
+          style={{ marginTop: '10px' }}
           onClick={this.login}
-        />
-        <ButtonRight
-          type="submit"
-          value="register"
-          className="btn btn-default"
+        >
+          login
+        </Button>
+        <Button
+          variant="outlined"
+          style={{ marginLeft: '10px', marginTop: '10px' }}
           onClick={() => {}}
-        />
-      </InputRow>
-    </LoginContainer>
+        >
+          register
+        </Button>
+      </div>
+    </div>
   );
 }
 
