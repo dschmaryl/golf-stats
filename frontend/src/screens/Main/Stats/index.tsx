@@ -16,12 +16,14 @@ import { StatsList } from './StatsList';
 interface PropTypes {
   statsLoaded: boolean;
   stats: StatsType;
+  selectedSeason: number;
   selectSeason: Function;
 }
 
 export const StatsComponent: React.FC<PropTypes> = ({
   statsLoaded,
   stats,
+  selectedSeason,
   selectSeason
 }) => {
   const seasons = Object.keys(stats)
@@ -38,8 +40,17 @@ export const StatsComponent: React.FC<PropTypes> = ({
         </div>
       ) : (
         <Table style={{ marginTop: '-10px' }}>
-          <StatsHeader seasons={seasons} onClick={selectSeason} />
-          <StatsList seasons={seasons} stats={stats} onClick={selectSeason} />
+          <StatsHeader
+            seasons={seasons}
+            selectedSeason={selectedSeason}
+            onClick={selectSeason}
+          />
+          <StatsList
+            seasons={seasons}
+            stats={stats}
+            selectedSeason={selectedSeason}
+            onClick={selectSeason}
+          />
         </Table>
       )}
     </div>
@@ -48,7 +59,8 @@ export const StatsComponent: React.FC<PropTypes> = ({
 
 const mapStateToProps = (state: AppStateType) => ({
   statsLoaded: state.stats.statsLoaded,
-  stats: state.stats.data
+  stats: state.stats.data,
+  selectedSeason: state.stats.selectedSeason
 });
 
 const mapDispatchToProps = (

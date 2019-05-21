@@ -5,6 +5,8 @@ import TableRow from '@material-ui/core/TableRow';
 
 import { StatsType } from '../../../types/stats';
 
+import { styles } from './styles';
+
 type StatKeysType = { [stat: string]: string };
 
 const statKeys: StatKeysType = {
@@ -20,10 +22,16 @@ const statKeys: StatKeysType = {
 interface PropTypes {
   seasons: Array<number>;
   stats: StatsType;
+  selectedSeason: number;
   onClick: Function;
 }
 
-export const StatsList: React.FC<PropTypes> = ({ seasons, stats, onClick }) => (
+export const StatsList: React.FC<PropTypes> = ({
+  seasons,
+  stats,
+  selectedSeason,
+  onClick
+}) => (
   <TableBody>
     {Object.keys(statKeys).map(stat => (
       <TableRow key={stat}>
@@ -33,7 +41,11 @@ export const StatsList: React.FC<PropTypes> = ({ seasons, stats, onClick }) => (
             align="right"
             key={season + '-' + stat}
             onClick={() => onClick(season)}
-            style={{ cursor: 'pointer' }}
+            style={
+              selectedSeason === season
+                ? styles.selectedCell
+                : styles.regularCell
+            }
           >
             {stats[season][stat]}
           </TableCell>

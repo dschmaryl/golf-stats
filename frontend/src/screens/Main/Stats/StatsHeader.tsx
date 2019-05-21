@@ -3,12 +3,19 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 
+import { styles } from './styles';
+
 interface PropTypes {
   seasons: Array<number>;
+  selectedSeason: number;
   onClick: Function;
 }
 
-export const StatsHeader: React.FC<PropTypes> = ({ seasons, onClick }) => (
+export const StatsHeader: React.FC<PropTypes> = ({
+  seasons,
+  selectedSeason,
+  onClick
+}) => (
   <TableHead>
     <TableRow>
       <TableCell>season:</TableCell>
@@ -17,7 +24,10 @@ export const StatsHeader: React.FC<PropTypes> = ({ seasons, onClick }) => (
           align="right"
           key={season}
           onClick={() => onClick(season)}
-          style={{ cursor: 'pointer' }}
+          style={
+            // selectedSeason === season ? styles.selectedCell : styles.regularCell
+            styles.regularCell
+          }
         >
           {season === 2046 ? 'overall' : season}
         </TableCell>

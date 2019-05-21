@@ -1,23 +1,14 @@
 from functools import wraps
 
 from flask import g, jsonify, request
-from flask_login import current_user
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from itsdangerous import SignatureExpired, BadSignature
 
 from backend import app
 from backend.models import User
 
+
 TWO_WEEKS = 1209600
-
-
-def check_authorization(func):
-    @wraps(func)
-    def wrapper(*args, **kwargs):
-        if current_user.is_authenticated:
-            return func(*args, **kwargs)
-        return jsonify(error='not authorized')
-    return wrapper
 
 
 def generate_token(user, expiration=TWO_WEEKS):

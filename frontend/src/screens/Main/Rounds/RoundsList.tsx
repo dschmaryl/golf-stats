@@ -13,7 +13,7 @@ import { showRoundDialog } from '../../../actions/rounds';
 import { AppStateType } from '../../../types';
 import { RoundsType } from '../../../types/rounds';
 
-import { styles } from './styles'
+import { styles } from './styles';
 
 interface PropTypes {
   rounds: RoundsType;
@@ -53,10 +53,10 @@ const RoundsListComponent: React.FC<PropTypes> = props => (
             style={{ cursor: 'pointer' }}
             hover
           >
-            <TableCell style={styles.wideCell}>
+            <TableCell style={styles.dateCell}>
               {round['date'].split(' ')[0]}
             </TableCell>
-            <TableCell style={styles.wideCell}>{round['course']}</TableCell>
+            <TableCell style={styles.courseCell}>{round['course']}</TableCell>
             <TableCell style={styles.narrowCell} align="right">
               {round['total_strokes']}
             </TableCell>

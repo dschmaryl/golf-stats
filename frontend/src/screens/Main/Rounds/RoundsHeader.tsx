@@ -29,8 +29,10 @@ export const RoundsHeaderComponent: React.FC<PropTypes> = ({
     <TableCell
       align={value === 'date' || value === 'course' ? 'left' : 'right'}
       style={
-        value === 'date' || value === 'course'
-          ? styles.wideCell
+        value === 'date'
+          ? styles.dateCell
+          : value === 'course'
+          ? styles.courseCell
           : styles.narrowCell
       }
     >
