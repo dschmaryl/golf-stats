@@ -11,8 +11,10 @@ import { AppStateType } from '../types';
 
 const styles = {
   loginContainer: {
-    width: '190px',
-    margin: '20% 0 0 20%'
+    width: '200px',
+    margin: 'auto',
+    paddingTop: '10%',
+    paddingRight: '10%'
   },
   rowContainer: {
     marginBottom: '20px'

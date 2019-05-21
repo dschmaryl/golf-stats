@@ -33,7 +33,12 @@ export const SelectedRoundComponent: React.FC<PropTypes> = ({
     maxWidth="md"
     fullWidth={true}
   >
-    <DialogTitle>{round ? round.date.split(' ')[0] : ''}</DialogTitle>
+    <DialogTitle>
+      {round
+        ? round.date.split(' ')[0] +
+          (round.roundData ? ' - ' + round.roundData['course_name'] : '')
+        : ''}
+    </DialogTitle>
     <DialogContent>
       <SelectedRoundTable />
     </DialogContent>

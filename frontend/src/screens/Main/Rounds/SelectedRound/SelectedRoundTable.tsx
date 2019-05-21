@@ -67,10 +67,16 @@ export const SelectedRoundTableComponent: React.FC<PropTypes> = ({
       <TableRow>
         <TableCell style={{ padding: '8px' }}>{label}:</TableCell>
         {renderHoles(1, stat)}
-        <TableCell align="right" style={{ padding: '8px' }}>{roundData['front_9_' + stat]}</TableCell>
+        <TableCell align="right" style={{ padding: '8px' }}>
+          {roundData['front_9_' + stat]}
+        </TableCell>
         {renderHoles(10, stat)}
-        <TableCell align="right" style={{ padding: '8px' }}>{roundData['back_9_' + stat]}</TableCell>
-        <TableCell align="right" style={{ padding: '8px' }}>{roundData['total_' + stat]}</TableCell>
+        <TableCell align="right" style={{ padding: '8px' }}>
+          {roundData['back_9_' + stat]}
+        </TableCell>
+        <TableCell align="right" style={{ padding: '8px' }}>
+          {roundData['total_' + stat]}
+        </TableCell>
       </TableRow>
     );
 
@@ -88,7 +94,9 @@ export const SelectedRoundTableComponent: React.FC<PropTypes> = ({
                 {i + 1}
               </TableCell>
             ))}
-            <TableCell align="right" style={{ padding: '8px' }}>front</TableCell>
+            <TableCell align="right" style={{ padding: '8px' }}>
+              front
+            </TableCell>
             {nineHoleArray((_: any, i: number) => (
               <TableCell
                 align="right"
@@ -98,8 +106,12 @@ export const SelectedRoundTableComponent: React.FC<PropTypes> = ({
                 {i + 10}
               </TableCell>
             ))}
-            <TableCell align="right" style={{ padding: '8px' }}>back</TableCell>
-            <TableCell align="right" style={{ padding: '8px' }}>total</TableCell>
+            <TableCell align="right" style={{ padding: '8px' }}>
+              back
+            </TableCell>
+            <TableCell align="right" style={{ padding: '8px' }}>
+              total
+            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>

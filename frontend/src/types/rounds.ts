@@ -28,6 +28,7 @@ export interface RoundData {
   id: number;
   user_id: number;
   course: string;
+  course_name: string;
   tee_color: string;
   tee_id: number;
   notes: string;

@@ -13,6 +13,8 @@ import { showRoundDialog } from '../../../actions/rounds';
 import { AppStateType } from '../../../types';
 import { RoundsType } from '../../../types/rounds';
 
+import { styles } from './styles'
+
 interface PropTypes {
   rounds: RoundsType;
   sortKey: string;
@@ -49,15 +51,30 @@ const RoundsListComponent: React.FC<PropTypes> = props => (
             key={key}
             onClick={() => props.showRoundDialog(key)}
             style={{ cursor: 'pointer' }}
+            hover
           >
-            <TableCell>{round['date'].split(' ')[0]}</TableCell>
-            <TableCell>{round['course']}</TableCell>
-            <TableCell align="right">{round['total_strokes']}</TableCell>
-            <TableCell align="right">{round['front_9_strokes']}</TableCell>
-            <TableCell align="right">{round['back_9_strokes']}</TableCell>
-            <TableCell align="right">{round['total_putts']}</TableCell>
-            <TableCell align="right">{round['total_gir']}</TableCell>
-            <TableCell align="right">{round['handicap_index']}</TableCell>
+            <TableCell style={styles.wideCell}>
+              {round['date'].split(' ')[0]}
+            </TableCell>
+            <TableCell style={styles.wideCell}>{round['course']}</TableCell>
+            <TableCell style={styles.narrowCell} align="right">
+              {round['total_strokes']}
+            </TableCell>
+            <TableCell style={styles.narrowCell} align="right">
+              {round['front_9_strokes']}
+            </TableCell>
+            <TableCell style={styles.narrowCell} align="right">
+              {round['back_9_strokes']}
+            </TableCell>
+            <TableCell style={styles.narrowCell} align="right">
+              {round['total_putts']}
+            </TableCell>
+            <TableCell style={styles.narrowCell} align="right">
+              {round['total_gir']}
+            </TableCell>
+            <TableCell style={styles.narrowCell} align="right">
+              {round['handicap_index']}
+            </TableCell>
           </TableRow>
         );
       })}
