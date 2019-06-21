@@ -1,0 +1,1 @@
+{"version":3,"sources":["index.css"],"names":[],"mappings":"AAAA,KACE,kCAAmC,CACnC,iCAAkC,CAGlC,UAAW,CAEX,iBACF","file":"main.4c016fe8.chunk.css","sourcesContent":["body {\n  -webkit-font-smoothing: antialiased;\n  -moz-osx-font-smoothing: grayscale;\n\n  /* mine */\n  color: #555;\n\n  overflow-y: scroll;\n}\n"]}

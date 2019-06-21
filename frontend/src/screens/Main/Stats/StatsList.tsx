@@ -7,17 +7,27 @@ import { StatsType } from '../../../types/stats';
 
 import { styles } from './styles';
 
-type StatKeysType = { [stat: string]: string };
+// type StatKeysType = { [stat: string]: string };
 
-const statKeys: StatKeysType = {
-  strokes: 'scoring average',
-  putts: 'putts per round',
-  gir: 'greens per round',
-  handicap: 'handicap',
-  par3: 'par 3 average',
-  par4: 'par 4 average',
-  par5: 'par 5 average'
-};
+// const statKeys: StatKeysType = {
+//   strokes: 'scoring average',
+//   putts: 'putts per round',
+//   gir: 'greens per round',
+//   handicap: 'handicap',
+//   par3: 'par 3 average',
+//   par4: 'par 4 average',
+//   par5: 'par 5 average'
+// };
+
+const statKeys: Array<string> = [
+  'strokes',
+  'putts',
+  'gir',
+  'handicap',
+  'par3',
+  'par4',
+  'par5'
+];
 
 interface PropTypes {
   seasons: Array<number>;
@@ -32,15 +42,43 @@ export const StatsList: React.FC<PropTypes> = ({
   selectedSeason,
   onClick
 }) => (
+  // <TableBody>
+  //   {Object.keys(statKeys).map(stat => (
+  //     <TableRow key={stat}>
+  //       <TableCell>{statKeys[stat]}:</TableCell>
+  //       {seasons.map(season => (
+  //         <TableCell
+  //           align="right"
+  //           key={season + '-' + stat}
+  //           onClick={() => onClick(season)}
+  //           style={
+  //             selectedSeason === season
+  //               ? styles.selectedCell
+  //               : styles.regularCell
+  //           }
+  //         >
+  //           {stats[season][stat]}
+  //         </TableCell>
+  //       ))}
+  //     </TableRow>
+  //   ))}
+  // </TableBody>
   <TableBody>
-    {Object.keys(statKeys).map(stat => (
-      <TableRow key={stat}>
-        <TableCell>{statKeys[stat]}:</TableCell>
-        {seasons.map(season => (
+    {seasons.map((season: number) => (
+      <TableRow key={season} onClick={() => onClick(season)} hover>
+        <TableCell
+          style={
+            selectedSeason === season
+              ? styles.selectedSeasonCell
+              : styles.seasonCell
+          }
+        >
+          {season === 2046 ? 'overall' : season}
+        </TableCell>
+        {statKeys.map((stat: string) => (
           <TableCell
             align="right"
             key={season + '-' + stat}
-            onClick={() => onClick(season)}
             style={
               selectedSeason === season
                 ? styles.selectedCell

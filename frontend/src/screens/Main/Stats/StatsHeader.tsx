@@ -11,6 +11,16 @@ interface PropTypes {
   onClick: Function;
 }
 
+const stats: Array<string> = [
+  'score',
+  'putts',
+  'greens',
+  'handicap',
+  'par 3',
+  'par 4',
+  'par 5'
+];
+
 export const StatsHeader: React.FC<PropTypes> = ({
   seasons,
   selectedSeason,
@@ -18,7 +28,7 @@ export const StatsHeader: React.FC<PropTypes> = ({
 }) => (
   <TableHead>
     <TableRow>
-      <TableCell>season:</TableCell>
+      {/* <TableCell>season:</TableCell>
       {seasons.map(season => (
         <TableCell
           align="right"
@@ -30,6 +40,12 @@ export const StatsHeader: React.FC<PropTypes> = ({
           }
         >
           {season === 2046 ? 'overall' : season}
+        </TableCell>
+      ))} */}
+      <TableCell style={styles.seasonHeaderCell}>season</TableCell>
+      {stats.map(stat => (
+        <TableCell align="right" key={stat} style={styles.headerCell}>
+          {stat}
         </TableCell>
       ))}
     </TableRow>

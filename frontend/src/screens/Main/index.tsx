@@ -3,10 +3,10 @@ import { connect } from 'react-redux';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
+// import AppBar from '@material-ui/core/AppBar';
+// import Toolbar from '@material-ui/core/Toolbar';
+// import IconButton from '@material-ui/core/IconButton';
+// import MenuIcon from '@material-ui/icons/Menu';
 
 import { addRounds } from '../../actions/rounds';
 import { addStats } from '../../actions/stats';
@@ -59,13 +59,13 @@ class MainComponent extends React.Component<PropTypes> {
       <Stats />
       <Rounds />
 
-      <AppBar position="static">
+      {/* <AppBar position="static">
         <Toolbar>
           <IconButton color="inherit" aria-label="Menu">
             <MenuIcon />
           </IconButton>
         </Toolbar>
-      </AppBar>
+      </AppBar> */}
     </div>
   );
 }

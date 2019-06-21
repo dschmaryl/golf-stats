@@ -106,10 +106,11 @@ class User(db.Model):
                     else:
                         all_stats[stat] = season_stats[stat]
 
-                    averages[season][stat] = round(
-                        average(stats_array),
-                        2
-                    )
+                    # if stat == 'handicap':
+                    #     averages[season]['handicap'] = stats_array[-1]
+                    # else:
+                    #     averages[season][stat] = round(average(stats_array), 2)
+                    averages[season][stat] = round(average(stats_array), 1)
 
         if all_stats:
             # season 2046 contains 'overall' stats, ie avg off all seasons
@@ -119,7 +120,7 @@ class User(db.Model):
             for stat, stats_array in all_stats.items():
                 if stat == 'handicap':
                     continue
-                averages[2046][stat] = round(average(stats_array), 2)
+                averages[2046][stat] = round(average(stats_array), 1)
 
         return averages
 
