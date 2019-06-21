@@ -71,7 +71,9 @@ class User(db.Model):
                 return self._mavg(data, period)
             return self._avg(data)
 
-        seasons = [2018, 2017, 2016, 2015]
+        seasons = [season for season in range(
+            2015, self.get_latest_round().date.year + 1)]
+
         stats = {
             'strokes': 'total_strokes',
             'putts': 'total_putts',

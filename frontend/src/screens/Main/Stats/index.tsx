@@ -20,7 +20,7 @@ interface PropTypes {
   selectSeason: Function;
 }
 
-export const StatsComponent: React.FC<PropTypes> = ({
+const StatsComponent: React.FC<PropTypes> = ({
   statsLoaded,
   stats,
   selectedSeason,

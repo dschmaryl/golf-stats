@@ -33,8 +33,6 @@ export const SelectedRoundTableComponent: React.FC<PropTypes> = ({
       </div>
     );
   } else {
-    console.log(round);
-
     const roundData = round.roundData;
     const nineHoleTotal = (startHole: number, stat: string) =>
       nineHoleArray(
