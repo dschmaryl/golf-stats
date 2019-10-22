@@ -82,32 +82,22 @@ class Round(db.Model):
         self.total_gir = self.front_9_gir + self.back_9_gir
 
     def calc_handicap(self):
-        rounds = self.get_twenty_rounds()
-        num_of_diffs_used = self.get_num_of_diffs(rounds)
-        if num_of_diffs_used == 0:
-            self.handicap_index = 50
-        else:
-            diffs = sorted([r.calc_diff() for r in rounds])[:num_of_diffs_used]
-            # calculate handicap and truncate to one decimal place
-            handicap = floor((sum(diffs) / len(diffs) * 0.96) * 10) / 10
-            self.handicap_index = min(handicap, 50)
+        # get 20 latest rounds
+        all_rounds = self.user.get_rounds()
+        round_idx = all_rounds.index(self)  # index of current round
+        rounds = all_rounds[max(0, round_idx - 19):round_idx + 1]
 
-    def get_twenty_rounds(self):
-        # get rounds and slice to no more than 20 rounds with
-        # self being the last round in the list
-        rounds = self.user.get_rounds()
-        round_idx = rounds.index(self)
-        return rounds[max(0, round_idx - 19):round_idx + 1]
-
-    @staticmethod
-    def get_num_of_diffs(rounds):
-        # my own version based on the changes for 2020 with adjustments to be
-        # a little more fair when a player only has a few rounds
-        return {
+        # my own version adjusted to be a little more fair when a player
+        # only has a few rounds
+        num_of_diffs_used = {
             1: 1, 2: 1, 3: 1, 4: 2, 5: 2, 6: 2, 7: 3,
             8: 3, 9: 4, 10: 4, 11: 4, 12: 5, 13: 5, 14: 6,
             15: 6, 16: 6, 17: 7, 18: 7, 19: 8, 20: 8
         }[len(rounds)]
+
+        diffs = sorted([r.calc_diff() for r in rounds])[:num_of_diffs_used]
+        handicap = floor(sum(diffs) / len(diffs) * 10) / 10
+        self.handicap_index = min(handicap, 54)
 
     def calc_diff(self):
         adjusted_score = self.get_adjusted_score()
@@ -121,18 +111,17 @@ class Round(db.Model):
         if not previous_round:
             return self.total_strokes
 
-        old_handicap = previous_round.handicap_index
-        course_handicap = round(old_handicap * self.tee.slope / 113, 0)
-        if course_handicap < 10:
-            # max is double bogey. this needs to be fixed
-            max_score = 7
-        else:
-            max_score = int(course_handicap / 10 + 6)
+        previous_handicap = previous_round.handicap_index
 
-        # this needs to be refactored to fix single-digit handicap max
-        adjusted_score = sum([min(max_score, hole.strokes)
+        old_course_handicap = previous_handicap * self.tee.slope / 113
+        new_course_handicap = (old_course_handicap
+                               + self.tee.rating - self.tee.get_total_par())
+
+        max_above_par = new_course_handicap / 18 + 2
+        adjusted_score = sum([min(hole.strokes, hole.par + max_above_par)
                               for hole in self.holes])
-        return adjusted_score
+
+        return round(adjusted_score, 2)
 
     def as_dict(self):
         return {
