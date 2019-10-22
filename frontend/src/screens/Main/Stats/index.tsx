@@ -5,10 +5,10 @@ import { ThunkDispatch } from 'redux-thunk';
 
 import Table from '@material-ui/core/Table';
 
-import { selectSeason } from '../../../actions/stats';
+import { selectSeason } from '../../../store/stats/actions';
 
-import { AppStateType } from '../../../types';
-import { StatsType } from '../../../types/stats';
+import { AppStateType } from '../../../store/types';
+import { StatsType } from '../../../store/stats/types';
 
 import { StatsHeader } from './StatsHeader';
 import { StatsList } from './StatsList';

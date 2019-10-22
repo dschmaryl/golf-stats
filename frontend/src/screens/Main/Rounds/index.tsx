@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import Table from '@material-ui/core/Table';
 
-import { AppStateType } from '../../../types';
+import { AppStateType } from '../../../store/types';
 
 import { RoundsHeader } from './RoundsHeader';
 import { RoundsList } from './RoundsList';

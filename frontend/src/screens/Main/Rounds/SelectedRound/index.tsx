@@ -9,10 +9,10 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
-import { hideRoundDialog } from '../../../../actions/rounds';
+import { hideRoundDialog } from '../../../../store/rounds/actions';
 
-import { AppStateType } from '../../../../types';
-import { Round } from '../../../../types/rounds';
+import { AppStateType } from '../../../../store/types';
+import { Round } from '../../../../store/rounds/types';
 
 import { SelectedRoundTable } from './SelectedRoundTable';
 

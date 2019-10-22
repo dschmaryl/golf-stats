@@ -8,10 +8,10 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 
-import { showRoundDialog } from '../../../actions/rounds';
+import { showRoundDialog } from '../../../store/rounds/actions';
 
-import { AppStateType } from '../../../types';
-import { RoundsType } from '../../../types/rounds';
+import { AppStateType } from '../../../store/types';
+import { RoundsType } from '../../../store/rounds/types';
 
 import { styles } from './styles';
 

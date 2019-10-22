@@ -1,16 +1,20 @@
 import React from 'react';
-import { createStore, applyMiddleware } from 'redux';
+import { combineReducers, createStore, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 
-import { rootReducer } from './reducers';
+import { auth } from './auth/reducer';
+import { rounds } from './rounds/reducer';
+import { stats } from './stats/reducer';
+
+const rootReducer = combineReducers({ auth, rounds, stats });
 
 const store = createStore(
   persistReducer(
-    { key: 'golf-stats', storage, whitelist: ['token'] },
+    { key: 'golf-stats', storage, whitelist: ['auth'] },
     rootReducer
   ),
   applyMiddleware(thunk)

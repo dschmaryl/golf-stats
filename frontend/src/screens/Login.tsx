@@ -6,8 +6,8 @@ import { connect } from 'react-redux';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 
-import { login } from '../actions/auth';
-import { AppStateType } from '../types';
+import { login } from '../store/auth/actions';
+import { AppStateType } from '../store/types';
 
 const styles = {
   loginContainer: {

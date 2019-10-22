@@ -8,9 +8,9 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 
-import { setSortKey } from '../../../actions/rounds';
+import { setSortKey } from '../../../store/rounds/actions';
 
-import { AppStateType } from '../../../types';
+import { AppStateType } from '../../../store/types';
 
 import { styles } from './styles';
 

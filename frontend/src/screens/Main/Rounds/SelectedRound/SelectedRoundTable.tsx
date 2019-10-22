@@ -9,10 +9,10 @@ import TableBody from '@material-ui/core/TableBody';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 
-import { hideRoundDialog } from '../../../../actions/rounds';
+import { hideRoundDialog } from '../../../../store/rounds/actions';
 
-import { AppStateType } from '../../../../types';
-import { Round } from '../../../../types/rounds';
+import { AppStateType } from '../../../../store/types';
+import { Round } from '../../../../store/rounds/types';
 
 const nineHoleArray = (func: Function) =>
   Array.from({ length: 9 }, (v, i) => func(v, i));

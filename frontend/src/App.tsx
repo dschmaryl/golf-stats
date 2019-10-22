@@ -3,16 +3,16 @@ import { connect } from 'react-redux';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 
-import { checkToken } from './actions/auth';
+import { checkToken } from './store/auth/actions';
 
-import { AppStateType } from './types';
-import { Token } from './types/auth';
+import { AppStateType } from './store/types';
+// import { Token } from './types/auth';
 
 import { Login } from './screens/Login';
 import { Main } from './screens/Main';
 
 type PropTypes = {
-  token: Token;
+  token: string;
   isAuthenticated: boolean;
   authenticationFailed: boolean;
   checkToken: Function;
@@ -39,7 +39,7 @@ const AppComponent: React.FC<PropTypes> = ({
 };
 
 const mapStateToProps = (state: AppStateType) => ({
-  token: state.token,
+  token: state.auth.token,
   isAuthenticated: state.auth.isAuthenticated,
   authenticationFailed: state.auth.authenticationFailed
 });

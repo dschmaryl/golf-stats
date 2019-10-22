@@ -1,6 +1,6 @@
 import { Reducer } from 'redux';
 
-import { RoundsStateType } from '../types/rounds';
+import { RoundsStateType } from './types';
 
 export const rounds: Reducer = (
   state: RoundsStateType = {

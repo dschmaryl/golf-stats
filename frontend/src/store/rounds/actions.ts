@@ -2,12 +2,12 @@ import { AnyAction, ActionCreator } from 'redux';
 import { ThunkAction } from 'redux-thunk';
 
 import { AppStateType } from '../types';
-import { getData } from '../utils/httpFunctions';
+import { getData } from '../../utils/httpFunctions';
 
 export const addRounds: ActionCreator<
   ThunkAction<void, AppStateType, null, AnyAction>
 > = () => (dispatch, getState) =>
-  getData('/api/user/rounds', getState().token)
+  getData('/api/user/rounds', getState().auth.token)
     .then(response => response.data)
     .then(data => dispatch({ type: 'ADD_ROUNDS', data }))
     .catch(() => console.log('failed to get rounds'));
@@ -20,7 +20,7 @@ export const showRoundDialog: ActionCreator<
   const rounds = getState().rounds.data;
 
   if (!rounds[roundIndex].roundData) {
-    return getData('/api/round/' + rounds[roundIndex].id, getState().token)
+    return getData('/api/round/' + rounds[roundIndex].id, getState().auth.token)
       .then(response => response.data)
       .then(data => dispatch({ type: 'ADD_ROUND_DATA', roundIndex, data }))
       .catch(() => console.log('failed to get round data'));
