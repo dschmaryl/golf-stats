@@ -101,20 +101,13 @@ class Round(db.Model):
 
     @staticmethod
     def get_num_of_diffs(rounds):
-        # return number of diffs to be used to calculate handicap based on
-        # the number of rounds that have been recorded so far.
-        #
-        # if len(rounds) < 5:
-        #     return 0
-        # else:
-        #     return {
-        #         5: 1, 6: 1, 7: 2, 8: 2, 9: 3, 10: 3, 11: 4, 12: 4,
-        #         13: 5, 14: 5, 15: 6, 16: 6, 17: 7, 18: 8, 19: 9, 20: 10
-        #     }[len(rounds)]
-
-        # my own version; i think its more fair to golfers with only a few
-        # rounds entered
-        return max(1, floor(len(rounds)/2))
+        # my own version based on the changes for 2020 with adjustments to be
+        # a little more fair when a player only has a few rounds
+        return {
+            1: 1, 2: 1, 3: 1, 4: 2, 5: 2, 6: 2, 7: 3,
+            8: 3, 9: 4, 10: 4, 11: 4, 12: 5, 13: 5, 14: 6,
+            15: 6, 16: 6, 17: 7, 18: 7, 19: 8, 20: 8
+        }[len(rounds)]
 
     def calc_diff(self):
         adjusted_score = self.get_adjusted_score()
