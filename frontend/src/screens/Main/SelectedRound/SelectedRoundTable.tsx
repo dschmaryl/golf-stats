@@ -9,28 +9,26 @@ import TableBody from '@material-ui/core/TableBody';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 
-import { hideRoundDialog } from '../../../../store/rounds/actions';
+import { hideRoundDialog } from '../../../store/rounds/actions';
+import { AppStateType } from '../../../store/types';
+import { Round } from '../../../store/rounds/types';
 
-import { AppStateType } from '../../../../store/types';
-import { Round } from '../../../../store/rounds/types';
+import { styles } from './styles';
 
-const bigPadding = { padding: '8px' };
-const smallPadding = { padding: '5px' };
-
-const nineHoleArray = (func: Function) =>
-  Array.from({ length: 9 }, (v, i) => func(v, i));
+const frontNine = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+const backNine = [10, 11, 12, 13, 14, 15, 16, 17, 18];
 
 const Cell = ({ text }: { text: any }) => (
   <TableCell
     align="right"
-    style={('' + text).length > 1 ? smallPadding : bigPadding}
+    style={('' + text).length > 1 ? styles.smallPadding : styles.bigPadding}
   >
     {text}
   </TableCell>
 );
 
 const CellLeft = ({ text }: { text: any }) => (
-  <TableCell style={smallPadding}>{text}</TableCell>
+  <TableCell style={styles.smallPadding}>{text}</TableCell>
 );
 
 interface PropTypes {
@@ -50,36 +48,34 @@ export const SelectedRoundTableComponent: React.FC<PropTypes> = ({
     );
   } else {
     const roundData = round.roundData;
-    const nineHoleTotal = (startHole: number, stat: string) =>
-      nineHoleArray(
-        (_: any, i: number) => roundData['holes'][i + startHole][stat]
-      ).reduce((total: number, hole: number) => total + hole);
 
-    roundData['front_9_par'] = nineHoleTotal(1, 'par');
-    roundData['back_9_par'] = nineHoleTotal(10, 'par');
+    roundData['front_9_par'] = frontNine.reduce(
+      (sum, num) => sum + roundData['holes'][num]['par'],
+      0
+    );
+
+    roundData['back_9_par'] = backNine.reduce(
+      (sum, num) => sum + roundData['holes'][num]['par'],
+      0
+    );
+
     roundData['total_par'] = roundData['front_9_par'] + roundData['back_9_par'];
 
-    const holeStat = (holeNumber: number, stat: string) =>
+    const getStat = (holeNum: number, stat: string) =>
       stat === 'gir'
-        ? roundData['holes'][holeNumber]['gir']
+        ? roundData['holes'][holeNum]['gir']
           ? '*'
           : ''
-        : roundData['holes'][holeNumber][stat];
+        : roundData['holes'][holeNum][stat];
 
-    const renderHoles = (startHole: number, stat: string) =>
-      nineHoleArray((_: any, i: number) => (
-        <Cell
-          text={holeStat(i + startHole, stat)}
-          key={stat + '_' + (i + startHole)}
-        />
-      ));
+    const renderHole = (num: any) => <Cell text={num} key={'hole_' + num} />;
 
     const renderTableRow = (label: string, stat: string) => (
       <TableRow>
         <CellLeft text={label + ':'} />
-        {renderHoles(1, stat)}
+        {frontNine.map(holeNum => renderHole(getStat(holeNum, stat)))}
         <Cell text={roundData['front_9_' + stat]} />
-        {renderHoles(10, stat)}
+        {backNine.map(holeNum => renderHole(getStat(holeNum, stat)))}
         <Cell text={roundData['back_9_' + stat]} />
         <Cell text={roundData['total_' + stat]} />
       </TableRow>
@@ -90,13 +86,9 @@ export const SelectedRoundTableComponent: React.FC<PropTypes> = ({
         <TableHead>
           <TableRow>
             <CellLeft text="hole:" />
-            {nineHoleArray((_: any, i: number) => (
-              <Cell text={i + 1} key={'hole_' + (i + 1)} />
-            ))}
+            {frontNine.map(renderHole)}
             <Cell text="front" />
-            {nineHoleArray((_: any, i: number) => (
-              <Cell text={i + 10} key={'hole_' + (i + 10)} />
-            ))}
+            {backNine.map(renderHole)}
             <Cell text="back" />
             <Cell text="total" />
           </TableRow>

@@ -7,19 +7,7 @@ import { StatsType } from '../../../store/stats/types';
 
 import { styles } from './styles';
 
-// type StatKeysType = { [stat: string]: string };
-
-// const statKeys: StatKeysType = {
-//   strokes: 'scoring average',
-//   putts: 'putts per round',
-//   gir: 'greens per round',
-//   handicap: 'handicap',
-//   par3: 'par 3 average',
-//   par4: 'par 4 average',
-//   par5: 'par 5 average'
-// };
-
-const statKeys: Array<string> = [
+const statKeys = [
   'strokes',
   'putts',
   'gir',
@@ -42,29 +30,8 @@ export const StatsList: React.FC<PropTypes> = ({
   selectedSeason,
   onClick
 }) => (
-  // <TableBody>
-  //   {Object.keys(statKeys).map(stat => (
-  //     <TableRow key={stat}>
-  //       <TableCell>{statKeys[stat]}:</TableCell>
-  //       {seasons.map(season => (
-  //         <TableCell
-  //           align="right"
-  //           key={season + '-' + stat}
-  //           onClick={() => onClick(season)}
-  //           style={
-  //             selectedSeason === season
-  //               ? styles.selectedCell
-  //               : styles.regularCell
-  //           }
-  //         >
-  //           {stats[season][stat]}
-  //         </TableCell>
-  //       ))}
-  //     </TableRow>
-  //   ))}
-  // </TableBody>
   <TableBody>
-    {seasons.map((season: number) => (
+    {seasons.map(season => (
       <TableRow key={season} onClick={() => onClick(season)} hover>
         <TableCell
           style={
@@ -75,7 +42,7 @@ export const StatsList: React.FC<PropTypes> = ({
         >
           {season === 2046 ? 'overall' : season}
         </TableCell>
-        {statKeys.map((stat: string) => (
+        {statKeys.map(stat => (
           <TableCell
             align="right"
             key={season + '-' + stat}
