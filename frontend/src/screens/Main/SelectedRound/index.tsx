@@ -9,12 +9,13 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
-import { hideRoundDialog } from '../../../../store/rounds/actions';
-
-import { AppStateType } from '../../../../store/types';
-import { Round } from '../../../../store/rounds/types';
+import { hideRoundDialog } from '../../../store/rounds/actions';
+import { AppStateType } from '../../../store/types';
+import { Round } from '../../../store/rounds/types';
 
 import { SelectedRoundTable } from './SelectedRoundTable';
+
+import { styles } from './styles';
 
 interface PropTypes {
   showRoundDialog: boolean;
@@ -29,7 +30,7 @@ export const SelectedRoundComponent: React.FC<PropTypes> = ({
 }) => (
   <Dialog
     open={showRoundDialog}
-    onClose={event => hideRoundDialog()}
+    onClose={() => hideRoundDialog()}
     maxWidth="md"
     fullWidth={true}
   >
@@ -45,8 +46,8 @@ export const SelectedRoundComponent: React.FC<PropTypes> = ({
     <DialogActions>
       <Button
         variant="outlined"
-        style={{ marginTop: '10px' }}
-        onClick={event => hideRoundDialog()}
+        style={styles.button}
+        onClick={() => hideRoundDialog()}
       >
         close
       </Button>

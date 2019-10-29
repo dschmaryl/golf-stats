@@ -6,12 +6,13 @@ import { ThunkDispatch } from 'redux-thunk';
 import Table from '@material-ui/core/Table';
 
 import { selectSeason } from '../../../store/stats/actions';
-
 import { AppStateType } from '../../../store/types';
 import { StatsType } from '../../../store/stats/types';
 
 import { StatsHeader } from './StatsHeader';
 import { StatsList } from './StatsList';
+
+import { styles } from './styles';
 
 interface PropTypes {
   statsLoaded: boolean;
@@ -32,14 +33,14 @@ const StatsComponent: React.FC<PropTypes> = ({
     .reverse();
 
   return (
-    <div style={{ marginTop: '20px' }}>
+    <div style={styles.statsContainer}>
       <h2>statistics</h2>
       {!statsLoaded ? (
-        <div style={{ padding: '10px' }}>
+        <div style={styles.loadingDiv}>
           <h5>loading stats...</h5>
         </div>
       ) : (
-        <Table style={{ marginTop: '-10px' }}>
+        <Table style={styles.statsTable}>
           <StatsHeader
             seasons={seasons}
             selectedSeason={selectedSeason}
