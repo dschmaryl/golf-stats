@@ -9,16 +9,11 @@ import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 
 import { showRoundDialog } from '../../../store/rounds/actions';
+
 import { AppStateType } from '../../../store/types';
 import { RoundsType } from '../../../store/rounds/types';
 
 import { styles } from './styles';
-
-const Cell = ({ text }: { text: number }) => (
-  <TableCell style={styles.narrowCell} align="right">
-    {text}
-  </TableCell>
-);
 
 interface PropTypes {
   rounds: RoundsType;
@@ -28,39 +23,33 @@ interface PropTypes {
   showRoundDialog: Function;
 }
 
-const RoundsListComponent: React.FC<PropTypes> = ({
-  rounds,
-  sortKey,
-  reverseSort,
-  selectedSeason,
-  showRoundDialog
-}) => (
+const RoundsListComponent: React.FC<PropTypes> = props => (
   <TableBody>
-    {Object.keys(rounds)
-      .map(key => parseInt(key))
+    {Object.keys(props.rounds)
+      .map(k => parseInt(k))
       .filter(
         key =>
-          selectedSeason === 2046 ||
-          rounds[key].date.split('-')[0] === '' + selectedSeason
+          props.selectedSeason === 2046 ||
+          props.rounds[key].date.split('-')[0] === '' + props.selectedSeason
       )
       .sort((a, b) => {
-        if (sortKey === 'date') {
-          return moment(rounds[reverseSort ? b : a]['date']).diff(
-            moment(rounds[reverseSort ? a : b]['date'])
+        if (props.sortKey === 'date') {
+          return moment(props.rounds[props.reverseSort ? b : a]['date']).diff(
+            moment(props.rounds[props.reverseSort ? a : b]['date'])
           );
         } else {
-          const first = rounds[reverseSort ? b : a][sortKey];
-          const second = rounds[reverseSort ? a : b][sortKey];
+          const first = props.rounds[props.reverseSort ? b : a][props.sortKey];
+          const second = props.rounds[props.reverseSort ? a : b][props.sortKey];
           return first > second ? 1 : -1;
         }
       })
       .map(key => {
-        const round = rounds[key];
+        const round = props.rounds[key];
 
         return (
           <TableRow
             key={key}
-            onClick={() => showRoundDialog(key)}
+            onClick={() => props.showRoundDialog(key)}
             style={{ cursor: 'pointer' }}
             hover
           >
@@ -68,12 +57,24 @@ const RoundsListComponent: React.FC<PropTypes> = ({
               {round['date'].split(' ')[0]}
             </TableCell>
             <TableCell style={styles.courseCell}>{round['course']}</TableCell>
-            <Cell text={round['total_strokes']} />
-            <Cell text={round['front_9_strokes']} />
-            <Cell text={round['back_9_strokes']} />
-            <Cell text={round['total_putts']} />
-            <Cell text={round['total_gir']} />
-            <Cell text={round['handicap_index']} />
+            <TableCell style={styles.narrowCell} align="right">
+              {round['total_strokes']}
+            </TableCell>
+            <TableCell style={styles.narrowCell} align="right">
+              {round['front_9_strokes']}
+            </TableCell>
+            <TableCell style={styles.narrowCell} align="right">
+              {round['back_9_strokes']}
+            </TableCell>
+            <TableCell style={styles.narrowCell} align="right">
+              {round['total_putts']}
+            </TableCell>
+            <TableCell style={styles.narrowCell} align="right">
+              {round['total_gir']}
+            </TableCell>
+            <TableCell style={styles.narrowCell} align="right">
+              {round['handicap_index']}
+            </TableCell>
           </TableRow>
         );
       })}

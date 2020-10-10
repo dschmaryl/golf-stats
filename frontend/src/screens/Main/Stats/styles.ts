@@ -1,21 +1,10 @@
 export const styles = {
-  statsContainer: {
-    marginTop: '20px'
-  },
-  loadingDiv: {
-    padding: '10px'
-  },
-  statsTable: {
-    marginTop: '-10px'
-  },
   seasonHeaderCell: {
     minWidth: '60px',
     maxWidth: '60px',
     padding: '8px'
   },
-  headerCell: {
-    padding: '8px'
-  },
+  headerCell: { padding: '8px' },
   seasonCell: {
     minWidth: '60px',
     maxWidth: '60px',

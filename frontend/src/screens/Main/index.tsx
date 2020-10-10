@@ -12,7 +12,6 @@ import { RoundsType } from '../../store/rounds/types';
 
 import { Rounds } from './Rounds';
 import { Stats } from './Stats';
-import { SelectedRound } from './SelectedRound';
 
 const styles = {
   mainContainer: {
@@ -22,6 +21,8 @@ const styles = {
   },
   headerRow: {
     marginTop: '20px'
+    // display: 'flex',
+    // justifyContent: 'center'
   }
 };
 
@@ -52,7 +53,6 @@ class MainComponent extends React.Component<PropTypes> {
       </div>
       <Stats />
       <Rounds />
-      <SelectedRound />
     </div>
   );
 }

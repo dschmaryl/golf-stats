@@ -8,25 +8,26 @@ import { AppStateType } from '../../../store/types';
 import { RoundsHeader } from './RoundsHeader';
 import { RoundsList } from './RoundsList';
 
-import { styles } from './styles';
+import { SelectedRound } from './SelectedRound';
 
 interface PropTypes {
   roundsLoaded: boolean;
 }
 
 export const RoundsComponent: React.FC<PropTypes> = ({ roundsLoaded }) => (
-  <div style={styles.roundsContainer}>
+  <div style={{ marginTop: '40px', marginBottom: '50px' }}>
     <h2>rounds</h2>
     {!roundsLoaded ? (
-      <div style={styles.loadingDiv}>
+      <div style={{ padding: '10px' }}>
         <h5>loading rounds...</h5>
       </div>
     ) : (
-      <Table padding="dense" style={styles.roundsTable}>
+      <Table padding="dense" style={{ marginTop: '-10px'}}>
         <RoundsHeader />
         <RoundsList />
       </Table>
     )}
+    <SelectedRound />
   </div>
 );
 
