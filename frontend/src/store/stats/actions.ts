@@ -2,6 +2,7 @@ import { AnyAction, ActionCreator } from 'redux';
 import { ThunkAction } from 'redux-thunk';
 
 import { AppStateType } from '../types';
+import { checkToken } from '../auth/actions'
 import { getData } from '../../utils/httpFunctions';
 
 export const addStats: ActionCreator<
@@ -10,7 +11,10 @@ export const addStats: ActionCreator<
   getData('/api/user/stats', getState().auth.token)
     .then(response => response.data)
     .then(data => dispatch({ type: 'ADD_STATS', data }))
-    .catch(() => console.log('failed to get stats'));
+    .catch(() => {
+      console.log('failed to get stats');
+      dispatch(checkToken())
+    });
 
 export const selectSeason: ActionCreator<AnyAction> = (season: string) => ({
   type: 'SELECT_SEASON',
