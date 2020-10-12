@@ -12,45 +12,42 @@ import { Login } from './screens/Login';
 import { Main } from './screens/Main';
 
 type PropTypes = {
-  token: string;
-  isAuthenticated: boolean;
-  authenticationFailed: boolean;
-  checkToken: Function;
+	token: string;
+	isAuthenticated: boolean;
+	authenticationFailed: boolean;
+	checkToken: Function;
 };
 
 const AppComponent: React.FC<PropTypes> = ({
-  token,
-  isAuthenticated,
-  authenticationFailed,
-  checkToken
+	token,
+	isAuthenticated,
+	authenticationFailed,
+	checkToken
 }) => {
-  if (token && isAuthenticated) {
-    return <Main />;
-  } else if (!token || authenticationFailed) {
-    return <Login />;
-  } else {
-    checkToken();
-    return (
-      <div>
-        <p>authenticating...</p>
-      </div>
-    );
-  }
+	if (token && isAuthenticated) {
+		return <Main />;
+	} else if (!token || authenticationFailed) {
+		return <Login />;
+	} else {
+		checkToken();
+		return (
+			<div>
+				<p>authenticating...</p>
+			</div>
+		);
+	}
 };
 
 const mapStateToProps = (state: AppStateType) => ({
-  token: state.auth.token,
-  isAuthenticated: state.auth.isAuthenticated,
-  authenticationFailed: state.auth.authenticationFailed
+	token: state.auth.token,
+	isAuthenticated: state.auth.isAuthenticated,
+	authenticationFailed: state.auth.authenticationFailed
 });
 
 const mapDispatchToProps = (
-  dispatch: ThunkDispatch<AppStateType, null, AnyAction>
+	dispatch: ThunkDispatch<AppStateType, null, AnyAction>
 ) => ({
-  checkToken: () => dispatch(checkToken())
+	checkToken: () => dispatch(checkToken())
 });
 
-export const App = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(AppComponent);
+export const App = connect(mapStateToProps, mapDispatchToProps)(AppComponent);

@@ -20,75 +20,75 @@ import { styles } from './styles';
 // };
 
 const statKeys: Array<string> = [
-  'strokes',
-  'putts',
-  'gir',
-  'handicap',
-  'par3',
-  'par4',
-  'par5'
+	'strokes',
+	'putts',
+	'gir',
+	'handicap',
+	'par3',
+	'par4',
+	'par5'
 ];
 
 interface PropTypes {
-  seasons: Array<number>;
-  stats: StatsType;
-  selectedSeason: number;
-  onClick: Function;
+	seasons: Array<number>;
+	stats: StatsType;
+	selectedSeason: number;
+	onClick: Function;
 }
 
 export const StatsList: React.FC<PropTypes> = ({
-  seasons,
-  stats,
-  selectedSeason,
-  onClick
+	seasons,
+	stats,
+	selectedSeason,
+	onClick
 }) => (
-  // <TableBody>
-  //   {Object.keys(statKeys).map(stat => (
-  //     <TableRow key={stat}>
-  //       <TableCell>{statKeys[stat]}:</TableCell>
-  //       {seasons.map(season => (
-  //         <TableCell
-  //           align="right"
-  //           key={season + '-' + stat}
-  //           onClick={() => onClick(season)}
-  //           style={
-  //             selectedSeason === season
-  //               ? styles.selectedCell
-  //               : styles.regularCell
-  //           }
-  //         >
-  //           {stats[season][stat]}
-  //         </TableCell>
-  //       ))}
-  //     </TableRow>
-  //   ))}
-  // </TableBody>
-  <TableBody>
-    {seasons.map((season: number) => (
-      <TableRow key={season} onClick={() => onClick(season)} hover>
-        <TableCell
-          style={
-            selectedSeason === season
-              ? styles.selectedSeasonCell
-              : styles.seasonCell
-          }
-        >
-          {season === 2046 ? 'overall' : season}
-        </TableCell>
-        {statKeys.map((stat: string) => (
-          <TableCell
-            align="right"
-            key={season + '-' + stat}
-            style={
-              selectedSeason === season
-                ? styles.selectedCell
-                : styles.regularCell
-            }
-          >
-            {stats[season][stat]}
-          </TableCell>
-        ))}
-      </TableRow>
-    ))}
-  </TableBody>
+	// <TableBody>
+	//   {Object.keys(statKeys).map(stat => (
+	//     <TableRow key={stat}>
+	//       <TableCell>{statKeys[stat]}:</TableCell>
+	//       {seasons.map(season => (
+	//         <TableCell
+	//           align="right"
+	//           key={season + '-' + stat}
+	//           onClick={() => onClick(season)}
+	//           style={
+	//             selectedSeason === season
+	//               ? styles.selectedCell
+	//               : styles.regularCell
+	//           }
+	//         >
+	//           {stats[season][stat]}
+	//         </TableCell>
+	//       ))}
+	//     </TableRow>
+	//   ))}
+	// </TableBody>
+	<TableBody>
+		{seasons.map((season: number) => (
+			<TableRow key={season} onClick={() => onClick(season)} hover>
+				<TableCell
+					style={
+						selectedSeason === season
+							? styles.selectedSeasonCell
+							: styles.seasonCell
+					}
+				>
+					{season === 2046 ? 'overall' : season}
+				</TableCell>
+				{statKeys.map((stat: string) => (
+					<TableCell
+						align="right"
+						key={season + '-' + stat}
+						style={
+							selectedSeason === season
+								? styles.selectedCell
+								: styles.regularCell
+						}
+					>
+						{stats[season][stat]}
+					</TableCell>
+				))}
+			</TableRow>
+		))}
+	</TableBody>
 );

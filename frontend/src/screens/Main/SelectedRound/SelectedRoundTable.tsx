@@ -19,103 +19,103 @@ const frontNine = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 const backNine = [10, 11, 12, 13, 14, 15, 16, 17, 18];
 
 const Cell = ({ text }: { text: any }) => (
-  <TableCell
-    align="right"
-    style={('' + text).length > 1 ? styles.smallPadding : styles.bigPadding}
-  >
-    {text}
-  </TableCell>
+	<TableCell
+		align="right"
+		style={('' + text).length > 1 ? styles.smallPadding : styles.bigPadding}
+	>
+		{text}
+	</TableCell>
 );
 
 const CellLeft = ({ text }: { text: any }) => (
-  <TableCell style={styles.smallPadding}>{text}</TableCell>
+	<TableCell style={styles.smallPadding}>{text}</TableCell>
 );
 
 interface PropTypes {
-  selectedRoundIsLoaded: boolean;
-  round: Round;
+	selectedRoundIsLoaded: boolean;
+	round: Round;
 }
 
 export const SelectedRoundTableComponent: React.FC<PropTypes> = ({
-  selectedRoundIsLoaded,
-  round
+	selectedRoundIsLoaded,
+	round
 }) => {
-  if (!selectedRoundIsLoaded) {
-    return (
-      <div style={{ padding: '20px' }}>
-        <h5>loading round data...</h5>
-      </div>
-    );
-  } else {
-    const roundData = round.roundData;
+	if (!selectedRoundIsLoaded) {
+		return (
+			<div style={{ padding: '20px' }}>
+				<h5>loading round data...</h5>
+			</div>
+		);
+	} else {
+		const roundData = round.roundData;
 
-    roundData['front_9_par'] = frontNine.reduce(
-      (sum, num) => sum + roundData['holes'][num]['par'],
-      0
-    );
+		roundData['front_9_par'] = frontNine.reduce(
+			(sum, num) => sum + roundData['holes'][num]['par'],
+			0
+		);
 
-    roundData['back_9_par'] = backNine.reduce(
-      (sum, num) => sum + roundData['holes'][num]['par'],
-      0
-    );
+		roundData['back_9_par'] = backNine.reduce(
+			(sum, num) => sum + roundData['holes'][num]['par'],
+			0
+		);
 
-    roundData['total_par'] = roundData['front_9_par'] + roundData['back_9_par'];
+		roundData['total_par'] = roundData['front_9_par'] + roundData['back_9_par'];
 
-    const getStat = (holeNum: number, stat: string) =>
-      stat === 'gir'
-        ? roundData['holes'][holeNum]['gir']
-          ? '*'
-          : ''
-        : roundData['holes'][holeNum][stat];
+		const getStat = (holeNum: number, stat: string) =>
+			stat === 'gir'
+				? roundData['holes'][holeNum]['gir']
+					? '*'
+					: ''
+				: roundData['holes'][holeNum][stat];
 
-    const renderHole = (num: any) => <Cell text={num} key={'hole_' + num} />;
+		const renderHole = (num: any) => <Cell text={num} key={'hole_' + num} />;
 
-    const renderTableRow = (label: string, stat: string) => (
-      <TableRow>
-        <CellLeft text={label + ':'} />
-        {frontNine.map(holeNum => renderHole(getStat(holeNum, stat)))}
-        <Cell text={roundData['front_9_' + stat]} />
-        {backNine.map(holeNum => renderHole(getStat(holeNum, stat)))}
-        <Cell text={roundData['back_9_' + stat]} />
-        <Cell text={roundData['total_' + stat]} />
-      </TableRow>
-    );
+		const renderTableRow = (label: string, stat: string) => (
+			<TableRow>
+				<CellLeft text={label + ':'} />
+				{frontNine.map((holeNum) => renderHole(getStat(holeNum, stat)))}
+				<Cell text={roundData['front_9_' + stat]} />
+				{backNine.map((holeNum) => renderHole(getStat(holeNum, stat)))}
+				<Cell text={roundData['back_9_' + stat]} />
+				<Cell text={roundData['total_' + stat]} />
+			</TableRow>
+		);
 
-    return (
-      <Table padding="dense">
-        <TableHead>
-          <TableRow>
-            <CellLeft text="hole:" />
-            {frontNine.map(renderHole)}
-            <Cell text="front" />
-            {backNine.map(renderHole)}
-            <Cell text="back" />
-            <Cell text="total" />
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {renderTableRow('par', 'par')}
-          {renderTableRow('score', 'strokes')}
-          {renderTableRow('putts', 'putts')}
-          {renderTableRow('gir', 'gir')}
-        </TableBody>
-      </Table>
-    );
-  }
+		return (
+			<Table padding="dense">
+				<TableHead>
+					<TableRow>
+						<CellLeft text="hole:" />
+						{frontNine.map(renderHole)}
+						<Cell text="front" />
+						{backNine.map(renderHole)}
+						<Cell text="back" />
+						<Cell text="total" />
+					</TableRow>
+				</TableHead>
+				<TableBody>
+					{renderTableRow('par', 'par')}
+					{renderTableRow('score', 'strokes')}
+					{renderTableRow('putts', 'putts')}
+					{renderTableRow('gir', 'gir')}
+				</TableBody>
+			</Table>
+		);
+	}
 };
 
 const mapStateToProps = (state: AppStateType) => ({
-  selectedRoundIsLoaded: state.rounds.selectedRoundIsLoaded,
-  round: state.rounds.data[state.rounds.selectedRoundIndex]
+	selectedRoundIsLoaded: state.rounds.selectedRoundIsLoaded,
+	round: state.rounds.data[state.rounds.selectedRoundIndex]
 });
 
 const mapDispatchToProps = (
-  dispatch: ThunkDispatch<AppStateType, null, AnyAction>
+	dispatch: ThunkDispatch<AppStateType, null, AnyAction>
 ) => ({
-  hideRoundDialog: () => dispatch(hideRoundDialog())
+	hideRoundDialog: () => dispatch(hideRoundDialog())
 });
 
 export const SelectedRoundTable = connect(
-  mapStateToProps,
-  mapDispatchToProps
+	mapStateToProps,
+	mapDispatchToProps
 )(SelectedRoundTableComponent);

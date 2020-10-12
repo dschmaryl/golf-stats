@@ -4,10 +4,10 @@ import { RoundsStateType } from './rounds/types';
 import { StatsStateType } from './stats/types';
 
 export interface AppStateType {
-  auth: AuthStateType;
-  rounds: RoundsStateType;
-  stats: StatsStateType;
-  // token: TokenStateType;
+	auth: AuthStateType;
+	rounds: RoundsStateType;
+	stats: StatsStateType;
+	// token: TokenStateType;
 }
 
 export type ActionTypes = AuthActionTypes;
