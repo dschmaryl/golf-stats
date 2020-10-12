@@ -26,7 +26,7 @@ export const auth: Reducer = (
       return {
         isAuthenticated: false,
         authenticationFailed: true,
-        statusText: `Error logging in: ${action.error}`,
+        statusText: `Error: ${action.error}`,
         token: ''
       };
 

@@ -1,2 +1,3 @@
 [TYPECHECK]
 generated-members=db
+disable=multiple-statements

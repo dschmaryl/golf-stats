@@ -13,7 +13,7 @@ export const addStats: ActionCreator<
     .then(data => dispatch({ type: 'ADD_STATS', data }))
     .catch(() => {
       console.log('failed to get stats');
-      dispatch(checkToken())
+      dispatch(checkToken());
     });
 
 export const selectSeason: ActionCreator<AnyAction> = (season: string) => ({
