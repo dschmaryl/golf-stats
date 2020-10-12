@@ -7,6 +7,7 @@ import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
 import { hideRoundDialog } from '../../../../store/rounds/actions';
@@ -41,6 +42,15 @@ export const SelectedRoundComponent: React.FC<PropTypes> = ({
 		</DialogTitle>
 		<DialogContent>
 			<SelectedRoundTable />
+			{round ? (
+				<div style={{ paddingTop: '20px', marginBottom: '-20px' }}>
+					<DialogContentText>
+						<span style={{ fontSize: '0.9em' }}>
+							{round.roundData ? round.roundData.notes : ''}
+						</span>
+					</DialogContentText>
+				</div>
+			) : null}
 		</DialogContent>
 		<DialogActions>
 			<Button
