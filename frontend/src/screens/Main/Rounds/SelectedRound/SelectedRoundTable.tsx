@@ -69,14 +69,20 @@ export const SelectedRoundTableComponent: React.FC<PropTypes> = ({
 					: ''
 				: roundData['holes'][holeNum][stat];
 
-		const renderHole = (num: any) => <Cell text={num} key={'hole_' + num} />;
+		const renderHole = (holeNum: number, value: any, stat: string) => (
+			<Cell text={value} key={'hole_' + holeNum + '_' + stat} />
+		);
 
 		const renderTableRow = (label: string, stat: string) => (
 			<TableRow>
 				<CellLeft text={label + ':'} />
-				{frontNine.map((holeNum) => renderHole(getStat(holeNum, stat)))}
+				{frontNine.map((holeNum) =>
+					renderHole(holeNum, getStat(holeNum, stat), stat)
+				)}
 				<Cell text={roundData['front_9_' + stat]} />
-				{backNine.map((holeNum) => renderHole(getStat(holeNum, stat)))}
+				{backNine.map((holeNum) =>
+					renderHole(holeNum, getStat(holeNum, stat), stat)
+				)}
 				<Cell text={roundData['back_9_' + stat]} />
 				<Cell text={roundData['total_' + stat]} />
 			</TableRow>
@@ -87,9 +93,9 @@ export const SelectedRoundTableComponent: React.FC<PropTypes> = ({
 				<TableHead>
 					<TableRow>
 						<CellLeft text="hole:" />
-						{frontNine.map(renderHole)}
+						{frontNine.map((holeNum) => renderHole(holeNum, holeNum, 'hole'))}
 						<Cell text="front" />
-						{backNine.map(renderHole)}
+						{backNine.map((holeNum) => renderHole(holeNum, holeNum, 'hole'))}
 						<Cell text="back" />
 						<Cell text="total" />
 					</TableRow>
